@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import type { MapAnchor, PublishedSnapshot } from "@lohono/shared-types";
 import type { MapPin, MapRoute } from "@/components/map/types";
@@ -22,7 +23,11 @@ interface Trip {
 
 export function TripView({ trip }: { trip: Trip }) {
   const s = trip.snapshot;
+  const router = useRouter();
+  const params = useParams();
+  const token = String(params.token);
   const [activePinId, setActivePinId] = useState<string | null>(null);
+  const refresh = () => router.refresh();
 
   const anchors = (s.mapAsset.transformJson as { anchors?: MapAnchor[] }).anchors ?? [];
 
@@ -117,13 +122,17 @@ export function TripView({ trip }: { trip: Trip }) {
             <p className="text-xs uppercase tracking-widest text-ink/50">Day {d.dayIndex + 1} · {d.date}</p>
             <h2 className="mt-1 font-display text-2xl">{d.theme}</h2>
             <ul className="mt-6 space-y-4">
-              {d.stops.map((stop) => (
+              {d.stops.map((stop, si) => (
                 <StopCard
                   key={stop.id}
                   itineraryId={trip.itineraryId}
+                  token={token}
+                  dayIndex={d.dayIndex}
+                  stopIndex={si}
                   stop={stop}
                   active={activePinId === stop.id}
                   onFocus={() => setActivePinId(stop.id)}
+                  onEdited={refresh}
                 />
               ))}
             </ul>

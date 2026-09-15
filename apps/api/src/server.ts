@@ -9,6 +9,7 @@ import { registerGeneration } from "./modules/generation/routes.js";
 import { registerJobs } from "./modules/jobs/routes.js";
 import { registerReview } from "./modules/review/routes.js";
 import { registerGuest } from "./modules/guest/routes.js";
+import { registerEditing } from "./modules/editing/routes.js";
 
 export async function buildServer(): Promise<FastifyInstance> {
   const env = loadEnv();
@@ -39,6 +40,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   await registerJobs(app);
   await registerReview(app);
   await registerGuest(app);
+  await registerEditing(app);
 
   return app;
 }
