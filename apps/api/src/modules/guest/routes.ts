@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
-import { guestService } from "./service.js";
-import { leadClickBody } from "./schema.js";
+import { guestService } from "./service";
+import { leadClickBody } from "./schema";
 
 export async function registerGuest(app: FastifyInstance) {
   app.get("/trip/:token", async (req, reply) => {

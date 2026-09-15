@@ -9,14 +9,14 @@ import {
   type Poi,
   type Stop,
 } from "@lohono/shared-types";
-import { db } from "../../db/client.js";
-import { bookings, villas, itineraries } from "../../db/schema/index.js";
-import { preferencesRepo } from "../questionnaire/repository.js";
-import { loadDriveMatrix, retrieveCandidates } from "./retriever.js";
-import { buildSelectPrompt, V1_SELECT_VERSION } from "./prompts/v1-select.js";
-import { buildNarratePrompt, V1_NARRATE_VERSION } from "./prompts/v1-narrate.js";
-import { jsonCall } from "./llm.js";
-import { repairSelection } from "./repair.js";
+import { db } from "../../db/client";
+import { bookings, villas, itineraries } from "../../db/schema/index";
+import { preferencesRepo } from "../questionnaire/repository";
+import { loadDriveMatrix, retrieveCandidates } from "./retriever";
+import { buildSelectPrompt, V1_SELECT_VERSION } from "./prompts/v1-select";
+import { buildNarratePrompt, V1_NARRATE_VERSION } from "./prompts/v1-narrate";
+import { jsonCall } from "./llm";
+import { repairSelection } from "./repair";
 
 export async function generateItineraryForBooking(bookingId: string) {
   const booking = await db.select().from(bookings).where(eq(bookings.id, bookingId)).limit(1).then((r) => r[0]);

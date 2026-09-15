@@ -1,6 +1,6 @@
-import { buildServer } from "./server.js";
-import { loadEnv } from "./config/env.js";
-import { runWorker } from "./workers/runner.js";
+import { buildServer } from "./server";
+import { loadEnv } from "./config/env";
+import { runWorker } from "./workers/runner";
 
 const env = loadEnv();
 

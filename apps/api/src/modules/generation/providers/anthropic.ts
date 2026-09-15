@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { loadEnv } from "../../../config/env.js";
-import { parseJsonResponse } from "./json-utils.js";
-import type { LlmJsonCallArgs, LlmJsonCallResult, LlmProvider } from "./types.js";
+import { loadEnv } from "../../../config/env";
+import { parseJsonResponse } from "./json-utils";
+import type { LlmJsonCallArgs, LlmJsonCallResult, LlmProvider } from "./types";
 
 // Rough per-1k-token USD prices — exact model names first, then a tier
 // heuristic so a new model string (e.g. a future claude-*) still prices sanely.

@@ -1,5 +1,5 @@
 import type { OpeningHours, PoiCategory, PriceBand, Seasonality } from "@lohono/shared-types";
-import { hours, monsoonOff, yearRound } from "./_helpers.js";
+import { hours, monsoonOff, yearRound } from "./_helpers";
 
 export interface SeedPoi {
   name: string;

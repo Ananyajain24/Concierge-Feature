@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import { questionnaireAnswersSchema } from "@lohono/shared-types";
-import { questionnaireService } from "./service.js";
-import { bookingService } from "../bookings/service.js";
+import { questionnaireService } from "./service";
+import { bookingService } from "../bookings/service";
 
 export async function registerQuestionnaire(app: FastifyInstance) {
   app.get("/questionnaire/:token", async (req, reply) => {

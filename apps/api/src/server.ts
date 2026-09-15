@@ -1,16 +1,16 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
-import { loadEnv } from "./config/env.js";
-import { registerHealth } from "./modules/health/routes.js";
-import { registerCatalog } from "./modules/catalog/routes.js";
-import { registerBookings } from "./modules/bookings/routes.js";
-import { registerQuestionnaire } from "./modules/questionnaire/routes.js";
-import { registerGeneration } from "./modules/generation/routes.js";
-import { registerJobs } from "./modules/jobs/routes.js";
-import { registerReview } from "./modules/review/routes.js";
-import { registerGuest } from "./modules/guest/routes.js";
-import { registerEditing } from "./modules/editing/routes.js";
-import { registerInsights } from "./modules/insights/routes.js";
+import { loadEnv } from "./config/env";
+import { registerHealth } from "./modules/health/routes";
+import { registerCatalog } from "./modules/catalog/routes";
+import { registerBookings } from "./modules/bookings/routes";
+import { registerQuestionnaire } from "./modules/questionnaire/routes";
+import { registerGeneration } from "./modules/generation/routes";
+import { registerJobs } from "./modules/jobs/routes";
+import { registerReview } from "./modules/review/routes";
+import { registerGuest } from "./modules/guest/routes";
+import { registerEditing } from "./modules/editing/routes";
+import { registerInsights } from "./modules/insights/routes";
 
 export async function buildServer(): Promise<FastifyInstance> {
   const env = loadEnv();

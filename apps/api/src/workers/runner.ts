@@ -1,6 +1,6 @@
-import { jobsRepo } from "../modules/jobs/repository.js";
-import { generateItineraryForBooking } from "../modules/generation/service.js";
-import { slaMonitorTick } from "../modules/review/sla.js";
+import { jobsRepo } from "../modules/jobs/repository";
+import { generateItineraryForBooking } from "../modules/generation/service";
+import { slaMonitorTick } from "../modules/review/sla";
 
 type Handler = (payload: Record<string, unknown>) => Promise<unknown>;
 

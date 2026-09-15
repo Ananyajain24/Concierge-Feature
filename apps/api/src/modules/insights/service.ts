@@ -1,4 +1,4 @@
-import { insightsRepo } from "./repository.js";
+import { insightsRepo } from "./repository";
 
 // Drizzle's `execute` returns { rows, ... }; normalise to plain arrays.
 const rows = <T = unknown>(r: unknown): T[] => (r as { rows?: T[] }).rows ?? [];

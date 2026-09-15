@@ -1,11 +1,11 @@
 import type { Day, Poi } from "@lohono/shared-types";
 import { rankAlternates } from "@lohono/itinerary-engine";
 import { eq } from "drizzle-orm";
-import { reviewRepo } from "./repository.js";
-import { buildPublishedSnapshot } from "./snapshot.js";
-import { loadDriveMatrix } from "../generation/retriever.js";
-import { db } from "../../db/client.js";
-import { bookings, villas } from "../../db/schema/index.js";
+import { reviewRepo } from "./repository";
+import { buildPublishedSnapshot } from "./snapshot";
+import { loadDriveMatrix } from "../generation/retriever";
+import { db } from "../../db/client";
+import { bookings, villas } from "../../db/schema/index";
 
 export const reviewService = {
   queue: reviewRepo.queue,

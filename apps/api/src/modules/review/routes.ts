@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
-import { reviewService } from "./service.js";
-import { editBody, regenerateBody } from "./schema.js";
+import { reviewService } from "./service";
+import { editBody, regenerateBody } from "./schema";
 
 export async function registerReview(app: FastifyInstance) {
   app.get("/review/queue", async () => reviewService.queue());

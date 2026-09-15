@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { db } from "../../db/client.js";
+import { db } from "../../db/client";
 
 // Insights queries — raw SQL is clearer here than the ORM.
 // Every count is per-itinerary or per-poi so the caller can chart directly.

@@ -1,4 +1,4 @@
-import { jobsRepo } from "./repository.js";
+import { jobsRepo } from "./repository";
 
 export const jobsService = {
   enqueue: (kind: string, payload: Record<string, unknown>) => jobsRepo.enqueue(kind, payload),

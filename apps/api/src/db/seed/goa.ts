@@ -1,9 +1,9 @@
 // Idempotent seed for the Goa MVP.
 // Re-running will not create duplicate rows; existing rows are updated where safe.
 import { eq } from "drizzle-orm";
-import { db } from "../client.js";
-import { destinations, villas, pois } from "../schema/index.js";
-import { GOA_POIS } from "./goa.pois.js";
+import { db } from "../client";
+import { destinations, villas, pois } from "../schema/index";
+import { GOA_POIS } from "./goa.pois";
 
 const DEST_SLUG = "goa";
 

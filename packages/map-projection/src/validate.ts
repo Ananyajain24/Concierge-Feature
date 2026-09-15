@@ -1,4 +1,4 @@
-import { fitAffine, project, type AnchorPoint } from "./affine.js";
+import { fitAffine, project, type AnchorPoint } from "./affine";
 
 export interface AnchorError {
   index: number;

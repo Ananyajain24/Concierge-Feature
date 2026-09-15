@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
-import { db } from "../../db/client.js";
-import { poiDistances } from "../../db/schema/index.js";
+import { db } from "../../db/client";
+import { poiDistances } from "../../db/schema/index";
 
 export interface PairRow {
   fromId: string;

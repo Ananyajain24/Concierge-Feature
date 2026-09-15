@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
 import type { Poi, QuestionnaireAnswers } from "@lohono/shared-types";
 import { haversineMeters, scorePoi } from "@lohono/itinerary-engine";
-import { db } from "../../db/client.js";
-import { pois, poiDistances } from "../../db/schema/index.js";
+import { db } from "../../db/client";
+import { pois, poiDistances } from "../../db/schema/index";
 
 export interface RetrieveInput {
   destinationId: string;

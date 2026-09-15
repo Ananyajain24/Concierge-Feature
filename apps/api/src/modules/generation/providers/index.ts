@@ -1,7 +1,7 @@
-import { loadEnv } from "../../../config/env.js";
-import { anthropicProvider } from "./anthropic.js";
-import { geminiProvider } from "./gemini.js";
-import type { LlmProvider } from "./types.js";
+import { loadEnv } from "../../../config/env";
+import { anthropicProvider } from "./anthropic";
+import { geminiProvider } from "./gemini";
+import type { LlmProvider } from "./types";
 
 const PROVIDERS: Record<string, LlmProvider> = {
   anthropic: anthropicProvider,
@@ -17,4 +17,4 @@ export function getLlmProvider(): LlmProvider {
   return provider;
 }
 
-export type { LlmJsonCallArgs, LlmJsonCallResult, LlmProvider } from "./types.js";
+export type { LlmJsonCallArgs, LlmJsonCallResult, LlmProvider } from "./types";

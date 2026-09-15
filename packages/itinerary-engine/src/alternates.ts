@@ -1,5 +1,5 @@
 import type { Poi } from "@lohono/shared-types";
-import { scorePoi, type ScoringPrefs } from "./scoring.js";
+import { scorePoi, type ScoringPrefs } from "./scoring";
 
 export interface AlternatesInput {
   targetPoi: Poi;

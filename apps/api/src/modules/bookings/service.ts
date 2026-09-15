@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
-import { bookingRepo } from "./repository.js";
-import { signBookingToken, verifyBookingToken } from "../../lib/token.js";
-import type { BookingCreateBody } from "./schema.js";
+import { bookingRepo } from "./repository";
+import { signBookingToken, verifyBookingToken } from "../../lib/token";
+import type { BookingCreateBody } from "./schema";
 
 export const bookingService = {
   create: async (input: BookingCreateBody) => {

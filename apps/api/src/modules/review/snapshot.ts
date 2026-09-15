@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import type { Day, Poi, PublishedSnapshot } from "@lohono/shared-types";
-import { db } from "../../db/client.js";
-import { bookings, villas, mapAssets, itineraries, pois } from "../../db/schema/index.js";
+import { db } from "../../db/client";
+import { bookings, villas, mapAssets, itineraries, pois } from "../../db/schema/index";
 
 // Build a self-contained render payload from live rows. On publish this jsonb
 // is what the guest endpoint returns — never a join.

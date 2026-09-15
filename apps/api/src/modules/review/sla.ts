@@ -1,6 +1,6 @@
 import { and, eq, lte } from "drizzle-orm";
-import { db } from "../../db/client.js";
-import { itineraries } from "../../db/schema/index.js";
+import { db } from "../../db/client";
+import { itineraries } from "../../db/schema/index";
 
 // Logs SLA breaches (T-0) and near-breaches (T-4h).
 // A production build might page or Slack; MVP just writes to stdout.

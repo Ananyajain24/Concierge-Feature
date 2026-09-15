@@ -1,5 +1,5 @@
-import { destinationRepo, poiRepo, villaRepo } from "./repository.js";
-import type { ListPoisQuery } from "./schema.js";
+import { destinationRepo, poiRepo, villaRepo } from "./repository";
+import type { ListPoisQuery } from "./schema";
 
 // Thin passthrough for MVP — reserve for cross-entity logic later
 // (e.g. cascade rules, cache invalidation).

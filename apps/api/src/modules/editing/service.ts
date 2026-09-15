@@ -3,12 +3,12 @@ import { eq } from "drizzle-orm";
 import type { Day, Poi, ReasonCode, Stop } from "@lohono/shared-types";
 import { WARNING_COPY } from "@lohono/shared-types";
 import { computeWarnings, validateItinerary } from "@lohono/itinerary-engine";
-import { db } from "../../db/client.js";
-import { bookings, itineraries, villas } from "../../db/schema/index.js";
-import { reviewRepo } from "../review/repository.js";
-import { buildPublishedSnapshot } from "../review/snapshot.js";
-import { loadDriveMatrix } from "../generation/retriever.js";
-import { verifyBookingToken } from "../../lib/token.js";
+import { db } from "../../db/client";
+import { bookings, itineraries, villas } from "../../db/schema/index";
+import { reviewRepo } from "../review/repository";
+import { buildPublishedSnapshot } from "../review/snapshot";
+import { loadDriveMatrix } from "../generation/retriever";
+import { verifyBookingToken } from "../../lib/token";
 
 async function loadContext(itineraryId: string) {
   const it = await reviewRepo.get(itineraryId);

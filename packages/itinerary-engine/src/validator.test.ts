@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateItinerary } from "./validator.js";
+import { validateItinerary } from "./validator";
 import type { Poi, Day } from "@lohono/shared-types";
 
 const DEST_ID = "11111111-1111-1111-1111-111111111111";

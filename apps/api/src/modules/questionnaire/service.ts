@@ -1,6 +1,6 @@
 import type { QuestionnaireAnswers } from "@lohono/shared-types";
-import { preferencesRepo } from "./repository.js";
-import { jobsService } from "../jobs/service.js";
+import { preferencesRepo } from "./repository";
+import { jobsService } from "../jobs/service";
 
 // Derive high-signal tags from raw answers so downstream retrieval has one
 // consistent vocabulary to match against POIs.

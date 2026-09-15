@@ -1,4 +1,4 @@
-import { runWorker } from "./runner.js";
+import { runWorker } from "./runner";
 
 runWorker().catch((e) => {
   console.error(e);

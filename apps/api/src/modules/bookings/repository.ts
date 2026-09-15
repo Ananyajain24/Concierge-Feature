@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { db } from "../../db/client.js";
-import { bookings } from "../../db/schema/index.js";
+import { db } from "../../db/client";
+import { bookings } from "../../db/schema/index";
 
 export const bookingRepo = {
   list: () => db.select().from(bookings),

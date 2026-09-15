@@ -1,7 +1,7 @@
 // Seed entrypoint — dispatches to per-destination seed scripts.
 // Currently only Goa is seeded for the MVP.
-import { pool } from "../client.js";
-import { seedGoa } from "./goa.js";
+import { pool } from "../client";
+import { seedGoa } from "./goa";
 
 async function main() {
   console.log("→ Seeding Goa…");

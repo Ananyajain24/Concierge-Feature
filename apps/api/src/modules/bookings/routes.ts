@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
-import { bookingService } from "./service.js";
-import { bookingCreateBody } from "./schema.js";
+import { bookingService } from "./service";
+import { bookingCreateBody } from "./schema";
 
 export async function registerBookings(app: FastifyInstance) {
   app.get("/bookings", async () => bookingService.list());

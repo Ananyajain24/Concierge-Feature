@@ -1,5 +1,5 @@
 import type { Violation } from "@lohono/itinerary-engine";
-import { jsonCall } from "./llm.js";
+import { jsonCall } from "./llm";
 import { llmSelectionSchema, type LlmSelection } from "@lohono/shared-types";
 
 // One feedback pass — the model gets its previous JSON plus a violation report

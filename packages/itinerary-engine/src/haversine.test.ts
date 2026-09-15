@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { haversineMeters, estimateDriveSeconds } from "./haversine.js";
+import { haversineMeters, estimateDriveSeconds } from "./haversine";
 
 describe("haversineMeters", () => {
   it("is 0 for the same point", () => {

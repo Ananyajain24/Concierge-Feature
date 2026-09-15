@@ -1,6 +1,6 @@
 import { and, asc, eq, lte } from "drizzle-orm";
-import { db } from "../../db/client.js";
-import { jobs } from "../../db/schema/index.js";
+import { db } from "../../db/client";
+import { jobs } from "../../db/schema/index";
 
 export const jobsRepo = {
   enqueue: (kind: string, payload: Record<string, unknown>, runAt = new Date()) =>

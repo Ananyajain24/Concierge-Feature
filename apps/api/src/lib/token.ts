@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { loadEnv } from "../config/env.js";
+import { loadEnv } from "../config/env";
 
 // Signed opaque booking tokens: base64url(bookingId).sig
 // No JWT — one HMAC and it stays under 120 chars.

@@ -1,10 +1,10 @@
 // Populate poi_distances for every villa->POI and POI->POI pair in a destination.
 // Symmetric and complete: (a,b) and (b,a) are both written.
 import { eq } from "drizzle-orm";
-import { db, pool } from "../src/db/client.js";
-import { destinations, pois, villas } from "../src/db/schema/index.js";
-import { distanceRepo, type PairRow } from "../src/modules/distances/repository.js";
-import { HaversineDetourProvider, type DistanceProvider } from "../src/modules/distances/provider.js";
+import { db, pool } from "../src/db/client";
+import { destinations, pois, villas } from "../src/db/schema/index";
+import { distanceRepo, type PairRow } from "../src/modules/distances/repository";
+import { HaversineDetourProvider, type DistanceProvider } from "../src/modules/distances/provider";
 
 const providers: Record<string, () => DistanceProvider> = {
   "haversine-detour-v1": () => new HaversineDetourProvider(),

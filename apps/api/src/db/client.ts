@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-import { loadEnv } from "../config/env.js";
-import * as schema from "./schema/index.js";
+import { loadEnv } from "../config/env";
+import * as schema from "./schema/index";
 
 const env = loadEnv();
 

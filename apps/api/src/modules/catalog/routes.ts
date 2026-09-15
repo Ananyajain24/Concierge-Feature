@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { catalogService } from "./service.js";
+import { catalogService } from "./service";
 import {
   destinationCreateBody,
   destinationUpdateBody,
@@ -8,7 +8,7 @@ import {
   poiUpdateBody,
   villaCreateBody,
   villaUpdateBody,
-} from "./schema.js";
+} from "./schema";
 
 export async function registerCatalog(app: FastifyInstance) {
   // destinations

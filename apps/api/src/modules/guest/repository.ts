@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
-import { db } from "../../db/client.js";
-import { bookings, itineraries, bookingLeads } from "../../db/schema/index.js";
+import { db } from "../../db/client";
+import { bookings, itineraries, bookingLeads } from "../../db/schema/index";
 
 export const guestRepo = {
   publishedByToken: async (token: string) => {

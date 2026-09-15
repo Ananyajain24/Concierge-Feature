@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { jobsService } from "./service.js";
+import { jobsService } from "./service";
 
 export async function registerJobs(app: FastifyInstance) {
   app.get("/jobs/:id", async (req) => jobsService.get((req.params as { id: string }).id));

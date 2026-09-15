@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
-import { editingService } from "./service.js";
-import { addBody, freeTextBody, moveBody, removeBody, swapBody } from "./schema.js";
+import { editingService } from "./service";
+import { addBody, freeTextBody, moveBody, removeBody, swapBody } from "./schema";
 
 // Guest-scoped editing endpoints — auth is via the booking token in the URL.
 export async function registerEditing(app: FastifyInstance) {

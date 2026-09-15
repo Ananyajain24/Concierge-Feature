@@ -1,5 +1,5 @@
-import { getLlmProvider } from "./providers/index.js";
-import type { LlmJsonCallArgs, LlmJsonCallResult } from "./providers/types.js";
+import { getLlmProvider } from "./providers/index";
+import type { LlmJsonCallArgs, LlmJsonCallResult } from "./providers/types";
 
 export type JsonCallResult<T> = LlmJsonCallResult<T>;
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fitAffine, project } from "./affine.js";
+import { fitAffine, project } from "./affine";
 
 describe("fitAffine", () => {
   it("recovers an exact affine when given clean anchors", () => {

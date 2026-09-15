@@ -1,7 +1,7 @@
 import { and, eq, ilike, or } from "drizzle-orm";
-import { db } from "../../db/client.js";
-import { destinations, pois, villas } from "../../db/schema/index.js";
-import type { ListPoisQuery } from "./schema.js";
+import { db } from "../../db/client";
+import { destinations, pois, villas } from "../../db/schema/index";
+import type { ListPoisQuery } from "./schema";
 
 // ---- destinations ----
 

@@ -1,5 +1,5 @@
-import { verifyBookingToken } from "../../lib/token.js";
-import { guestRepo } from "./repository.js";
+import { verifyBookingToken } from "../../lib/token";
+import { guestRepo } from "./repository";
 
 export const guestService = {
   trip: async (token: string) => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { HaversineDetourProvider } from "./provider.js";
+import { HaversineDetourProvider } from "./provider";
 
 describe("HaversineDetourProvider", () => {
   it("is symmetric", async () => {

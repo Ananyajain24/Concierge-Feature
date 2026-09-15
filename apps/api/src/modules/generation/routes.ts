@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { generateItineraryForBooking } from "./service.js";
+import { generateItineraryForBooking } from "./service";
 
 // Manual trigger for testing; production path is the worker picking up jobs.
 export async function registerGeneration(app: FastifyInstance) {

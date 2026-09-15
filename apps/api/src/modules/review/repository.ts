@@ -1,6 +1,6 @@
 import { and, asc, eq } from "drizzle-orm";
-import { db } from "../../db/client.js";
-import { itineraries, itineraryEdits, bookings, villas, pois } from "../../db/schema/index.js";
+import { db } from "../../db/client";
+import { itineraries, itineraryEdits, bookings, villas, pois } from "../../db/schema/index";
 
 export const reviewRepo = {
   queue: () =>

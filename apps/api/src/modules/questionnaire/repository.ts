@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { db } from "../../db/client.js";
-import { guestPreferences } from "../../db/schema/index.js";
+import { db } from "../../db/client";
+import { guestPreferences } from "../../db/schema/index";
 
 export const preferencesRepo = {
   get: (bookingId: string) =>
