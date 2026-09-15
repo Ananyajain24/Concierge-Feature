@@ -22,6 +22,7 @@
     "@lohono/itinerary-engine": "workspace:*",
     "@lohono/map-projection": "workspace:*",
     "@lohono/shared-types": "workspace:*",
+    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.36.0",
     "fastify": "^5.0.0",
     "pg": "^8.13.0",

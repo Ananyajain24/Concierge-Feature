@@ -1,7 +1,8 @@
 import crypto from "node:crypto";
 import { eq } from "drizzle-orm";
 import type { Day, Poi, ReasonCode, Stop } from "@lohono/shared-types";
-import { WARNING_COPY, computeWarnings, validateItinerary } from "@lohono/itinerary-engine";
+import { WARNING_COPY } from "@lohono/shared-types";
+import { computeWarnings, validateItinerary } from "@lohono/itinerary-engine";
 import { db } from "../../db/client.js";
 import { bookings, itineraries, villas } from "../../db/schema/index.js";
 import { reviewRepo } from "../review/repository.js";
