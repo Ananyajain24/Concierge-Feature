@@ -2,6 +2,7 @@ import Fastify, { type FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
 import { loadEnv } from "./config/env.js";
 import { registerHealth } from "./modules/health/routes.js";
+import { registerCatalog } from "./modules/catalog/routes.js";
 
 export async function buildServer(): Promise<FastifyInstance> {
   const env = loadEnv();
@@ -25,6 +26,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   });
 
   await registerHealth(app);
+  await registerCatalog(app);
 
   return app;
 }
