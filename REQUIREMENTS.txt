@@ -1,0 +1,67 @@
+# Lohono Concierge - System Requirements & Setup
+
+## System Requirements (No Docker)
+
+### 1. Node.js
+- Required Version: >= 20
+- Download: https://nodejs.org/
+- Verify: `node --version`
+
+### 2. PostgreSQL
+- Required Version: >= 16
+- Download: https://www.postgresql.org/download/
+- For Windows: Use PostgreSQL installer or use pgAdmin for GUI management
+- Verify: `psql --version`
+- Start PostgreSQL service (Windows: PostgreSQL should auto-start as service)
+
+### 3. pnpm (Package Manager)
+- Required Version: 9.12.0
+- Install: `npm install -g pnpm`
+- Verify: `pnpm --version`
+
+### 4. API Keys
+- Anthropic API: https://console.anthropic.com/
+  - Get key at https://console.anthropic.com/account/keys
+- Gemini API (optional): https://aistudio.google.com/apikey
+
+## Project Dependencies
+
+### Root Level
+- turbo: ^2.1.0
+- typescript: ^5.6.0
+
+### API (@lohono/api)
+- @anthropic-ai/sdk: ^0.30.0
+- @google/genai: ^1.0.0
+- @fastify/cors: ^10.0.0
+- drizzle-orm: ^0.36.0
+- fastify: ^5.0.0
+- pg: ^8.13.0
+- pino-pretty: ^11.2.0
+- zod: ^3.23.8
+
+### Web (@lohono/web)
+- next: 15.0.0
+- react: 19.0.0-rc
+- react-dom: 19.0.0-rc
+- @tanstack/react-query: ^5.59.0
+- framer-motion: ^11.5.0
+- recharts: ^2.12.0
+- tailwindcss: ^3.4.13
+- zod: ^3.23.8
+
+### Build Tools
+- drizzle-kit: ^0.28.0
+- tsx: ^4.19.0
+- vitest: ^2.1.0
+
+## Network Requirements
+- Internet: For npm/pnpm downloads
+- Ports:
+  - 4000: API server (Fastify)
+  - 3000: Web server (Next.js)
+  - 5432: PostgreSQL database
+
+## Optional
+- pgAdmin: GUI tool for PostgreSQL (optional but helpful)
+  - Download: https://www.pgadmin.org/download/
