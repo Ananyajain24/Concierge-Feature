@@ -1,0 +1,8 @@
+{
+  "extends": "@lohono/config/tsconfig.node.json",
+  "include": ["src/**/*.ts", "scripts/**/*.ts"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "."
+  }
+}

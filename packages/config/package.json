@@ -1,0 +1,7 @@
+{
+  "name": "@lohono/config",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js",
+  "files": ["tsconfig.base.json", "tsconfig.node.json", "tsconfig.next.json"]
+}

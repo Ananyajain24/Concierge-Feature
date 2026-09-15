@@ -1,0 +1,24 @@
+{
+  "name": "lohono-concierge",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.12.0",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "db:push": "pnpm --filter @lohono/api db:push",
+    "db:seed": "pnpm --filter @lohono/api db:seed",
+    "db:studio": "pnpm --filter @lohono/api db:studio",
+    "db:distances": "pnpm --filter @lohono/api db:distances"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
