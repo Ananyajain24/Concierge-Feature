@@ -1,6 +1,6 @@
 import { doublePrecision, integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
-import { destinations } from "./destinations.js";
-import { idCol, timestamps } from "./_shared.js";
+import { destinations } from "./destinations";
+import { idCol, timestamps } from "./_shared";
 
 export const villas = pgTable("villas", {
   id: idCol,

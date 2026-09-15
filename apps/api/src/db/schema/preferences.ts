@@ -1,7 +1,7 @@
 import { jsonb, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import type { QuestionnaireAnswers } from "@lohono/shared-types";
-import { bookings } from "./bookings.js";
-import { timestamps } from "./_shared.js";
+import { bookings } from "./bookings";
+import { timestamps } from "./_shared";
 
 export const guestPreferences = pgTable("guest_preferences", {
   bookingId: uuid("booking_id").primaryKey().references(() => bookings.id, { onDelete: "cascade" }),

@@ -1,7 +1,7 @@
 import { integer, jsonb, pgTable, real, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import type { Day, PublishedSnapshot } from "@lohono/shared-types";
-import { bookings } from "./bookings.js";
-import { idCol, timestamps } from "./_shared.js";
+import { bookings } from "./bookings";
+import { idCol, timestamps } from "./_shared";
 
 export const itineraries = pgTable("itineraries", {
   id: idCol,

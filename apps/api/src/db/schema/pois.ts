@@ -1,7 +1,7 @@
 import { boolean, doublePrecision, integer, jsonb, pgTable, real, text, uuid } from "drizzle-orm/pg-core";
 import type { OpeningHours, Seasonality } from "@lohono/shared-types";
-import { destinations } from "./destinations.js";
-import { idCol, timestamps } from "./_shared.js";
+import { destinations } from "./destinations";
+import { idCol, timestamps } from "./_shared";
 
 export const pois = pgTable("pois", {
   id: idCol,

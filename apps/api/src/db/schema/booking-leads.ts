@@ -1,6 +1,6 @@
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
-import { itineraries } from "./itineraries.js";
-import { idCol, timestamps } from "./_shared.js";
+import { itineraries } from "./itineraries";
+import { idCol, timestamps } from "./_shared";
 
 export const bookingLeads = pgTable("booking_leads", {
   id: idCol,

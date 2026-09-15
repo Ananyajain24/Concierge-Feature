@@ -1,5 +1,5 @@
 import { jsonb, pgTable, text } from "drizzle-orm/pg-core";
-import { idCol, timestamps } from "./_shared.js";
+import { idCol, timestamps } from "./_shared";
 
 export const destinations = pgTable("destinations", {
   id: idCol,

@@ -1,7 +1,7 @@
 import { integer, jsonb, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import type { MapTransform } from "@lohono/shared-types";
-import { destinations } from "./destinations.js";
-import { idCol, timestamps } from "./_shared.js";
+import { destinations } from "./destinations";
+import { idCol, timestamps } from "./_shared";
 
 export const mapAssets = pgTable("map_assets", {
   id: idCol,

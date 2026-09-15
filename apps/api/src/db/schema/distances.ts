@@ -1,5 +1,5 @@
 import { integer, pgTable, primaryKey, text, uuid } from "drizzle-orm/pg-core";
-import { timestamps } from "./_shared.js";
+import { timestamps } from "./_shared";
 
 // A distance row applies to any pair — either poi<->poi or villa<->poi.
 // We store IDs as raw UUIDs (no FK) so pairs can point at either table;
