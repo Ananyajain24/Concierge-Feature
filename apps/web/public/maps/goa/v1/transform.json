@@ -1,0 +1,16 @@
+{
+  "kind": "affine",
+  "width": 2048,
+  "height": 1536,
+  "anchors": [
+    { "id": "arambol",    "lat": 15.6874, "lng": 73.7031, "x": 1230, "y": 60,   "label": "Arambol" },
+    { "id": "mandrem",    "lat": 15.6613, "lng": 73.7222, "x": 1200, "y": 260,  "label": "Mandrem" },
+    { "id": "ashwem",     "lat": 15.6432, "lng": 73.7361, "x": 1160, "y": 420,  "label": "Ashwem" },
+    { "id": "morjim",     "lat": 15.6316, "lng": 73.7327, "x": 1140, "y": 550,  "label": "Morjim" },
+    { "id": "chapora",    "lat": 15.6055, "lng": 73.7350, "x": 1100, "y": 780,  "label": "Chapora" },
+    { "id": "anjuna",     "lat": 15.5735, "lng": 73.7407, "x": 1035, "y": 1020, "label": "Anjuna" },
+    { "id": "baga",       "lat": 15.5527, "lng": 73.7517, "x": 1000, "y": 1200, "label": "Baga" },
+    { "id": "aguada",     "lat": 15.4924, "lng": 73.7734, "x": 950,  "y": 1470, "label": "Aguada" }
+  ],
+  "matrix": [0, 0, 0, 0, 0, 0]
+}
