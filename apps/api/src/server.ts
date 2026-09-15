@@ -3,6 +3,10 @@ import cors from "@fastify/cors";
 import { loadEnv } from "./config/env.js";
 import { registerHealth } from "./modules/health/routes.js";
 import { registerCatalog } from "./modules/catalog/routes.js";
+import { registerBookings } from "./modules/bookings/routes.js";
+import { registerQuestionnaire } from "./modules/questionnaire/routes.js";
+import { registerGeneration } from "./modules/generation/routes.js";
+import { registerJobs } from "./modules/jobs/routes.js";
 
 export async function buildServer(): Promise<FastifyInstance> {
   const env = loadEnv();
@@ -27,6 +31,10 @@ export async function buildServer(): Promise<FastifyInstance> {
 
   await registerHealth(app);
   await registerCatalog(app);
+  await registerBookings(app);
+  await registerQuestionnaire(app);
+  await registerGeneration(app);
+  await registerJobs(app);
 
   return app;
 }
