@@ -1,5 +1,6 @@
 import { jobsRepo } from "../modules/jobs/repository.js";
 import { generateItineraryForBooking } from "../modules/generation/service.js";
+import { slaMonitorTick } from "../modules/review/sla.js";
 
 type Handler = (payload: Record<string, unknown>) => Promise<unknown>;
 
@@ -10,7 +11,7 @@ const HANDLERS: Record<string, Handler> = {
     return generateItineraryForBooking(bookingId);
   },
   sla_monitor: async () => {
-    // Real body arrives in M4.
+    await slaMonitorTick(console.log);
     return { ok: true };
   },
 };

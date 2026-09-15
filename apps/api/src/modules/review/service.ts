@@ -1,0 +1,95 @@
+import type { Day, Poi } from "@lohono/shared-types";
+import { rankAlternates } from "@lohono/itinerary-engine";
+import { eq } from "drizzle-orm";
+import { reviewRepo } from "./repository.js";
+import { buildPublishedSnapshot } from "./snapshot.js";
+import { loadDriveMatrix } from "../generation/retriever.js";
+import { db } from "../../db/client.js";
+import { bookings, villas } from "../../db/schema/index.js";
+
+export const reviewService = {
+  queue: reviewRepo.queue,
+  get: reviewRepo.get,
+
+  detail: async (id: string) => {
+    const it = await reviewRepo.get(id);
+    if (!it) return null;
+    const booking = await db.select().from(bookings).where(eq(bookings.id, it.bookingId)).limit(1).then((r) => r[0]!);
+    const villa = await db.select().from(villas).where(eq(villas.id, booking.villaId)).limit(1).then((r) => r[0]!);
+    const pois = await reviewRepo.poisForItinerary(id);
+    return { itinerary: it, booking, villa, pois };
+  },
+
+  edit: async (params: {
+    itineraryId: string;
+    actor: "reviewer" | "guest" | "system";
+    reasonCode: string;
+    note?: string;
+    days: Day[];
+  }) => {
+    const before = await reviewRepo.get(params.itineraryId);
+    if (!before) throw new Error("itinerary not found");
+    const updated = await reviewRepo.updateDays(params.itineraryId, params.days, "review");
+    await reviewRepo.writeEdit({
+      itineraryId: params.itineraryId,
+      actor: params.actor,
+      before: (before.days ?? []) as never,
+      after: params.days as never,
+      reasonCode: params.reasonCode,
+      note: params.note ?? null,
+    });
+    return updated;
+  },
+
+  publish: async (id: string) => {
+    const it = await reviewRepo.get(id);
+    if (!it) throw new Error("itinerary not found");
+    const version = (it.version ?? 1);
+    const snap = await buildPublishedSnapshot(id, version, it.summary);
+    return reviewRepo.publish(id, snap, version);
+  },
+
+  regenerate: async (id: string, note: string) => {
+    // For MVP we simply flag and reset — the worker/generator picks it back up
+    // when re-enqueued (out of scope for a purely manual reviewer action here).
+    await reviewRepo.writeEdit({
+      itineraryId: id,
+      actor: "reviewer",
+      before: null,
+      after: null,
+      reasonCode: "COPY_TONE",
+      note: `Regeneration requested: ${note}`,
+    });
+    return { queued: true };
+  },
+
+  alternatesForStop: async (itineraryId: string, dayIndex: number, stopIndex: number) => {
+    const detail = await reviewService.detail(itineraryId);
+    if (!detail) return [];
+    const days = (detail.itinerary.days ?? []) as Day[];
+    const day = days[dayIndex];
+    const stop = day?.stops[stopIndex];
+    if (!day || !stop) return [];
+    const target = detail.pois.find((p) => p.id === stop.poiId);
+    if (!target) return [];
+    const currentIds = days.flatMap((d) => d.stops.map((s) => s.poiId));
+    const drive = await loadDriveMatrix(detail.pois.map((p) => p.id), detail.villa.id);
+
+    const driveFromPrev: Record<string, number> = {};
+    const prevId = stopIndex === 0 ? detail.villa.id : day.stops[stopIndex - 1]!.poiId;
+    for (const p of detail.pois) driveFromPrev[p.id] = drive[`${prevId}|${p.id}`] ?? 0;
+
+    return rankAlternates({
+      targetPoi: target as Poi,
+      candidates: detail.pois as Poi[],
+      currentItineraryPoiIds: currentIds,
+      driveSecondsFromContext: driveFromPrev,
+      prefs: {
+        vibes: [],
+        budget: "moderate",
+        kidFriendlyRequired: false,
+        travelMonth: new Date(String(detail.booking.checkIn)).getUTCMonth() + 1,
+      },
+    });
+  },
+};

@@ -1,0 +1,83 @@
+import { and, eq } from "drizzle-orm";
+import type { Day, Poi, PublishedSnapshot } from "@lohono/shared-types";
+import { db } from "../../db/client.js";
+import { bookings, villas, mapAssets, itineraries, pois } from "../../db/schema/index.js";
+
+// Build a self-contained render payload from live rows. On publish this jsonb
+// is what the guest endpoint returns — never a join.
+export async function buildPublishedSnapshot(
+  itineraryId: string,
+  version: number,
+  summary: string,
+): Promise<PublishedSnapshot> {
+  const it = await db.select().from(itineraries).where(eq(itineraries.id, itineraryId)).limit(1).then((r) => r[0]);
+  if (!it) throw new Error("itinerary not found");
+  const booking = await db.select().from(bookings).where(eq(bookings.id, it.bookingId)).limit(1).then((r) => r[0]);
+  if (!booking) throw new Error("booking not found");
+  const villa = await db.select().from(villas).where(eq(villas.id, booking.villaId)).limit(1).then((r) => r[0]);
+  if (!villa) throw new Error("villa not found");
+  const map = await db
+    .select()
+    .from(mapAssets)
+    .where(eq(mapAssets.destinationId, villa.destinationId))
+    .limit(1)
+    .then((r) => r[0]);
+  const destPois = await db.select().from(pois).where(eq(pois.destinationId, villa.destinationId));
+  const poiById = new Map<string, Poi>(destPois.map((p) => [p.id, p as Poi]));
+
+  const days = (it.days ?? []) as Day[];
+  const publishedDays = days.map((d) => ({
+    dayIndex: d.dayIndex,
+    date: d.date,
+    theme: d.theme,
+    stops: d.stops.map((s) => {
+      const poi = poiById.get(s.poiId);
+      return {
+        ...s,
+        poiName: poi?.name ?? "?",
+        poiCategory: poi?.category ?? "unknown",
+        poiLat: poi?.lat ?? 0,
+        poiLng: poi?.lng ?? 0,
+        bookable: poi?.bookable ?? false,
+        bookingUrl: poi?.bookingUrl ?? null,
+        photoUrl: poi?.photoUrl ?? null,
+        conciergeNote: poi?.conciergeNote ?? "",
+        durationMin: poi?.avgDurationMin ?? 60,
+      };
+    }),
+  }));
+
+  const snapshot: PublishedSnapshot = {
+    version,
+    villa: {
+      id: villa.id,
+      name: villa.name,
+      lat: villa.lat,
+      lng: villa.lng,
+      heroImageUrl: villa.heroImageUrl ?? null,
+    },
+    destinationId: villa.destinationId,
+    mapAsset: map
+      ? {
+          imageUrl: map.imageUrl,
+          transformJson: map.transform,
+          width: map.transform.width,
+          height: map.transform.height,
+          version: map.version,
+        }
+      : {
+          // MVP fallback: bake in the placeholder path.
+          imageUrl: "/maps/goa/v1/artwork.svg",
+          transformJson: { kind: "affine", matrix: [0,0,0,0,0,0], width: 2048, height: 1536, anchors: [] },
+          width: 2048,
+          height: 1536,
+          version: 1,
+        },
+    dates: { checkIn: String(booking.checkIn), checkOut: String(booking.checkOut) },
+    guestName: booking.guestName,
+    summary,
+    days: publishedDays,
+    warnings: [],
+  };
+  return snapshot;
+}
