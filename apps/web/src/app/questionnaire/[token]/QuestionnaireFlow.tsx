@@ -117,7 +117,7 @@ export function QuestionnaireFlow({
               <path d="M8 7.2 V11 M8 4.8 V4.9" />
             </svg>
             <span className="text-[13px] leading-snug text-graphite">
-              A concierge reads and fixes your plan before you see it — usually within a day.
+              You&apos;ll see your plan the moment it&apos;s built — usually under a minute, no waiting on anyone.
             </span>
           </div>
         </div>
@@ -137,7 +137,7 @@ export function QuestionnaireFlow({
             disabled={!canGoNext || submitting}
             onClick={last ? submit : () => setStep((s) => s + 1)}
           >
-            {submitting ? "Sending…" : last ? "Send to my concierge" : "Continue"}
+            {submitting ? "Building your plan…" : last ? "Build my itinerary" : "Continue"}
             {!submitting && (
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 8 H13 M9 4 L13 8 L9 12" />

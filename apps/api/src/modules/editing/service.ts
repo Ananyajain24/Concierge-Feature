@@ -199,10 +199,11 @@ export const editingService = {
 
   freeText: async (token: string, itineraryId: string, message: string) => {
     requireTokenAccess(token, itineraryId);
-    await db
-      .update(itineraries)
-      .set({ status: "review" })
-      .where(eq(itineraries.id, itineraryId));
+    // No human reviewer in front of the guest right now — flipping status to
+    // "review" here used to hand this to a concierge, but with nothing left
+    // to re-publish it, that would just hide the guest's own itinerary from
+    // them indefinitely. Log the request and leave the published trip up.
+    console.log(`[REQUEST] itinerary=${itineraryId}: ${message}`);
     await reviewRepo.writeEdit({
       itineraryId,
       actor: "guest",
@@ -211,6 +212,6 @@ export const editingService = {
       reasonCode: "COPY_TONE",
       note: `Guest free-text request: ${message}`,
     });
-    return { queuedForReview: true };
+    return { logged: true };
   },
 };

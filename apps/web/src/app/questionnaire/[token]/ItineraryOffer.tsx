@@ -81,14 +81,14 @@ export function ItineraryOffer({
               Would you like us to plan your days here?
             </h1>
             <p className="mt-4 text-[14.5px] leading-relaxed text-graphite">
-              Answer a few quick questions about your trip and a concierge will put together a day-by-day
-              plan around {villa.name} — with a map, real drive times, and every stop swappable.
+              Answer a few quick questions about your trip and we&apos;ll build a day-by-day plan around{" "}
+              {villa.name} on the spot — with a map, real drive times, and every stop swappable.
             </p>
 
             <ul className="mt-7 flex flex-col gap-3.5">
               {[
                 "About 90 seconds of questions",
-                "A concierge reads and fixes it before you see it",
+                "Your plan appears the moment it's built — no waiting on a person",
                 "Change anything yourself, any time",
               ].map((t) => (
                 <li key={t} className="flex items-center gap-3 text-[14px] text-graphite">

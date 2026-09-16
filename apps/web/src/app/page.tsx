@@ -48,9 +48,9 @@ export default async function HomePage() {
             Your trip, planned.
           </h1>
           <p className="mt-4 max-w-[50ch] text-[15px] leading-[1.72] text-graphite">
-            Tell us about your stay, answer a few quick questions, and a concierge will put together a
-            day-by-day plan around your villa — with a map, real drive times, and every stop bookable
-            right there.
+            Tell us about your stay, answer a few quick questions, and we&apos;ll build a day-by-day plan
+            around your villa on the spot — with a map, real drive times, and every stop bookable right
+            there.
           </p>
 
           <div className="mt-10 flex flex-col gap-2.5">

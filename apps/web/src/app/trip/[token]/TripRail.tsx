@@ -67,9 +67,9 @@ export function TripRail({
   }
 
   async function sendConciergeMessage(message: string) {
-    // This is specifically an edit request (not a general contact form), so
-    // it puts the itinerary back into review — the guest sees the plan is
-    // being redone rather than the version that no longer reflects the ask.
+    // Logged for the record (and swap/remove/add already publish a new
+    // version instantly) — no reviewer sits in front of this right now, so
+    // the request is noted rather than pulling the guest's own plan down.
     await api(`/trip/${token}/itinerary/${itineraryId}/message`, {
       method: "POST",
       body: JSON.stringify({ message }),
@@ -129,12 +129,12 @@ export function TripRail({
         <p className="eyebrow">Your concierge</p>
         {messageSent ? (
           <p className="mt-3 text-sm leading-relaxed text-graphite">
-            Sent — your concierge is redoing this and it&apos;ll be back with you shortly.
+            Sent — noted for your trip. Swap anything yourself any time.
           </p>
         ) : (
           <>
             <p className="mb-4 mt-3 text-sm leading-relaxed text-graphite">
-              Want something changed? Swap any stop yourself, or tell us and we&apos;ll redo the day.
+              Want something changed? Swap any stop yourself — or send a note and we&apos;ll take it from there.
             </p>
             <Button className="w-full" onClick={() => setSheetOpen(true)}>
               Message your concierge

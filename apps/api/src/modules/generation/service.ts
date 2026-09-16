@@ -1,9 +1,10 @@
 import crypto from "node:crypto";
 import { eq } from "drizzle-orm";
-import { validateItinerary } from "@lohono/itinerary-engine";
+import { computeWarnings, validateItinerary } from "@lohono/itinerary-engine";
 import {
   llmNarrationSchema,
   llmSelectionSchema,
+  WARNING_COPY,
   type Day,
   type LlmSelection,
   type Poi,
@@ -17,6 +18,7 @@ import { buildSelectPrompt, V1_SELECT_VERSION } from "./prompts/v1-select";
 import { buildNarratePrompt, V1_NARRATE_VERSION } from "./prompts/v1-narrate";
 import { jsonCall } from "./llm";
 import { repairSelection } from "./repair";
+import { reviewService } from "../review/service";
 
 export async function generateItineraryForBooking(bookingId: string) {
   const booking = await db.select().from(bookings).where(eq(bookings.id, bookingId)).limit(1).then((r) => r[0]);
@@ -114,27 +116,53 @@ export async function generateItineraryForBooking(bookingId: string) {
   const narratedDays = mergeNarration(days, parsedNar.data);
   const summary = parsedNar.data.summary;
 
-  const status = flaggedForReview ? "review" : "review"; // always go to review — reviewer publishes
-  const slaDueAt = new Date(Date.now() + 24 * 3600 * 1000);
+  // No human reviewer in front of the guest right now, so this is the one
+  // chance to attach the engine's own advisory flags (KID_UNFRIENDLY,
+  // CLOSED_TODAY, ...) before the guest ever sees the plan — previously
+  // these only appeared after a guest's first edit, as a side effect of
+  // editing/service.ts's applyAndPublish running the same check.
+  const kidAges = prefs.answers.kidAges;
+  const { stopWarnings } = computeWarnings({
+    days: narratedDays,
+    poisById: poiById,
+    driveSecondsByPair: secondsOnly(driveMatrix),
+    travelMonth,
+    hasYoungKids: kidAges.some((n) => n <= 10),
+  });
+  const withWarnings = narratedDays.map((d) => ({
+    ...d,
+    stops: d.stops.map((s) => ({
+      ...s,
+      warnings: stopWarnings
+        .filter((w) => w.dayIndex === d.dayIndex && w.poiId === s.poiId)
+        .map((w) => WARNING_COPY[w.code]),
+    })),
+  }));
 
   const [row] = await db
     .insert(itineraries)
     .values({
       id: crypto.randomUUID(),
       bookingId,
-      status,
-      slaDueAt,
+      status: "draft",
       promptVersion: `${V1_SELECT_VERSION}+${V1_NARRATE_VERSION}`,
       model: s1.model,
       costUsd: totalCost,
       latencyMs: totalLatencyMs,
       version: 1,
-      days: narratedDays,
+      days: withWarnings,
       summary,
     })
     .returning();
 
-  return { itinerary: row, repairAttempted, flaggedForReview };
+  // Human review is switched off for now (CLAUDE.md rule 3 revisited) — the
+  // guest sees this the moment generation finishes, not after a reviewer
+  // approves it. reviewService.publish is the same path the admin "Approve &
+  // publish" button used to call, so the snapshot it produces is identical.
+  if (!row) throw new Error("failed to insert itinerary row");
+  const published = await reviewService.publish(row.id);
+
+  return { itinerary: published ?? row, repairAttempted, flaggedForReview };
 }
 
 // Convert LLM selection to internal Day objects with drive times populated.

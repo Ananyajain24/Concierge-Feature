@@ -187,7 +187,7 @@ export function TripView({ trip }: { trip: Trip }) {
               and your concierge will put together the menu.
             </p>
             {chefSent ? (
-              <p className="text-sm text-brass">Sent — your concierge will follow up.</p>
+              <p className="text-sm text-brass">Sent — noted for your trip.</p>
             ) : (
               <Button className="w-full bg-brass text-ink hover:bg-brass" onClick={() => setChefSheetOpen(true)}>
                 Ask about it
@@ -197,8 +197,8 @@ export function TripView({ trip }: { trip: Trip }) {
           <div className="rounded-md border border-linen bg-sand p-5">
             <p className="eyebrow">Why these places</p>
             <p className="mt-3 text-sm leading-[1.7] text-graphite">
-              Every stop here is one our team has been to, and a person read this whole plan before
-              it reached you.
+              Every stop here is a real place from our own curated {s.destinationName} list — never
+              invented, only ever picked from places our team has actually been to.
             </p>
           </div>
         </aside>
