@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Booking, Destination, QuestionnaireAnswers, Villa } from "@lohono/shared-types";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
+import { GuestScreen } from "@/components/guest/GuestScreen";
 import { EMPTY_ANSWERS, STEPS, type StepDef } from "./questions";
 import { StepBody } from "./StepBody";
 import { CraftingState } from "./CraftingState";
@@ -71,25 +72,25 @@ export function QuestionnaireFlow({
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col bg-ivory">
-      <div className="px-6 pt-7">
+    <GuestScreen>
+      <div className="px-6 pt-6">
         <div className="flex items-center justify-between">
           <button
             onClick={() => (step === 0 ? setOfferAccepted(false) : setStep((s) => s - 1))}
             aria-label="Back"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-linen"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-linen"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
               <path d="M10 3 L5 8 L10 13" />
             </svg>
           </button>
-          <span className="font-display text-[17px] uppercase tracking-[0.22em]">Lohono</span>
-          <span className="text-[13px] text-muted">
+          <span className="font-display text-[16px] uppercase tracking-[0.22em]">Lohono</span>
+          <span className="text-[12.5px] text-muted">
             {step + 1} / {STEPS.length}
           </span>
         </div>
 
-        <div className="mt-6 flex gap-1.5" role="progressbar" aria-valuenow={step + 1} aria-valuemax={STEPS.length}>
+        <div className="mt-5 flex gap-1.5" role="progressbar" aria-valuenow={step + 1} aria-valuemax={STEPS.length}>
           {STEPS.map((s, i) => (
             <span
               key={s.id}
@@ -99,33 +100,33 @@ export function QuestionnaireFlow({
         </div>
       </div>
 
-      <section className="flex flex-1 flex-col px-6 pt-9">
+      <section className="flex flex-1 flex-col px-6 pt-6">
         <p className="eyebrow">
           {villa.name} · {fmt(booking.checkIn)} – {fmt(booking.checkOut)}
         </p>
-        <h1 className="mt-3 font-display text-[34px] leading-[1.12] tracking-tight">{current.title}</h1>
-        <p className="mt-3 text-[14.5px] leading-relaxed text-graphite">{current.sub}</p>
+        <h1 className="mt-2.5 font-display text-[28px] leading-[1.15] tracking-tight">{current.title}</h1>
+        <p className="mt-2 text-[14px] leading-relaxed text-graphite">{current.sub}</p>
 
-        <div className="mt-7">
+        <div className="mt-6">
           <StepBody step={current} answers={answers} setAnswers={setAnswers} />
         </div>
 
-        <div className="mt-auto pb-5 pt-8">
-          <div className="flex items-start gap-3 rounded-md bg-sand px-4 py-3.5">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="mt-0.5 shrink-0 text-brass-deep">
+        <div className="mt-auto pb-5 pt-6">
+          <div className="flex items-start gap-2.5 rounded-md bg-sand px-3.5 py-3">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="mt-0.5 shrink-0 text-brass-deep">
               <circle cx="8" cy="8" r="6.5" />
               <path d="M8 7.2 V11 M8 4.8 V4.9" />
             </svg>
-            <span className="text-[13px] leading-snug text-graphite">
-              You&apos;ll see your plan the moment it&apos;s built — usually under a minute, no waiting on anyone.
+            <span className="text-[12.5px] leading-snug text-graphite">
+              You&apos;ll see your plan the moment it&apos;s built — usually under a minute.
             </span>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-linen px-6 pb-7 pt-4">
-        {error && <p className="mb-3 text-[13px] text-terracotta">{error}</p>}
-        <div className="flex gap-3">
+      <footer className="border-t border-linen px-6 pb-6 pt-3.5">
+        {error && <p className="mb-2.5 text-[13px] text-terracotta">{error}</p>}
+        <div className="flex gap-2.5">
           {!last && skippable && (
             <Button variant="secondary" size="lg" onClick={() => setStep((s) => s + 1)}>
               Skip
@@ -145,9 +146,9 @@ export function QuestionnaireFlow({
             )}
           </Button>
         </div>
-        <p className="mt-3 text-center text-xs text-muted">Takes about 90 seconds · saved as you go</p>
+        <p className="mt-2.5 text-center text-xs text-muted">Takes about 90 seconds · saved as you go</p>
       </footer>
-    </main>
+    </GuestScreen>
   );
 }
 

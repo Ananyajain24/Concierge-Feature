@@ -21,9 +21,9 @@ interface Options {
   maxScale?: number;
 }
 
-// Drag to pan, buttons (or ctrl/cmd+wheel) to zoom. Plain wheel/trackpad
-// scroll does nothing — the map must never fight the page for scroll, which
-// is what happens if every scroll over it gets treated as a zoom gesture.
+// Drag to pan, the +/- buttons to zoom. The wheel/trackpad never does
+// anything to the map, in either direction — see the note on onWheel's old
+// home below for why even a ctrl-gated version of that still misbehaved.
 export function usePanZoom(opts: Options) {
   const { minScale = 0.3, maxScale = 5 } = opts;
   const [vp, setVp] = useState<MapViewport>({ scale: 1, tx: 0, ty: 0 });
@@ -93,28 +93,14 @@ export function usePanZoom(opts: Options) {
     drag.current = null;
   }, []);
 
-  // Only ctrl/cmd+wheel zooms (the universal "this embed won't eat your
-  // scroll" convention). A plain wheel event is left completely alone so the
-  // page scrolls right through the map like anything else on it.
-  const onWheel = useCallback(
-    (e: React.WheelEvent) => {
-      if (!e.ctrlKey && !e.metaKey) return;
-      e.preventDefault();
-      const el = containerRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const px = e.clientX - rect.left;
-      const py = e.clientY - rect.top;
-      setVp((prev) => {
-        const factor = e.deltaY < 0 ? 1.1 : 0.9;
-        const nextScale = Math.min(maxScale, Math.max(minScale, prev.scale * factor));
-        const k = nextScale / prev.scale;
-        return clamp({ scale: nextScale, tx: px - (px - prev.tx) * k, ty: py - (py - prev.ty) * k });
-      });
-    },
-    [clamp, minScale, maxScale],
-  );
-
+  // The wheel does nothing at all, on purpose — not even ctrl+wheel. A
+  // laptop trackpad reports two-finger pinch as a wheel event with
+  // ctrlKey:true regardless of whether Ctrl is actually held, and an
+  // imprecise two-finger *scroll* attempt commonly carries a little pinch
+  // with it too. Gating zoom on ctrlKey therefore still fired mid-scroll on
+  // a trackpad — the exact "keeps zooming in and out" complaint. The map is
+  // fully static under any wheel/trackpad input now; the +/- buttons are the
+  // only way to zoom.
   const zoomBy = useCallback(
     (factor: number) => {
       const el = containerRef.current;
@@ -149,7 +135,7 @@ export function usePanZoom(opts: Options) {
   return {
     containerRef,
     viewport: vp,
-    handlers: { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp, onWheel },
+    handlers: { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp },
     reset,
     zoomBy,
   };
