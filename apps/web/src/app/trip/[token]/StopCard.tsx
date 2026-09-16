@@ -3,10 +3,13 @@
 import { useState } from "react";
 import type { GuestBooking, PublishedStop } from "@lohono/shared-types";
 import { api } from "@/lib/api";
+import { externalSearchUrl } from "@/lib/externalSearch";
 import { Button } from "@/components/ui/Button";
 import { StopThumb } from "@/components/itinerary/StopThumb";
 import { WarningBanner } from "@/components/itinerary/WarningBanner";
 import { BookingConfirmation } from "@/components/itinerary/BookingConfirmation";
+import { BookingModal } from "@/components/itinerary/BookingModal";
+import { PlaceScene } from "@/components/map/places";
 import { SwapDrawer } from "./SwapDrawer";
 
 const CTA: Record<string, string> = {
@@ -16,6 +19,15 @@ const CTA: Record<string, string> = {
   spa: "Book a treatment",
   watersport: "Book this",
   day_trip: "Book this",
+};
+
+const CATEGORY_LABEL: Record<string, string> = {
+  restaurant: "Restaurant",
+  cafe: "Café",
+  bar: "Bar",
+  spa: "Spa",
+  watersport: "Watersport",
+  day_trip: "Day trip",
 };
 
 export function StopCard({
@@ -40,29 +52,10 @@ export function StopCard({
   onBooked: () => void;
 }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [booking, setBooking] = useState<GuestBooking | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const driveMin = Math.round(stop.driveFromPreviousSec / 60);
   const driveKm = stop.driveFromPreviousMeters / 1000;
-
-  async function bookClick(e: React.MouseEvent) {
-    e.stopPropagation();
-    setSubmitting(true);
-    setError(null);
-    try {
-      const row = await api<GuestBooking>(`/trip/${token}/itinerary/${itineraryId}/book`, {
-        method: "POST",
-        body: JSON.stringify({ stopId: stop.id }),
-      });
-      setBooking(row);
-      onBooked();
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setSubmitting(false);
-    }
-  }
 
   return (
     <>
@@ -94,14 +87,6 @@ export function StopCard({
             </p>
           )}
 
-          {stop.bookable && (stop.address || stop.phone || stop.priceInr != null) && !booking && (
-            <p className="mt-2 text-[12.5px] text-muted">
-              {stop.address && <span>{stop.address} </span>}
-              {stop.phone && <span>· {stop.phone} </span>}
-              {stop.priceInr != null && <span>· ₹{stop.priceInr.toLocaleString("en-IN")} per person</span>}
-            </p>
-          )}
-
           <WarningBanner codes={stop.warnings} />
 
           {booking ? (
@@ -109,8 +94,14 @@ export function StopCard({
           ) : (
             <div className="mt-3.5 flex flex-wrap items-center gap-2.5">
               {stop.bookable && (
-                <Button size="sm" onClick={bookClick} disabled={submitting}>
-                  {submitting ? "Booking…" : (CTA[stop.poiCategory] ?? "Book this")}
+                <Button
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModalOpen(true);
+                  }}
+                >
+                  {CTA[stop.poiCategory] ?? "Book this"}
                 </Button>
               )}
               <Button
@@ -123,11 +114,45 @@ export function StopCard({
               >
                 Swap this stop
               </Button>
-              {error && <span className="text-[12.5px] text-terracotta">{error}</span>}
             </div>
           )}
         </div>
       </li>
+
+      {modalOpen && (
+        <BookingModal
+          categoryLabel={CATEGORY_LABEL[stop.poiCategory] ?? stop.poiCategory.replace(/_/g, " ")}
+          title={stop.poiName}
+          picture={<PlaceScene category={stop.poiCategory} name={stop.poiName} uid={`modal-${stop.id}`} />}
+          description={stop.copy || stop.conciergeNote}
+          address={stop.address}
+          phone={stop.phone}
+          priceInr={stop.priceInr}
+          priceNote={stop.priceInr != null ? `${stop.priceInr.toLocaleString("en-IN")} per person` : undefined}
+          externalUrl={externalSearchUrl(stop.poiName, stop.address ?? "Goa")}
+          onConfirm={async () => {
+            const row = await api<GuestBooking>(`/trip/${token}/itinerary/${itineraryId}/book`, {
+              method: "POST",
+              body: JSON.stringify({ stopId: stop.id }),
+            });
+            setBooking(row);
+            onBooked();
+            return row;
+          }}
+          onLogExternal={() => {
+            api("/trip/lead", {
+              method: "POST",
+              body: JSON.stringify({
+                itineraryId,
+                stopId: stop.id,
+                poiId: stop.poiId,
+                url: externalSearchUrl(stop.poiName, stop.address ?? "Goa"),
+              }),
+            }).catch(() => null);
+          }}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
 
       {drawerOpen && (
         <SwapDrawer

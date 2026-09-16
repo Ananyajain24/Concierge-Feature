@@ -84,16 +84,18 @@ export function TripView({ trip }: { trip: Trip }) {
           <span className="eyebrow hidden text-brass sm:inline">Concierge</span>
         </div>
         <div className="flex items-center gap-3">
-          {bookingsSummary && bookingsSummary.bookings.length > 0 && (
-            <Link
-              href={`/trip/${token}/bookings`}
-              className="inline-flex items-center gap-2 rounded-full border border-linen px-3.5 py-1.5 text-xs text-graphite hover:border-brass"
-            >
-              {formatInr(bookingsSummary.totalInr)} spent · {bookingsSummary.bookings.length}{" "}
-              {bookingsSummary.bookings.length === 1 ? "booking" : "bookings"}
-            </Link>
-          )}
-          <span className="inline-flex items-center gap-2 rounded-full border border-linen px-3.5 py-1.5 text-xs text-graphite">
+          <Link
+            href={`/trip/${token}/bookings`}
+            className="inline-flex items-center gap-2 rounded-full bg-brass-deep px-3.5 py-1.5 text-xs font-medium text-ivory hover:bg-brass-hover"
+          >
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 5 H13 L12 13 H4 Z M5.5 5 V3.5 A2.5 2.5 0 0 1 10.5 3.5 V5" />
+            </svg>
+            {bookingsSummary && bookingsSummary.bookings.length > 0
+              ? `${formatInr(bookingsSummary.totalInr)} · ${bookingsSummary.bookings.length} ${bookingsSummary.bookings.length === 1 ? "booking" : "bookings"}`
+              : "View my bookings"}
+          </Link>
+          <span className="hidden items-center gap-2 rounded-full border border-linen px-3.5 py-1.5 text-xs text-graphite sm:inline-flex">
             <span className="h-1.5 w-1.5 rounded-full bg-sage" />
             Published · v{trip.version}
           </span>
@@ -125,6 +127,7 @@ export function TripView({ trip }: { trip: Trip }) {
           villaName={s.villa.name}
           destinationName={s.destinationName}
           checkIn={s.dates.checkIn}
+          checkOut={s.dates.checkOut}
           onBooked={refreshBookings}
         />
       </div>
@@ -199,6 +202,18 @@ export function TripView({ trip }: { trip: Trip }) {
             </p>
           </div>
         </aside>
+      </div>
+
+      <div className="border-t border-linen px-6 py-10 text-center md:px-12">
+        <p className="mb-4 text-[14.5px] text-graphite">
+          Booked a table, a car, a scooter? Everything you&apos;ve confirmed, and what it comes to, lives in one place.
+        </p>
+        <Link
+          href={`/trip/${token}/bookings`}
+          className="inline-flex items-center justify-center rounded-full bg-brass-deep px-8 py-3 text-sm font-medium text-ivory hover:bg-brass-hover"
+        >
+          View my bookings
+        </Link>
       </div>
 
       <footer className="border-t border-linen py-8 text-center text-xs text-muted">

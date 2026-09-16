@@ -6,17 +6,24 @@ import { api } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { MessageSheet } from "@/components/itinerary/MessageSheet";
 import { BookingConfirmation } from "@/components/itinerary/BookingConfirmation";
+import { BookingModal } from "@/components/itinerary/BookingModal";
+import { TransferScene, ScooterScene } from "@/components/map/places/legs";
+
+const TRANSFER_FLAT_INR = 3200; // mirrors apps/api/src/modules/ledger/service.ts
+const SCOOTER_PER_DAY_INR = 400;
 
 // The commission rail. Flights redirect to a real external search — Lohono
 // never confirms a flight price, so there is no in-app booking for it, only
-// a logged lead. Transfer and scooter are Lohono's own arrangement, so they
-// book in-app for real and come back with a driver or rental contact.
+// a logged lead. Transfer and scooter are Lohono's own arrangement: a picture
+// + details popup first, then they book in-app for real and come back with a
+// driver or rental contact.
 export function TripRail({
   token,
   itineraryId,
   villaName,
   destinationName,
   checkIn,
+  checkOut,
   onBooked,
 }: {
   token: string;
@@ -24,19 +31,24 @@ export function TripRail({
   villaName: string;
   destinationName: string;
   checkIn: string;
+  checkOut: string;
   onBooked: () => void;
 }) {
   const [flightOpened, setFlightOpened] = useState(false);
   const [legBookings, setLegBookings] = useState<Partial<Record<LegKind, GuestBooking>>>({});
-  const [pendingLeg, setPendingLeg] = useState<LegKind | null>(null);
+  const [openModal, setOpenModal] = useState<LegKind | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [messageSent, setMessageSent] = useState(false);
+
+  const days = Math.max(
+    1,
+    Math.round((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86_400_000),
+  );
+  const scooterPrice = SCOOTER_PER_DAY_INR * days;
 
   function findFlights() {
     const url = `https://www.google.com/travel/flights?q=${encodeURIComponent(`Flights to ${destinationName} on ${checkIn}`)}`;
     window.open(url, "_blank", "noopener");
-    // Still logged as a lead — the click is the product even though the
-    // guest finishes the booking on the airline/OTA's own site.
     api("/trip/lead", {
       method: "POST",
       body: JSON.stringify({ itineraryId, stopId: "leg:flights", url }),
@@ -45,17 +57,13 @@ export function TripRail({
   }
 
   async function bookLeg(leg: LegKind) {
-    setPendingLeg(leg);
-    try {
-      const row = await api<GuestBooking>(`/trip/${token}/itinerary/${itineraryId}/book-leg`, {
-        method: "POST",
-        body: JSON.stringify({ leg }),
-      });
-      setLegBookings((prev) => ({ ...prev, [leg]: row }));
-      onBooked();
-    } finally {
-      setPendingLeg(null);
-    }
+    const row = await api<GuestBooking>(`/trip/${token}/itinerary/${itineraryId}/book-leg`, {
+      method: "POST",
+      body: JSON.stringify({ leg }),
+    });
+    setLegBookings((prev) => ({ ...prev, [leg]: row }));
+    onBooked();
+    return row;
   }
 
   async function sendConciergeMessage(message: string) {
@@ -92,11 +100,10 @@ export function TripRail({
             <span className="text-sm">Airport transfer</span>
             {!legBookings.transfer && (
               <button
-                onClick={() => bookLeg("transfer")}
-                disabled={pendingLeg === "transfer"}
-                className="text-[13px] font-medium text-brass-hover hover:text-ink disabled:opacity-50"
+                onClick={() => setOpenModal("transfer")}
+                className="text-[13px] font-medium text-brass-hover hover:text-ink"
               >
-                {pendingLeg === "transfer" ? "…" : "Arrange a car"}
+                Arrange a car
               </button>
             )}
           </div>
@@ -107,11 +114,10 @@ export function TripRail({
             <span className="text-sm">Scooters for the trip</span>
             {!legBookings.scooter && (
               <button
-                onClick={() => bookLeg("scooter")}
-                disabled={pendingLeg === "scooter"}
-                className="text-[13px] font-medium text-brass-hover hover:text-ink disabled:opacity-50"
+                onClick={() => setOpenModal("scooter")}
+                className="text-[13px] font-medium text-brass-hover hover:text-ink"
               >
-                {pendingLeg === "scooter" ? "…" : "Reserve"}
+                Reserve
               </button>
             )}
           </div>
@@ -136,6 +142,31 @@ export function TripRail({
           </>
         )}
       </div>
+
+      {openModal === "transfer" && (
+        <BookingModal
+          categoryLabel="Airport transfer"
+          title={`${villaName} ⇄ Airport`}
+          picture={<TransferScene />}
+          description="A private car both ways, timed to your flight — Lohono's own fleet, not a third-party dispatch."
+          priceInr={TRANSFER_FLAT_INR}
+          onConfirm={() => bookLeg("transfer")}
+          onClose={() => setOpenModal(null)}
+        />
+      )}
+
+      {openModal === "scooter" && (
+        <BookingModal
+          categoryLabel="Scooter rental"
+          title={`Scooter for your stay (${days} ${days === 1 ? "day" : "days"})`}
+          picture={<ScooterScene />}
+          description="Delivered and collected at the villa — helmets included."
+          priceInr={scooterPrice}
+          priceNote={`₹${SCOOTER_PER_DAY_INR}/day × ${days} = ₹${scooterPrice.toLocaleString("en-IN")}`}
+          onConfirm={() => bookLeg("scooter")}
+          onClose={() => setOpenModal(null)}
+        />
+      )}
 
       {sheetOpen && (
         <MessageSheet
