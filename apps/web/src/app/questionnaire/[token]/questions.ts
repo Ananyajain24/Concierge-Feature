@@ -1,14 +1,21 @@
 import type { QuestionnaireAnswers } from "@lohono/shared-types";
 
-export type StepId =
-  | "vibes" | "pace" | "party" | "kids" | "budget" | "interests" | "dietary" | "mobility";
+// Every step is multiple-choice — chips, single or multi-select. No free
+// text anywhere, so there is nothing for a guest to write that a concierge
+// then has to interpret, and nothing the LLM prompt has to parse loosely.
+export type StepId = "vibes" | "pace" | "party" | "kids" | "budget" | "interests" | "dietary" | "mobility";
+
+export interface ChipOption {
+  value: string;
+  label: string;
+}
 
 export interface StepDef {
   id: StepId;
   title: string;
   sub: string;
-  kind: "chips-multi" | "chips-single" | "text" | "kids" | "textarea";
-  options?: { value: string; label: string; hint?: string }[];
+  kind: "chips-multi" | "chips-single";
+  options: ChipOption[];
 }
 
 export const STEPS: StepDef[] = [
@@ -39,8 +46,31 @@ export const STEPS: StepDef[] = [
       { value: "packed", label: "Pack it in" },
     ],
   },
-  { id: "party", title: "Who's coming?", sub: "One sentence is enough.", kind: "text" },
-  { id: "kids", title: "Kids", sub: "Ages of any children in the party.", kind: "kids" },
+  {
+    id: "party",
+    title: "Who's coming?",
+    sub: "Pick the one that fits best.",
+    kind: "chips-single",
+    options: [
+      { value: "Just the two of us", label: "Just the two of us" },
+      { value: "A family with kids", label: "A family with kids" },
+      { value: "A multi-generational family", label: "A multi-generational family" },
+      { value: "A group of friends", label: "A group of friends" },
+      { value: "Solo trip", label: "Solo trip" },
+    ],
+  },
+  {
+    id: "kids",
+    title: "Ages of any children?",
+    sub: "Pick all that apply — it changes how the days are paced.",
+    kind: "chips-multi",
+    options: [
+      { value: "none", label: "No children" },
+      { value: "under5", label: "Under 5" },
+      { value: "5to10", label: "5 – 10" },
+      { value: "11to17", label: "11 – 17" },
+    ],
+  },
   {
     id: "budget",
     title: "Budget",
@@ -56,8 +86,18 @@ export const STEPS: StepDef[] = [
   {
     id: "interests",
     title: "Anything you especially want to do?",
-    sub: "Comma-separated. Optional.",
-    kind: "text",
+    sub: "Pick as many as you like. Optional.",
+    kind: "chips-multi",
+    options: [
+      { value: "foodie", label: "Great meals" },
+      { value: "cultural", label: "Heritage & culture" },
+      { value: "adventure", label: "Adventure & watersports" },
+      { value: "wellness", label: "Spa & wellness" },
+      { value: "shopping", label: "Markets & shopping" },
+      { value: "nature", label: "Nature & wildlife" },
+      { value: "party", label: "Nightlife" },
+      { value: "photogenic", label: "Photo-worthy spots" },
+    ],
   },
   {
     id: "dietary",
@@ -72,7 +112,19 @@ export const STEPS: StepDef[] = [
       { value: "no_seafood", label: "No seafood" },
     ],
   },
-  { id: "mobility", title: "Anything we should know?", sub: "Mobility, health, or preferences.", kind: "textarea" },
+  {
+    id: "mobility",
+    title: "Anything we should know?",
+    sub: "Pick any that apply. Optional.",
+    kind: "chips-multi",
+    options: [
+      { value: "none", label: "No concerns" },
+      { value: "elderly", label: "Traveling with elderly guests" },
+      { value: "wheelchair", label: "Wheelchair access needed" },
+      { value: "infant", label: "Traveling with an infant" },
+      { value: "minimal_walking", label: "Prefer minimal walking" },
+    ],
+  },
 ];
 
 export const EMPTY_ANSWERS: QuestionnaireAnswers = {
@@ -84,4 +136,12 @@ export const EMPTY_ANSWERS: QuestionnaireAnswers = {
   interests: [],
   dietary: [],
   mobilityNotes: "",
+};
+
+// Chip value -> representative age fed to QuestionnaireAnswers.kidAges,
+// which downstream only ever checks against a "10 and under" threshold.
+export const KID_RANGE_AGE: Record<string, number> = {
+  under5: 3,
+  "5to10": 8,
+  "11to17": 14,
 };

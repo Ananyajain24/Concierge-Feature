@@ -57,6 +57,11 @@ export const publishedStopSchema = stopSchema.extend({
   photoUrl: z.string().url().nullable(),
   conciergeNote: z.string(),
   durationMin: z.number().int().nonnegative(),
+  // Denormalised so the guest page can book and show a confirmation without
+  // another round trip — same rule as everything else in the snapshot.
+  address: z.string().nullable().default(null),
+  phone: z.string().nullable().default(null),
+  priceInr: z.number().int().nonnegative().nullable().default(null),
 });
 export type PublishedStop = z.infer<typeof publishedStopSchema>;
 

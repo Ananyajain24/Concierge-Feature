@@ -11,6 +11,7 @@ import { registerJobs } from "./modules/jobs/routes";
 import { registerReview } from "./modules/review/routes";
 import { registerGuest } from "./modules/guest/routes";
 import { registerEditing } from "./modules/editing/routes";
+import { registerLedger } from "./modules/ledger/routes";
 import { registerInsights } from "./modules/insights/routes";
 
 export async function buildServer(): Promise<FastifyInstance> {
@@ -52,6 +53,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   await registerReview(app);
   await registerGuest(app);
   await registerEditing(app);
+  await registerLedger(app);
   await registerInsights(app);
 
   return app;

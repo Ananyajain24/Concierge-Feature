@@ -30,6 +30,7 @@ export async function retrieveCandidates(input: RetrieveInput): Promise<Poi[]> {
       const distance = haversineMeters({ lat: p.lat, lng: p.lng }, { lat: input.villaLat, lng: input.villaLng });
       const score = scorePoi(p as Poi, {
         vibes: input.answers.vibes,
+        interests: input.answers.interests,
         budget: input.answers.budget,
         kidFriendlyRequired: kidsPresent,
         travelMonth: input.travelMonth,

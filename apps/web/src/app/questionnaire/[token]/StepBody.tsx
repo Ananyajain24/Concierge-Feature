@@ -2,11 +2,11 @@
 
 import type { BudgetBand, PaceLevel, QuestionnaireAnswers } from "@lohono/shared-types";
 import { Chip } from "@/components/ui/Chip";
-import type { StepDef } from "./questions";
+import { KID_RANGE_AGE, type StepDef } from "./questions";
 
-const FIELD =
-  "w-full rounded-sm border border-linen bg-ivory px-3.5 py-3 text-[15px] outline-none focus:border-brass focus:ring-2 focus:ring-brass/30";
-
+// Every step below is a chip grid — no text input anywhere. The three steps
+// whose underlying field isn't itself a plain string array (party, kids,
+// mobility) each get a small translation on top of the same chip UI.
 export function StepBody({
   step,
   answers,
@@ -16,8 +16,65 @@ export function StepBody({
   answers: QuestionnaireAnswers;
   setAnswers: React.Dispatch<React.SetStateAction<QuestionnaireAnswers>>;
 }) {
-  if (step.kind === "chips-multi" && step.options) {
-    const key = step.id as "vibes" | "dietary";
+  if (step.id === "party") {
+    return (
+      <div className="flex flex-wrap gap-2.5">
+        {step.options.map((o) => (
+          <Chip
+            key={o.value}
+            selected={answers.partyComposition === o.value}
+            onClick={() => setAnswers((a) => ({ ...a, partyComposition: o.value }))}
+          >
+            {o.label}
+          </Chip>
+        ))}
+      </div>
+    );
+  }
+
+  if (step.id === "kids") {
+    const selected = kidsSelection(answers.kidAges);
+    return (
+      <div className="flex flex-wrap gap-2.5">
+        {step.options.map((o) => (
+          <Chip
+            key={o.value}
+            selected={selected.has(o.value)}
+            onClick={() =>
+              setAnswers((a) => ({ ...a, kidAges: toggleKidRange(a.kidAges, o.value) }))
+            }
+          >
+            {o.label}
+          </Chip>
+        ))}
+      </div>
+    );
+  }
+
+  if (step.id === "mobility") {
+    const selected = mobilitySelection(answers.mobilityNotes, step);
+    return (
+      <div className="flex flex-wrap gap-2.5">
+        {step.options.map((o) => (
+          <Chip
+            key={o.value}
+            selected={selected.has(o.value)}
+            onClick={() =>
+              setAnswers((a) => ({
+                ...a,
+                mobilityNotes: toggleMobility(mobilitySelection(a.mobilityNotes, step), o.value, step),
+              }))
+            }
+          >
+            {o.label}
+          </Chip>
+        ))}
+      </div>
+    );
+  }
+
+  if (step.kind === "chips-multi") {
+    const key = step.id as "vibes" | "interests" | "dietary";
     const current = answers[key] as string[];
     return (
       <div className="flex flex-wrap gap-2.5">
@@ -41,77 +98,66 @@ export function StepBody({
     );
   }
 
-  if (step.kind === "chips-single" && step.options) {
-    const key = step.id as "pace" | "budget";
-    const current = answers[key] as string;
-    return (
-      <div className="flex flex-wrap gap-2.5">
-        {step.options.map((o) => (
-          <Chip
-            key={o.value}
-            selected={current === o.value}
-            onClick={() => setAnswers((a) => ({ ...a, [key]: o.value as PaceLevel | BudgetBand }))}
-          >
-            {o.label}
-          </Chip>
-        ))}
-      </div>
-    );
-  }
+  // chips-single: pace, budget
+  const key = step.id as "pace" | "budget";
+  const current = answers[key] as string;
+  return (
+    <div className="flex flex-wrap gap-2.5">
+      {step.options.map((o) => (
+        <Chip
+          key={o.value}
+          selected={current === o.value}
+          onClick={() => setAnswers((a) => ({ ...a, [key]: o.value as PaceLevel | BudgetBand }))}
+        >
+          {o.label}
+        </Chip>
+      ))}
+    </div>
+  );
+}
 
-  if (step.kind === "kids") {
-    return (
-      <div>
-        <input
-          type="text"
-          inputMode="numeric"
-          value={answers.kidAges.join(", ")}
-          onChange={(e) =>
-            setAnswers((a) => ({
-              ...a,
-              kidAges: e.target.value
-                .split(",")
-                .map((s) => Number(s.trim()))
-                .filter((n) => Number.isFinite(n)),
-            }))
-          }
-          placeholder="e.g. 4, 8"
-          className={FIELD}
-        />
-        <p className="mt-2 text-xs text-muted">Leave blank if none. It changes the pacing.</p>
-      </div>
-    );
-  }
+// ---- kids: chip <-> kidAges[] -------------------------------------------
 
-  if (step.kind === "text") {
-    const isParty = step.id === "party";
-    return (
-      <input
-        value={isParty ? answers.partyComposition : answers.interests.join(", ")}
-        onChange={(e) =>
-          setAnswers((a) => ({
-            ...a,
-            partyComposition: isParty ? e.target.value : a.partyComposition,
-            interests: isParty
-              ? a.interests
-              : e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
-          }))
-        }
-        className={FIELD}
-      />
-    );
+function kidsSelection(kidAges: number[]): Set<string> {
+  if (kidAges.length === 0) return new Set(["none"]);
+  const set = new Set<string>();
+  for (const [range, age] of Object.entries(KID_RANGE_AGE)) {
+    if (kidAges.includes(age)) set.add(range);
   }
+  return set;
+}
 
-  if (step.kind === "textarea") {
-    return (
-      <textarea
-        rows={4}
-        value={answers.mobilityNotes ?? ""}
-        onChange={(e) => setAnswers((a) => ({ ...a, mobilityNotes: e.target.value }))}
-        className={FIELD}
-      />
-    );
+function toggleKidRange(kidAges: number[], value: string): number[] {
+  if (value === "none") return [];
+  const age = KID_RANGE_AGE[value]!;
+  return kidAges.includes(age) ? kidAges.filter((a) => a !== age) : [...kidAges, age];
+}
+
+// ---- mobility: chip <-> comma-joined label string ------------------------
+
+function mobilitySelection(notes: string | undefined, step: StepDef): Set<string> {
+  const labels = new Set((notes ?? "").split(", ").filter(Boolean));
+  const selected = new Set<string>();
+  for (const o of step.options) if (labels.has(o.label)) selected.add(o.value);
+  if (selected.size === 0) selected.add("none");
+  return selected;
+}
+
+function toggleMobility(current: Set<string>, value: string, step: StepDef): string {
+  const next = new Set(current);
+  if (value === "none") {
+    next.clear();
+    next.add("none");
+  } else {
+    next.delete("none");
+    if (next.has(value)) next.delete(value);
+    else next.add(value);
+    if (next.size === 0) next.add("none");
   }
-
-  return null;
+  if (next.has("none")) return "";
+  const labelByValue = new Map(step.options.map((o) => [o.value, o.label]));
+  return step.options
+    .filter((o) => next.has(o.value))
+    .map((o) => labelByValue.get(o.value)!)
+    .join(", ");
 }

@@ -61,6 +61,9 @@ export async function buildPublishedSnapshot(
         photoUrl: poi?.photoUrl ?? null,
         conciergeNote: poi?.conciergeNote ?? "",
         durationMin: poi?.avgDurationMin ?? 60,
+        address: poi?.address ?? null,
+        phone: poi?.phone ?? null,
+        priceInr: poi?.priceInr ?? null,
       };
     }),
   }));

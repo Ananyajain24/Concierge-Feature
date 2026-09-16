@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import type { PublishedStop } from "@lohono/shared-types";
+import type { GuestBooking, PublishedStop } from "@lohono/shared-types";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { StopThumb } from "@/components/itinerary/StopThumb";
 import { WarningBanner } from "@/components/itinerary/WarningBanner";
+import { BookingConfirmation } from "@/components/itinerary/BookingConfirmation";
 import { SwapDrawer } from "./SwapDrawer";
 
 const CTA: Record<string, string> = {
@@ -26,6 +27,7 @@ export function StopCard({
   active,
   onFocus,
   onEdited,
+  onBooked,
 }: {
   itineraryId: string;
   token: string;
@@ -35,20 +37,31 @@ export function StopCard({
   active: boolean;
   onFocus: () => void;
   onEdited: () => void;
+  onBooked: () => void;
 }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [booking, setBooking] = useState<GuestBooking | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const driveMin = Math.round(stop.driveFromPreviousSec / 60);
   const driveKm = stop.driveFromPreviousMeters / 1000;
 
   async function bookClick(e: React.MouseEvent) {
     e.stopPropagation();
-    const url = stop.bookingUrl ?? "https://lohono.com";
-    // The click is the product: log the lead first, then hand off.
-    await api("/trip/lead", {
-      method: "POST",
-      body: JSON.stringify({ itineraryId, stopId: stop.id, poiId: stop.poiId, url }),
-    }).catch(() => null);
-    window.open(url, "_blank", "noopener");
+    setSubmitting(true);
+    setError(null);
+    try {
+      const row = await api<GuestBooking>(`/trip/${token}/itinerary/${itineraryId}/book`, {
+        method: "POST",
+        body: JSON.stringify({ stopId: stop.id }),
+      });
+      setBooking(row);
+      onBooked();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -81,25 +94,38 @@ export function StopCard({
             </p>
           )}
 
+          {stop.bookable && (stop.address || stop.phone || stop.priceInr != null) && !booking && (
+            <p className="mt-2 text-[12.5px] text-muted">
+              {stop.address && <span>{stop.address} </span>}
+              {stop.phone && <span>· {stop.phone} </span>}
+              {stop.priceInr != null && <span>· ₹{stop.priceInr.toLocaleString("en-IN")} per person</span>}
+            </p>
+          )}
+
           <WarningBanner codes={stop.warnings} />
 
-          <div className="mt-3.5 flex flex-wrap gap-2.5">
-            {stop.bookable && (
-              <Button size="sm" onClick={bookClick}>
-                {CTA[stop.poiCategory] ?? "Book this"}
+          {booking ? (
+            <BookingConfirmation booking={booking} />
+          ) : (
+            <div className="mt-3.5 flex flex-wrap items-center gap-2.5">
+              {stop.bookable && (
+                <Button size="sm" onClick={bookClick} disabled={submitting}>
+                  {submitting ? "Booking…" : (CTA[stop.poiCategory] ?? "Book this")}
+                </Button>
+              )}
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDrawerOpen(true);
+                }}
+              >
+                Swap this stop
               </Button>
-            )}
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={(e) => {
-                e.stopPropagation();
-                setDrawerOpen(true);
-              }}
-            >
-              Swap this stop
-            </Button>
-          </div>
+              {error && <span className="text-[12.5px] text-terracotta">{error}</span>}
+            </div>
+          )}
         </div>
       </li>
 

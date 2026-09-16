@@ -5,6 +5,7 @@ import { db } from "../client";
 import { destinations, villas, pois } from "../schema/index";
 import { GOA_POIS } from "./goa.pois";
 import { upsertGoaMap } from "./goa.map";
+import { seedGoaProviders } from "./goa.providers";
 
 const DEST_SLUG = "goa";
 
@@ -78,6 +79,7 @@ export async function seedGoa(): Promise<void> {
   await upsertVillas(dest.id);
   await upsertPois(dest.id);
   await upsertGoaMap(dest.id);
+  await seedGoaProviders(dest.id);
   console.log(`  Goa destination: ${dest.id}`);
   console.log(`  Map asset: v2`);
   console.log(`  Villas: 2`);

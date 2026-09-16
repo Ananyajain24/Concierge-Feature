@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import dynamic from "next/dynamic";
-import type { MapAnchor, PublishedSnapshot } from "@lohono/shared-types";
+import type { BookingsSummary, MapAnchor, PublishedSnapshot } from "@lohono/shared-types";
 import type { MapStop } from "@/components/map/types";
 import { api } from "@/lib/api";
+import { formatInr } from "@/lib/currency";
 import { Button } from "@/components/ui/Button";
 import { MessageSheet } from "@/components/itinerary/MessageSheet";
 import { StopCard } from "./StopCard";
@@ -34,6 +36,17 @@ export function TripView({ trip }: { trip: Trip }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [chefSheetOpen, setChefSheetOpen] = useState(false);
   const [chefSent, setChefSent] = useState(false);
+  const [bookingsSummary, setBookingsSummary] = useState<BookingsSummary | null>(null);
+
+  const refreshBookings = useCallback(() => {
+    api<BookingsSummary>(`/trip/${token}/itinerary/${trip.itineraryId}/bookings`)
+      .then(setBookingsSummary)
+      .catch(() => null);
+  }, [token, trip.itineraryId]);
+
+  useEffect(() => {
+    refreshBookings();
+  }, [refreshBookings]);
 
   const anchors = (s.mapAsset.transformJson as { anchors?: MapAnchor[] }).anchors ?? [];
   const stopCount = s.days.reduce((n, d) => n + d.stops.length, 0);
@@ -70,10 +83,21 @@ export function TripView({ trip }: { trip: Trip }) {
           <span className="hidden h-3.5 w-px bg-linen sm:inline-block" />
           <span className="eyebrow hidden text-brass sm:inline">Concierge</span>
         </div>
-        <span className="inline-flex items-center gap-2 rounded-full border border-linen px-3.5 py-1.5 text-xs text-graphite">
-          <span className="h-1.5 w-1.5 rounded-full bg-sage" />
-          Published · v{trip.version}
-        </span>
+        <div className="flex items-center gap-3">
+          {bookingsSummary && bookingsSummary.bookings.length > 0 && (
+            <Link
+              href={`/trip/${token}/bookings`}
+              className="inline-flex items-center gap-2 rounded-full border border-linen px-3.5 py-1.5 text-xs text-graphite hover:border-brass"
+            >
+              {formatInr(bookingsSummary.totalInr)} spent · {bookingsSummary.bookings.length}{" "}
+              {bookingsSummary.bookings.length === 1 ? "booking" : "bookings"}
+            </Link>
+          )}
+          <span className="inline-flex items-center gap-2 rounded-full border border-linen px-3.5 py-1.5 text-xs text-graphite">
+            <span className="h-1.5 w-1.5 rounded-full bg-sage" />
+            Published · v{trip.version}
+          </span>
+        </div>
       </header>
 
       <div className="grid gap-10 px-6 pb-9 pt-10 md:px-12 lg:grid-cols-[minmax(0,1fr)_336px] lg:gap-14 lg:pt-12">
@@ -100,6 +124,8 @@ export function TripView({ trip }: { trip: Trip }) {
           itineraryId={trip.itineraryId}
           villaName={s.villa.name}
           destinationName={s.destinationName}
+          checkIn={s.dates.checkIn}
+          onBooked={refreshBookings}
         />
       </div>
 
@@ -140,6 +166,7 @@ export function TripView({ trip }: { trip: Trip }) {
                       active={selectedId === stop.id}
                       onFocus={() => setSelectedId(stop.id)}
                       onEdited={() => router.refresh()}
+                      onBooked={refreshBookings}
                     />
                   </div>
                 ))}

@@ -21,5 +21,10 @@ export const pois = pgTable("pois", {
   qualityScore: real("quality_score").notNull().default(0.7),
   bookingUrl: text("booking_url"),
   photoUrl: text("photo_url"),
+  // Booking-in-app fields. Null on anything that isn't `bookable` — there is
+  // nothing to confirm on a free beach or a heritage site with no ticketing.
+  address: text("address"),
+  phone: text("phone"),
+  priceInr: integer("price_inr"),
   ...timestamps,
 });
