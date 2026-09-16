@@ -1,9 +1,11 @@
 import Link from "next/link";
 
 const NAV = [
+  { href: "/admin", label: "Dashboard" },
   { href: "/admin/review", label: "Review queue" },
   { href: "/admin/catalog", label: "POI catalog" },
   { href: "/admin/maps/goa", label: "Map anchors" },
+  { href: "/dev/map", label: "Map sandbox" },
   { href: "/admin/insights", label: "Insights" },
 ];
 
