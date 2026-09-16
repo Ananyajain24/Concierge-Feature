@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { connectorPath, labelAnchor } from "./geometry";
+import { connectorPath, decluster, labelAnchor } from "./geometry";
 
 const villa = { x: 400, y: 300 };
 
@@ -36,5 +36,47 @@ describe("labelAnchor", () => {
     expect(labelAnchor(villa, { x: 100, y: 300 }).anchor).toBe("end");
     expect(labelAnchor(villa, { x: 400, y: 500 })).toMatchObject({ anchor: "middle" });
     expect(labelAnchor(villa, { x: 400, y: 100 }).dy).toBeLessThan(0);
+  });
+});
+
+describe("decluster", () => {
+  it("separates marks that land on top of each other", () => {
+    const out = decluster([
+      { x: 100, y: 100, r: 20 },
+      { x: 104, y: 101, r: 20 },
+      { x: 98, y: 103, r: 20 },
+    ]);
+    for (let i = 0; i < out.length; i++) {
+      for (let j = i + 1; j < out.length; j++) {
+        expect(Math.hypot(out[i]!.x - out[j]!.x, out[i]!.y - out[j]!.y)).toBeGreaterThan(24);
+      }
+    }
+  });
+
+  it("keeps marks near where they really are", () => {
+    const out = decluster([
+      { x: 100, y: 100, r: 18 },
+      { x: 108, y: 100, r: 18 },
+    ]);
+    expect(Math.abs(out[0]!.x - 100)).toBeLessThan(40);
+    expect(Math.abs(out[1]!.x - 108)).toBeLessThan(40);
+  });
+
+  it("never moves a fixed mark", () => {
+    const out = decluster([
+      { x: 200, y: 200, r: 40, fixed: true },
+      { x: 205, y: 200, r: 20 },
+    ]);
+    expect(out[0]).toEqual({ x: 200, y: 200 });
+    expect(out[1]!.x).toBeGreaterThan(230);
+  });
+
+  it("leaves well-separated marks alone", () => {
+    const out = decluster([
+      { x: 0, y: 0, r: 10 },
+      { x: 300, y: 300, r: 10 },
+    ]);
+    expect(out[0]).toEqual({ x: 0, y: 0 });
+    expect(out[1]).toEqual({ x: 300, y: 300 });
   });
 });

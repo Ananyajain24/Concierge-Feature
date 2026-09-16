@@ -1,37 +1,28 @@
 "use client";
 
-import { labelAnchor } from "@lohono/itinerary-engine";
 import styles from "./map.module.css";
-import { PlaceScene, sceneRadius } from "./places";
-import type { MapStop } from "./types";
+import { PlaceScene } from "./places";
+import type { PlacedStop } from "./layout";
 
-// One stop on the map: its drawn scene plus a name label set on the side
-// facing away from the villa, so labels never crowd the middle.
+// One stop on the map: its drawn scene, plus a name label only where the
+// layout pass found room for one.
 export function PlaceMark({
-  stop,
-  at,
-  villaAt,
+  placed,
   delay,
   dimmed,
   onSelect,
 }: {
-  stop: MapStop;
-  at: { x: number; y: number };
-  villaAt: { x: number; y: number };
+  placed: PlacedStop;
   delay: number;
   dimmed: boolean;
-  onSelect?: (stop: MapStop) => void;
+  onSelect?: (id: string) => void;
 }) {
-  const { anchor, dx, dy } = labelAnchor(villaAt, at);
-  const r = sceneRadius(stop.category);
-  const lx = at.x + dx + (anchor === "start" ? r : anchor === "end" ? -r : 0);
-  const ly = at.y + dy + (dy < 0 ? -r * 0.9 : 0);
-
+  const { stop, at, nameAt } = placed;
   return (
     <g
       className={styles.stop}
       style={{ opacity: dimmed ? 0.32 : 1 }}
-      onClick={() => onSelect?.(stop)}
+      onClick={() => onSelect?.(stop.id)}
       role={onSelect ? "button" : undefined}
       aria-label={onSelect ? stop.name : undefined}
     >
@@ -41,23 +32,25 @@ export function PlaceMark({
         </g>
       </g>
 
-      <g className={styles.lab} style={{ animationDelay: `${delay + 0.9}s` }}>
-        <text
-          x={lx}
-          y={ly}
-          textAnchor={anchor}
-          fontSize={17}
-          fontWeight={600}
-          fill="var(--l-ink)"
-          paintOrder="stroke"
-          stroke="var(--l-map-sand)"
-          strokeWidth={3.5}
-          strokeLinejoin="round"
-          style={{ fontFamily: "var(--font-display), serif" }}
-        >
-          {stop.name}
-        </text>
-      </g>
+      {nameAt && (
+        <g className={styles.lab} style={{ animationDelay: `${delay + 0.9}s` }}>
+          <text
+            x={nameAt.x}
+            y={nameAt.y}
+            textAnchor={nameAt.anchor}
+            fontSize={17}
+            fontWeight={600}
+            fill="var(--l-ink)"
+            paintOrder="stroke"
+            stroke="var(--l-map-sand)"
+            strokeWidth={3.5}
+            strokeLinejoin="round"
+            style={{ fontFamily: "var(--font-display), serif" }}
+          >
+            {stop.name}
+          </text>
+        </g>
+      )}
     </g>
   );
 }

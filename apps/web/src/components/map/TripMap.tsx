@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { connectorPath } from "@lohono/itinerary-engine";
 import type { MapAnchor } from "@lohono/shared-types";
 import { useProjection } from "./hooks/useProjection";
 import { usePanZoom } from "./hooks/usePanZoom";
@@ -9,8 +8,8 @@ import { GoaArtwork } from "./artwork/GoaArtwork";
 import { Cartography } from "./Cartography";
 import { Connector } from "./Connector";
 import { PlaceMark } from "./PlaceMark";
-import { VillaMark, VILLA_RADIUS } from "./VillaMark";
-import { sceneRadius } from "./places";
+import { VillaMark } from "./VillaMark";
+import { layoutStops } from "./layout";
 import type { MapStop, MapVilla } from "./types";
 
 const W = 1000;
@@ -43,24 +42,10 @@ export function TripMap({
 
   const villaAt = useMemo(() => project(villa.lat, villa.lng), [project, villa.lat, villa.lng]);
 
+  // Positions and label placement are resolved once per data change, not per
+  // render — a real trip can put sixteen stops on one sheet.
   const placed = useMemo(
-    () =>
-      stops.map((stop, i) => {
-        const at = project(stop.lat, stop.lng);
-        const geom = connectorPath(villaAt, at, {
-          insetFrom: VILLA_RADIUS,
-          insetTo: sceneRadius(stop.category) + 6,
-          index: i,
-        });
-        const km = stop.driveMeters / 1000;
-        const min = Math.round(stop.driveSec / 60);
-        return {
-          stop,
-          at,
-          geom,
-          label: km >= 0.1 ? `${km.toFixed(1)} km · ${min} min` : "at the villa",
-        };
-      }),
+    () => layoutStops(stops, villaAt, project),
     [stops, project, villaAt],
   );
 
@@ -92,9 +77,9 @@ export function TripMap({
             <GoaArtwork />
 
             <g>
-              {placed.map(({ stop, geom, label }, i) => (
-                <g key={stop.id} style={{ opacity: active && active !== stop.id ? 0.32 : 1 }}>
-                  <Connector id={stop.id} geom={geom} label={label} delay={0.5 + i * 0.18} />
+              {placed.map((p, i) => (
+                <g key={p.stop.id} style={{ opacity: active && active !== p.stop.id ? 0.32 : 1 }}>
+                  <Connector placed={p} delay={0.5 + i * 0.12} />
                 </g>
               ))}
             </g>
@@ -102,15 +87,13 @@ export function TripMap({
             <VillaMark x={villaAt.x} y={villaAt.y} name={villa.name} />
 
             <g onMouseLeave={() => setHoverId(null)}>
-              {placed.map(({ stop, at }, i) => (
-                <g key={stop.id} onMouseEnter={() => setHoverId(stop.id)}>
+              {placed.map((p, i) => (
+                <g key={p.stop.id} onMouseEnter={() => setHoverId(p.stop.id)}>
                   <PlaceMark
-                    stop={stop}
-                    at={at}
-                    villaAt={villaAt}
-                    delay={0.45 + i * 0.18}
-                    dimmed={!!active && active !== stop.id}
-                    onSelect={(s) => onSelect?.(selectedId === s.id ? null : s)}
+                    placed={p}
+                    delay={0.45 + i * 0.12}
+                    dimmed={!!active && active !== p.stop.id}
+                    onSelect={(id) => onSelect?.(selectedId === id ? null : p.stop)}
                   />
                 </g>
               ))}

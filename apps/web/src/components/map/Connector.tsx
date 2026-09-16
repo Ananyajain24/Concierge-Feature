@@ -1,22 +1,12 @@
-import type { Connector as Geom } from "@lohono/itinerary-engine";
 import styles from "./map.module.css";
+import type { PlacedStop } from "./layout";
 
 // A dotted brass line from the villa to one stop, with the drive on it.
 // The dots are revealed through an animated mask so the line appears to travel
 // outward from the villa rather than sliding into place.
-export function Connector({
-  id,
-  geom,
-  label,
-  delay,
-}: {
-  id: string;
-  geom: Geom;
-  label: string;
-  delay: number;
-}) {
-  const maskId = `conn-${id}`;
-  const pillWidth = Math.max(58, label.length * 5.8 + 16);
+export function Connector({ placed, delay }: { placed: PlacedStop; delay: number }) {
+  const { stop, geom, label, pillAt, pillWidth } = placed;
+  const maskId = `conn-${stop.id}`;
 
   return (
     <g>
@@ -47,10 +37,11 @@ export function Connector({
         mask={`url(#${maskId})`}
       />
 
+      {pillAt && (
       <g
         className={styles.lab}
         style={{ animationDelay: `${delay + 0.75}s` }}
-        transform={`translate(${geom.mid.x},${geom.mid.y})`}
+        transform={`translate(${pillAt.x},${pillAt.y})`}
       >
         <rect
           x={-pillWidth / 2}
@@ -73,6 +64,7 @@ export function Connector({
           {label}
         </text>
       </g>
+      )}
     </g>
   );
 }
