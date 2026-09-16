@@ -10,9 +10,9 @@ import {
   type Stop,
 } from "@lohono/shared-types";
 import { db } from "../../db/client";
-import { bookings, villas, itineraries } from "../../db/schema/index";
+import { bookings, villas, destinations, itineraries } from "../../db/schema/index";
 import { preferencesRepo } from "../questionnaire/repository";
-import { loadDriveMatrix, retrieveCandidates } from "./retriever";
+import { loadDriveMatrix, retrieveCandidates, secondsOnly, type DrivePair } from "./retriever";
 import { buildSelectPrompt, V1_SELECT_VERSION } from "./prompts/v1-select";
 import { buildNarratePrompt, V1_NARRATE_VERSION } from "./prompts/v1-narrate";
 import { jsonCall } from "./llm";
@@ -23,6 +23,13 @@ export async function generateItineraryForBooking(bookingId: string) {
   if (!booking) throw new Error(`booking ${bookingId} not found`);
   const villa = await db.select().from(villas).where(eq(villas.id, booking.villaId)).limit(1).then((r) => r[0]);
   if (!villa) throw new Error("villa not found");
+  const destination = await db
+    .select()
+    .from(destinations)
+    .where(eq(destinations.id, villa.destinationId))
+    .limit(1)
+    .then((r) => r[0]);
+  if (!destination) throw new Error("destination not found");
   const prefs = await preferencesRepo.get(bookingId);
   if (!prefs) throw new Error("guest preferences not found — questionnaire required first");
 
@@ -44,7 +51,7 @@ export async function generateItineraryForBooking(bookingId: string) {
   // Pass 1 — selection
   const select = buildSelectPrompt({
     villaName: villa.name,
-    destinationName: villa.name.includes("Goa") ? "Goa" : "Goa",
+    destinationName: destination.name,
     checkIn: String(booking.checkIn),
     checkOut: String(booking.checkOut),
     answers: prefs.answers,
@@ -64,7 +71,7 @@ export async function generateItineraryForBooking(bookingId: string) {
     destinationId: villa.destinationId,
     days: days1,
     poisById: poiById,
-    driveSecondsByPair: driveMatrix,
+    driveSecondsByPair: secondsOnly(driveMatrix),
   });
 
   let repairAttempted = false;
@@ -83,7 +90,7 @@ export async function generateItineraryForBooking(bookingId: string) {
         destinationId: villa.destinationId,
         days: days2,
         poisById: poiById,
-        driveSecondsByPair: driveMatrix,
+        driveSecondsByPair: secondsOnly(driveMatrix),
       });
       if (v2.length > 0) flaggedForReview = true;
     }
@@ -94,7 +101,7 @@ export async function generateItineraryForBooking(bookingId: string) {
   // Pass 2 — narration
   const nar = buildNarratePrompt({
     villaName: villa.name,
-    destinationName: "Goa",
+    destinationName: destination.name,
     days: selection.days,
     poiById,
   });
@@ -133,14 +140,14 @@ export async function generateItineraryForBooking(bookingId: string) {
 // Convert LLM selection to internal Day objects with drive times populated.
 function selectionToDays(
   sel: LlmSelection,
-  drive: Record<string, number>,
+  drive: Record<string, DrivePair>,
   villaId: string,
 ): Day[] {
   return sel.days.map((d) => {
     const sorted = [...d.stops].sort((a, b) => a.order - b.order);
     let prevId = villaId;
     const stops: Stop[] = sorted.map((s, i) => {
-      const secs = drive[`${prevId}|${s.poiId}`] ?? 0;
+      const pair = drive[`${prevId}|${s.poiId}`];
       const stop: Stop = {
         id: crypto.randomUUID(),
         poiId: s.poiId,
@@ -148,8 +155,8 @@ function selectionToDays(
         order: i,
         isPinned: false,
         copy: "",
-        driveFromPreviousSec: secs,
-        driveFromPreviousMeters: 0,
+        driveFromPreviousSec: pair?.sec ?? 0,
+        driveFromPreviousMeters: pair?.meters ?? 0,
         warnings: [],
       };
       prevId = s.poiId;

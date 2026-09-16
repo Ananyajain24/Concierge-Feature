@@ -78,6 +78,7 @@ export const publishedSnapshotSchema = z.object({
     heroImageUrl: z.string().url().nullable(),
   }),
   destinationId: z.string().uuid(),
+  destinationName: z.string(),
   mapAsset: z.object({
     imageUrl: z.string(),
     transformJson: z.unknown(),

@@ -5,7 +5,9 @@ import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import type { MapAnchor, PublishedSnapshot } from "@lohono/shared-types";
 import type { MapStop } from "@/components/map/types";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
+import { MessageSheet } from "@/components/itinerary/MessageSheet";
 import { StopCard } from "./StopCard";
 import { TripRail } from "./TripRail";
 
@@ -30,6 +32,8 @@ export function TripView({ trip }: { trip: Trip }) {
   const router = useRouter();
   const token = String(useParams().token);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [chefSheetOpen, setChefSheetOpen] = useState(false);
+  const [chefSent, setChefSent] = useState(false);
 
   const anchors = (s.mapAsset.transformJson as { anchors?: MapAnchor[] }).anchors ?? [];
   const stopCount = s.days.reduce((n, d) => n + d.stops.length, 0);
@@ -91,7 +95,12 @@ export function TripView({ trip }: { trip: Trip }) {
             ))}
           </div>
         </div>
-        <TripRail />
+        <TripRail
+          token={token}
+          itineraryId={trip.itineraryId}
+          villaName={s.villa.name}
+          destinationName={s.destinationName}
+        />
       </div>
 
       <section className="px-6 pb-3 md:px-12">
@@ -141,12 +150,19 @@ export function TripView({ trip }: { trip: Trip }) {
 
         <aside className="flex flex-col gap-3.5">
           <div className="rounded-md border border-linen bg-forest p-5 text-ivory">
-            <p className="eyebrow text-brass">Held for you</p>
-            <p className="mt-3 font-display text-[25px] leading-tight">In-villa chef, one night</p>
+            <p className="eyebrow text-brass">One of ours</p>
+            <p className="mt-3 font-display text-[25px] leading-tight">Arrange an in-villa chef</p>
             <p className="mb-4 mt-2.5 text-sm leading-relaxed text-ivory/75">
-              Goan-Portuguese, six courses, cooked in your kitchen.
+              A private chef for a night at {s.villa.name} — tell us the occasion and any dietary notes
+              and your concierge will put together the menu.
             </p>
-            <Button className="w-full bg-brass text-ink hover:bg-brass">Ask about it</Button>
+            {chefSent ? (
+              <p className="text-sm text-brass">Sent — your concierge will follow up.</p>
+            ) : (
+              <Button className="w-full bg-brass text-ink hover:bg-brass" onClick={() => setChefSheetOpen(true)}>
+                Ask about it
+              </Button>
+            )}
           </div>
           <div className="rounded-md border border-linen bg-sand p-5">
             <p className="eyebrow">Why these places</p>
@@ -161,6 +177,22 @@ export function TripView({ trip }: { trip: Trip }) {
       <footer className="border-t border-linen py-8 text-center text-xs text-muted">
         Curated by Lohono · version {trip.version}
       </footer>
+
+      {chefSheetOpen && (
+        <MessageSheet
+          title="Arrange an in-villa chef"
+          placeholder="Any occasion, dietary notes, or preferred evening…"
+          onSend={async (message) => {
+            await api(`/trip/${token}/itinerary/${trip.itineraryId}/message`, {
+              method: "POST",
+              body: JSON.stringify({ message: `In-villa chef enquiry: ${message}` }),
+            });
+            setChefSheetOpen(false);
+            setChefSent(true);
+          }}
+          onClose={() => setChefSheetOpen(false)}
+        />
+      )}
     </main>
   );
 }

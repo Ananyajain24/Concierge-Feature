@@ -34,6 +34,10 @@ export async function registerCatalog(app: FastifyInstance) {
     const body = destinationUpdateBody.parse(req.body);
     return catalogService.destinations.update(id, body);
   });
+  app.get("/catalog/destinations/:id/readiness", async (req) => {
+    const id = (req.params as { id: string }).id;
+    return catalogService.destinations.readiness(id);
+  });
 
   // villas
   app.get("/catalog/villas", async (req) => {

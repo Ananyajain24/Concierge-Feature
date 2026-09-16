@@ -3,7 +3,7 @@ import { rankAlternates } from "@lohono/itinerary-engine";
 import { eq } from "drizzle-orm";
 import { reviewRepo } from "./repository";
 import { buildPublishedSnapshot } from "./snapshot";
-import { loadDriveMatrix } from "../generation/retriever";
+import { loadDriveMatrix, secondsOnly } from "../generation/retriever";
 import { db } from "../../db/client";
 import { bookings, villas } from "../../db/schema/index";
 
@@ -73,7 +73,7 @@ export const reviewService = {
     const target = detail.pois.find((p) => p.id === stop.poiId);
     if (!target) return [];
     const currentIds = days.flatMap((d) => d.stops.map((s) => s.poiId));
-    const drive = await loadDriveMatrix(detail.pois.map((p) => p.id), detail.villa.id);
+    const drive = secondsOnly(await loadDriveMatrix(detail.pois.map((p) => p.id), detail.villa.id));
 
     const driveFromPrev: Record<string, number> = {};
     const prevId = stopIndex === 0 ? detail.villa.id : day.stops[stopIndex - 1]!.poiId;

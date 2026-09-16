@@ -2,10 +2,13 @@
 // Currently only Goa is seeded for the MVP.
 import { pool } from "../client";
 import { seedGoa } from "./goa";
+import { seedOtherDestinations } from "./other-destinations";
 
 async function main() {
   console.log("→ Seeding Goa…");
   await seedGoa();
+  console.log("→ Seeding the rest of Lohono's destinations…");
+  await seedOtherDestinations();
   console.log("✓ Seed complete.");
 }
 

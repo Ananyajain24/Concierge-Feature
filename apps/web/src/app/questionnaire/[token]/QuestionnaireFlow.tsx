@@ -1,16 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import type { Booking, QuestionnaireAnswers } from "@lohono/shared-types";
+import type { Booking, Destination, QuestionnaireAnswers, Villa } from "@lohono/shared-types";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { EMPTY_ANSWERS, STEPS, type StepDef } from "./questions";
 import { StepBody } from "./StepBody";
 import { CraftingState } from "./CraftingState";
+import { ItineraryOffer, type Readiness } from "./ItineraryOffer";
 
 const fmt = (d: string) => new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 
-export function QuestionnaireFlow({ token, booking }: { token: string; booking: Booking }) {
+export function QuestionnaireFlow({
+  token,
+  booking,
+  villa,
+  destination,
+  readiness,
+}: {
+  token: string;
+  booking: Booking;
+  villa: Villa;
+  destination: Destination;
+  readiness: Readiness;
+}) {
+  const [offerAccepted, setOfferAccepted] = useState(false);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<QuestionnaireAnswers>(EMPTY_ANSWERS);
   const [submitting, setSubmitting] = useState(false);
@@ -20,6 +34,9 @@ export function QuestionnaireFlow({ token, booking }: { token: string; booking: 
   const current = STEPS[step]!;
   const last = step === STEPS.length - 1;
   const canGoNext = validStep(current, answers);
+  // Skip must never let a guest past a step the server will reject at submit
+  // time — only steps with no server-side requirement get a Skip at all.
+  const skippable = !REQUIRED_STEP_IDS.has(current.id);
 
   async function submit() {
     setSubmitting(true);
@@ -37,17 +54,30 @@ export function QuestionnaireFlow({ token, booking }: { token: string; booking: 
     }
   }
 
-  if (jobId) return <CraftingState booking={booking} jobId={jobId} />;
+  if (!offerAccepted) {
+    return (
+      <ItineraryOffer
+        booking={booking}
+        villa={villa}
+        destination={destination}
+        readiness={readiness}
+        onAccept={() => setOfferAccepted(true)}
+      />
+    );
+  }
+
+  if (jobId) {
+    return <CraftingState token={token} booking={booking} destinationName={destination.name} jobId={jobId} />;
+  }
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col bg-ivory">
       <div className="px-6 pt-7">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => setStep((s) => Math.max(0, s - 1))}
-            disabled={step === 0}
+            onClick={() => (step === 0 ? setOfferAccepted(false) : setStep((s) => s - 1))}
             aria-label="Back"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-linen disabled:opacity-30"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-linen"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
               <path d="M10 3 L5 8 L10 13" />
@@ -71,7 +101,7 @@ export function QuestionnaireFlow({ token, booking }: { token: string; booking: 
 
       <section className="flex flex-1 flex-col px-6 pt-9">
         <p className="eyebrow">
-          {booking.guestName} · {fmt(booking.checkIn)} – {fmt(booking.checkOut)}
+          {villa.name} · {fmt(booking.checkIn)} – {fmt(booking.checkOut)}
         </p>
         <h1 className="mt-3 font-display text-[34px] leading-[1.12] tracking-tight">{current.title}</h1>
         <p className="mt-3 text-[14.5px] leading-relaxed text-graphite">{current.sub}</p>
@@ -96,7 +126,7 @@ export function QuestionnaireFlow({ token, booking }: { token: string; booking: 
       <footer className="border-t border-linen px-6 pb-7 pt-4">
         {error && <p className="mb-3 text-[13px] text-terracotta">{error}</p>}
         <div className="flex gap-3">
-          {!last && (
+          {!last && skippable && (
             <Button variant="secondary" size="lg" onClick={() => setStep((s) => s + 1)}>
               Skip
             </Button>
@@ -120,6 +150,13 @@ export function QuestionnaireFlow({ token, booking }: { token: string; booking: 
     </main>
   );
 }
+
+// vibes needs at least one entry and party needs non-empty text — both are
+// enforced server-side by questionnaireAnswersSchema, so Skip can never be
+// offered on them. pace/budget always carry a valid default from
+// EMPTY_ANSWERS, so Skip and Continue behave identically there — no need to
+// special-case them.
+const REQUIRED_STEP_IDS = new Set(["vibes", "party"]);
 
 function validStep(step: StepDef, a: QuestionnaireAnswers): boolean {
   switch (step.id) {

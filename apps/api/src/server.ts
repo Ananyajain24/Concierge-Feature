@@ -1,5 +1,6 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
+import { ZodError } from "zod";
 import { loadEnv } from "./config/env";
 import { registerHealth } from "./modules/health/routes";
 import { registerCatalog } from "./modules/catalog/routes";
@@ -26,6 +27,15 @@ export async function buildServer(): Promise<FastifyInstance> {
 
   app.setErrorHandler((err: unknown, _req, reply) => {
     app.log.error(err);
+    // ZodError.message is a JSON-stringified issue array by default — fine in
+    // logs, unreadable if it ever reaches a guest. Fold it into one sentence.
+    if (err instanceof ZodError) {
+      const summary = err.issues
+        .map((i) => `${i.path.join(".") || "value"}: ${i.message}`)
+        .join("; ");
+      reply.status(422).send({ error: "ValidationError", message: summary });
+      return;
+    }
     const e = err as { statusCode?: number; name?: string; message?: string };
     reply.status(e.statusCode ?? 500).send({
       error: e.name ?? "Error",
