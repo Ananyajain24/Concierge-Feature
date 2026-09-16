@@ -9,3 +9,6 @@ dist
 *.log
 .DS_Store
 coverage
+
+# Seeded design-canvas payload (regenerate from the .dc.html sources)
+design/lohono-concierge-screens.html

@@ -3,9 +3,10 @@ import { rankAlternates } from "@lohono/itinerary-engine";
 import { eq } from "drizzle-orm";
 import { reviewRepo } from "./repository";
 import { buildPublishedSnapshot } from "./snapshot";
-import { loadDriveMatrix } from "../generation/retriever";
+import { loadDriveMatrix, secondsOnly } from "../generation/retriever";
 import { db } from "../../db/client";
 import { bookings, villas } from "../../db/schema/index";
+import { loadEnv } from "../../config/env";
 
 export const reviewService = {
   queue: reviewRepo.queue,
@@ -46,7 +47,16 @@ export const reviewService = {
     if (!it) throw new Error("itinerary not found");
     const version = (it.version ?? 1);
     const snap = await buildPublishedSnapshot(id, version, it.summary);
-    return reviewRepo.publish(id, snap, version);
+    const published = await reviewRepo.publish(id, snap, version);
+
+    // "We'll message you the link" (the crafting screen's own promise) — no
+    // real WhatsApp/email sending in MVP, so this is the send, logged.
+    const booking = await db.select().from(bookings).where(eq(bookings.id, it.bookingId)).limit(1).then((r) => r[0]);
+    if (booking) {
+      const { WEB_ORIGIN } = loadEnv();
+      console.log(`[GUEST NOTIFY] ${booking.guestName} <- ${WEB_ORIGIN}/trip/${booking.token}`);
+    }
+    return published;
   },
 
   regenerate: async (id: string, note: string) => {
@@ -73,7 +83,7 @@ export const reviewService = {
     const target = detail.pois.find((p) => p.id === stop.poiId);
     if (!target) return [];
     const currentIds = days.flatMap((d) => d.stops.map((s) => s.poiId));
-    const drive = await loadDriveMatrix(detail.pois.map((p) => p.id), detail.villa.id);
+    const drive = secondsOnly(await loadDriveMatrix(detail.pois.map((p) => p.id), detail.villa.id));
 
     const driveFromPrev: Record<string, number> = {};
     const prevId = stopIndex === 0 ? detail.villa.id : day.stops[stopIndex - 1]!.poiId;

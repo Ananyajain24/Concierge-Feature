@@ -1,5 +1,6 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
+import { ZodError } from "zod";
 import { loadEnv } from "./config/env";
 import { registerHealth } from "./modules/health/routes";
 import { registerCatalog } from "./modules/catalog/routes";
@@ -10,6 +11,7 @@ import { registerJobs } from "./modules/jobs/routes";
 import { registerReview } from "./modules/review/routes";
 import { registerGuest } from "./modules/guest/routes";
 import { registerEditing } from "./modules/editing/routes";
+import { registerLedger } from "./modules/ledger/routes";
 import { registerInsights } from "./modules/insights/routes";
 
 export async function buildServer(): Promise<FastifyInstance> {
@@ -24,12 +26,21 @@ export async function buildServer(): Promise<FastifyInstance> {
 
   await app.register(cors, { origin: env.CORS_ORIGIN, credentials: true });
 
-  app.setErrorHandler((err, _req, reply) => {
+  app.setErrorHandler((err: unknown, _req, reply) => {
     app.log.error(err);
-    const status = (err as { statusCode?: number }).statusCode ?? 500;
-    reply.status(status).send({
-      error: err.name ?? "Error",
-      message: err.message,
+    // ZodError.message is a JSON-stringified issue array by default — fine in
+    // logs, unreadable if it ever reaches a guest. Fold it into one sentence.
+    if (err instanceof ZodError) {
+      const summary = err.issues
+        .map((i) => `${i.path.join(".") || "value"}: ${i.message}`)
+        .join("; ");
+      reply.status(422).send({ error: "ValidationError", message: summary });
+      return;
+    }
+    const e = err as { statusCode?: number; name?: string; message?: string };
+    reply.status(e.statusCode ?? 500).send({
+      error: e.name ?? "Error",
+      message: e.message ?? "Unexpected error",
     });
   });
 
@@ -42,6 +53,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   await registerReview(app);
   await registerGuest(app);
   await registerEditing(app);
+  await registerLedger(app);
   await registerInsights(app);
 
   return app;

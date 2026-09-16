@@ -23,7 +23,7 @@ export default async function CatalogPage({
     <div className="space-y-8">
       <section>
         <h1 className="font-display text-2xl">Catalog</h1>
-        <p className="text-sm text-ink/60">
+        <p className="text-sm text-graphite">
           {destinations.length} destinations · {villas.length} villas · {pois.length} POIs
         </p>
       </section>

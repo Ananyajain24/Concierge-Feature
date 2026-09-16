@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap">
+  <style>
+    body { margin: 0; background: #FBF9F5; font-family: "Jost", system-ui, sans-serif; color: #1B1A17; -webkit-font-smoothing: antialiased; }
+    a { color: #8A6B3A; text-decoration: none; } a:hover { color: #6E5430; }
+    .disp { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 400; }
+    .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #8A8377; }
+    .sw { border-radius: 10px; height: 76px; border: 1px solid rgba(27,26,23,.08); }
+    .swn { font-size: 12.5px; font-weight: 500; margin-top: 8px; }
+    .swv { font-size: 11.5px; color: #8A8377; font-family: ui-monospace, Menlo, monospace; }
+  </style>
+</helmet>
+
+<div style="padding: 36px 40px 44px; background: #FBF9F5;">
+
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 1px solid #E4DACA; padding-bottom: 20px;">
+    <div>
+      <div class="eyebrow">Lohono Concierge</div>
+      <h1 class="disp" style="margin: 10px 0 0; font-size: 34px; letter-spacing: -.01em;">Design tokens</h1>
+    </div>
+    <div style="font-size: 13px; color: #8A8377; text-align: right; line-height: 1.6;">
+      One file: <span style="font-family: ui-monospace, Menlo, monospace;">apps/web/src/lib/tokens.css</span><br>
+      Swap hexes here and the whole product follows.
+    </div>
+  </div>
+
+  <!-- palette -->
+  <div style="margin-top: 30px;">
+    <div class="eyebrow">Ground &amp; ink</div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin-top: 14px;">
+      <div><div class="sw" style="background: #FBF9F5;"></div><div class="swn">Ivory</div><div class="swv">#FBF9F5</div></div>
+      <div><div class="sw" style="background: #F2EBE0;"></div><div class="swn">Sand</div><div class="swv">#F2EBE0</div></div>
+      <div><div class="sw" style="background: #E4DACA;"></div><div class="swn">Linen</div><div class="swv">#E4DACA</div></div>
+      <div><div class="sw" style="background: #1B1A17;"></div><div class="swn">Ink</div><div class="swv">#1B1A17</div></div>
+      <div><div class="sw" style="background: #4F4B44;"></div><div class="swn">Graphite</div><div class="swv">#4F4B44</div></div>
+      <div><div class="sw" style="background: #8A8377;"></div><div class="swn">Muted</div><div class="swv">#8A8377</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top: 26px;">
+    <div class="eyebrow">Accent, dark surface &amp; signals</div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin-top: 14px;">
+      <div><div class="sw" style="background: #B08D57;"></div><div class="swn">Brass</div><div class="swv">#B08D57</div></div>
+      <div><div class="sw" style="background: #8A6B3A;"></div><div class="swn">Brass deep</div><div class="swv">#8A6B3A</div></div>
+      <div><div class="sw" style="background: #F6EFE2;"></div><div class="swn">Brass wash</div><div class="swv">#F6EFE2</div></div>
+      <div><div class="sw" style="background: #24352D;"></div><div class="swn">Forest</div><div class="swv">#24352D</div></div>
+      <div><div class="sw" style="background: #7E9080;"></div><div class="swn">Sage</div><div class="swv">#7E9080</div></div>
+      <div><div class="sw" style="background: #9DC4CE;"></div><div class="swn">Sea</div><div class="swv">#9DC4CE</div></div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin-top: 14px;">
+      <div><div class="sw" style="background: #C1663F;"></div><div class="swn">Terracotta · warn</div><div class="swv">#C1663F</div></div>
+      <div><div class="sw" style="background: #C8973E;"></div><div class="swn">Amber · SLA 4–12h</div><div class="swv">#C8973E</div></div>
+      <div><div class="sw" style="background: #A33A2B;"></div><div class="swn">Crimson · breach</div><div class="swv">#A33A2B</div></div>
+      <div style="grid-column: span 3; border: 1px solid #E4DACA; border-radius: 10px; padding: 14px 16px; font-size: 12.5px; line-height: 1.6; color: #4F4B44;">
+        Body text is always Ink on Ivory. Brass is never body text — on Sand it drops to 4.16:1,
+        so links on a tinted ground use Brass hover <span style="font-family: ui-monospace, Menlo, monospace;">#6E5430</span>.
+        One accent per screen; warnings are terracotta on brass-wash, never red.
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 26px;">
+    <div class="eyebrow">Derived — SLA chips &amp; hover steps</div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin-top: 14px;">
+      <div><div class="sw" style="background: #F1F4EF;"></div><div class="swn">Sage tint</div><div class="swv">#F1F4EF</div></div>
+      <div><div class="sw" style="background: #47603F;"></div><div class="swn">Sage ink</div><div class="swv">#47603F</div></div>
+      <div><div class="sw" style="background: #FBF4E6;"></div><div class="swn">Amber tint</div><div class="swv">#FBF4E6</div></div>
+      <div><div class="sw" style="background: #E7D5B0;"></div><div class="swn">Amber edge</div><div class="swv">#E7D5B0</div></div>
+      <div><div class="sw" style="background: #E8C9B8;"></div><div class="swn">Crimson edge</div><div class="swv">#E8C9B8</div></div>
+      <div><div class="sw" style="background: #6E5430;"></div><div class="swn">Brass hover</div><div class="swv">#6E5430</div></div>
+    </div>
+  </div>
+
+  <!-- type -->
+  <div style="margin-top: 34px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 40px;">
+    <div>
+      <div class="eyebrow">Type</div>
+      <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="border-bottom: 1px solid #E4DACA; padding-bottom: 14px;">
+          <div class="disp" style="font-size: 44px; line-height: 1.08; letter-spacing: -.01em;">Five slow days</div>
+          <div class="swv" style="margin-top: 7px;">Cormorant Garamond 400 · 44/48 · hero</div>
+        </div>
+        <div style="border-bottom: 1px solid #E4DACA; padding-bottom: 14px;">
+          <div class="disp" style="font-size: 34px;">Review queue</div>
+          <div class="swv" style="margin-top: 7px;">Cormorant Garamond 400 · 34/38 · page head</div>
+        </div>
+        <div style="border-bottom: 1px solid #E4DACA; padding-bottom: 14px;">
+          <div class="disp" style="font-size: 27px;">Land, swim, eat late</div>
+          <div class="swv" style="margin-top: 7px;">Cormorant Garamond 400 · 27/32 · day theme</div>
+        </div>
+        <div style="border-bottom: 1px solid #E4DACA; padding-bottom: 14px;">
+          <div class="disp" style="font-size: 25px;">Instead of Chapora Fort</div>
+          <div class="swv" style="margin-top: 7px;">Cormorant Garamond 400 · 25/30 · panel head</div>
+        </div>
+        <div style="border-bottom: 1px solid #E4DACA; padding-bottom: 14px;">
+          <div style="font-size: 17px; font-weight: 500;">Chapora Fort</div>
+          <div class="swv" style="margin-top: 7px;">Jost 500 · 17/24 · card title</div>
+        </div>
+        <div style="border-bottom: 1px solid #E4DACA; padding-bottom: 14px;">
+          <div style="font-size: 15px; line-height: 1.7; color: #4F4B44; max-width: 54ch;">Ten minutes uphill on loose stone — wear something with a grip. The river mouth goes gold about twenty minutes before the sun drops.</div>
+          <div class="swv" style="margin-top: 7px;">Jost 400 · 15/24 · body</div>
+        </div>
+        <div>
+          <div class="eyebrow">Sunset · 18:15 · Viewpoint</div>
+          <div class="swv" style="margin-top: 7px;">Jost 600 · 11/14 · .14em · eyebrow</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="eyebrow">Components</div>
+      <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 18px;">
+
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+          <button style="height: 44px; padding: 0 24px; border: 0; border-radius: 999px; background: #8A6B3A; color: #FBF9F5; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer;">Reserve a table</button>
+          <button style="height: 44px; padding: 0 22px; border: 1px solid #E4DACA; border-radius: 999px; background: transparent; font-family: inherit; font-size: 14px; color: #1B1A17; cursor: pointer;">Swap this stop</button>
+          <a href="#" style="font-size: 14px; font-weight: 500;">Find flights</a>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 9px;">
+          <span style="display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 15px; border-radius: 999px; border: 1px solid #B08D57; background: #F6EFE2; font-size: 13.5px;">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#8A6B3A" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>
+            Selected
+          </span>
+          <span style="display: inline-flex; align-items: center; height: 36px; padding: 0 15px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 13.5px;">Unselected</span>
+          <span style="display: inline-flex; align-items: center; height: 36px; padding: 0 15px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 13.5px; color: #8A8377;">Disabled</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; background: #F6EFE2; border-left: 3px solid #C1663F; border-radius: 0 8px 8px 0; padding: 11px 14px;">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#C1663F" stroke-width="1.5" stroke-linecap="round"><path d="M8 2.5 L14.5 13.5 L1.5 13.5 Z"/><path d="M8 6.5 V9.5"/><path d="M8 11.4 V11.5"/></svg>
+          <span style="font-size: 13px; color: #4F4B44;">Non-blocking warning — advisory, dismissible.</span>
+        </div>
+
+        <div style="display: flex; gap: 9px; flex-wrap: wrap;">
+          <span style="display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; padding: 5px 13px; font-size: 12.5px; background: #F1F4EF; color: #47603F; border: 1px solid #D6DFD1;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #7E9080;"></span>14h left</span>
+          <span style="display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; padding: 5px 13px; font-size: 12.5px; background: #FBF4E6; color: #8A6B3A; border: 1px solid #E7D5B0;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #C8973E;"></span>9h 44m</span>
+          <span style="display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; padding: 5px 13px; font-size: 12.5px; background: #F6EFE2; color: #A33A2B; border: 1px solid #E8C9B8;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #A33A2B;"></span>3h 10m</span>
+          <span style="display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; padding: 5px 13px; font-size: 12.5px; background: #1B1A17; color: #FBF9F5;">Breached</span>
+        </div>
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <input style="flex-grow: 1; height: 44px; border: 1px solid #E4DACA; border-radius: 6px; padding: 0 13px; font-family: inherit; font-size: 14px; background: #FBF9F5; color: #1B1A17;" value="Field · 44px · 6px radius" />
+          <span style="height: 44px; display: inline-flex; align-items: center; padding: 0 13px; border: 2px solid rgba(176,141,87,.4); border-radius: 6px; font-size: 13px; color: #8A8377;">Focus ring</span>
+        </div>
+
+        <div style="display: flex; gap: 22px; align-items: center; border: 1px solid #E4DACA; border-radius: 10px; padding: 14px 16px;">
+          <div style="text-align: center;">
+            <svg width="30" height="38" viewBox="-16 -34 32 38"><path d="M0 0 C -9 -13 -15 -18 -15 -25 a15 15 0 1 1 30 0 c0 7 -6 12 -15 25 Z" fill="#8A6B3A"/><path d="M-6 -25 L0 -31 L6 -25 L6 -19 L-6 -19 Z" fill="#FBF9F5"/></svg>
+            <div class="swv" style="margin-top: 4px;">villa</div>
+          </div>
+          <div style="text-align: center;">
+            <svg width="30" height="38" viewBox="-15 -30 30 38"><circle cy="-13" r="13" fill="#24352D"/><text y="-9" text-anchor="middle" font-family="Jost, sans-serif" font-size="12" font-weight="500" fill="#FBF9F5">3</text></svg>
+            <div class="swv" style="margin-top: 4px;">stop</div>
+          </div>
+          <div style="flex-grow: 1;">
+            <svg width="100%" height="38" viewBox="0 0 320 38" preserveAspectRatio="xMidYMid meet">
+              <path d="M8 30 C 92 30 120 8 200 8 L 310 8" fill="none" stroke="#B08D57" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <div class="swv" style="margin-top: 2px;">route · 2.4px brass, dotted 1/7, rounded caps</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

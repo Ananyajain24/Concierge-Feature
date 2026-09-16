@@ -1,0 +1,17 @@
+{
+  "kind": "affine",
+  "width": 1000,
+  "height": 620,
+  "matrix": [2450.3204, 260.6522, -184400.4284, -61.9241, -1718.6876, 31594.6468],
+  "anchors": [
+    { "id": "arambol",  "lat": 15.6869, "lng": 73.7033, "x": 302, "y": 78,  "label": "Arambol" },
+    { "id": "ashwem",   "lat": 15.6432, "lng": 73.7361, "x": 328, "y": 150, "label": "Ashwem" },
+    { "id": "chapora",  "lat": 15.6055, "lng": 73.7350, "x": 340, "y": 200, "label": "Chapora" },
+    { "id": "anjuna",   "lat": 15.5735, "lng": 73.7407, "x": 352, "y": 246, "label": "Anjuna" },
+    { "id": "assagao",  "lat": 15.5850, "lng": 73.7700, "x": 432, "y": 246, "label": "Assagao" },
+    { "id": "mapusa",   "lat": 15.5919, "lng": 73.8087, "x": 516, "y": 216, "label": "Mapusa" },
+    { "id": "candolim", "lat": 15.5180, "lng": 73.7620, "x": 372, "y": 356, "label": "Candolim" },
+    { "id": "panjim",   "lat": 15.4989, "lng": 73.8278, "x": 556, "y": 404, "label": "Panjim" },
+    { "id": "oldgoa",   "lat": 15.5009, "lng": 73.9119, "x": 744, "y": 372, "label": "Old Goa" }
+  ]
+}

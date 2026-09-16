@@ -76,7 +76,7 @@ export function PoiForm({
   }
 
   return (
-    <div className="space-y-4 rounded border border-ink/10 bg-white p-6">
+    <div className="space-y-4 rounded border border-linen bg-ivory p-6">
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Name">
           <input value={draft.name} onChange={(e) => set("name", e.target.value)} className="input" />
@@ -129,11 +129,11 @@ export function PoiForm({
         />
       </Field>
 
-      {err && <p className="text-sm text-coral">{err}</p>}
+      {err && <p className="text-sm text-terracotta">{err}</p>}
 
       <div className="flex justify-end gap-3">
         <button onClick={() => router.back()} className="rounded border px-4 py-1.5 text-sm">Cancel</button>
-        <button onClick={save} disabled={saving} className="rounded bg-ink px-4 py-1.5 text-sm text-sand disabled:opacity-50">
+        <button onClick={save} disabled={saving} className="rounded bg-ink px-4 py-1.5 text-sm text-ivory disabled:opacity-50">
           {saving ? "Saving…" : "Save"}
         </button>
       </div>
@@ -155,7 +155,7 @@ export function PoiForm({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1 block text-xs uppercase tracking-wide text-ink/60">{label}</span>
+      <span className="mb-1 block text-xs uppercase tracking-wide text-graphite">{label}</span>
       {children}
     </label>
   );

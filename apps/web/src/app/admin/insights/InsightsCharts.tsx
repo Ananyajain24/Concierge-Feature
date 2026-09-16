@@ -58,13 +58,13 @@ export function InsightsCharts({ data }: { data: Insights }) {
         <ol className="divide-y divide-ink/5">
           {data.poiSwapOutRate.map((r, i) => (
             <li key={r.id} className="flex items-center gap-3 py-2 text-sm">
-              <span className="w-6 text-right text-ink/40">{i + 1}</span>
+              <span className="w-6 text-right text-muted">{i + 1}</span>
               <span className="flex-1 font-medium">{r.name}</span>
-              <span className="text-xs text-ink/50">{r.category}</span>
+              <span className="text-xs text-muted">{r.category}</span>
               <span className="w-10 text-right font-mono">{r.times_swapped_out}</span>
             </li>
           ))}
-          {data.poiSwapOutRate.length === 0 && <li className="py-4 text-sm text-ink/40">No swap events yet.</li>}
+          {data.poiSwapOutRate.length === 0 && <li className="py-4 text-sm text-muted">No swap events yet.</li>}
         </ol>
       </Panel>
 
@@ -72,18 +72,18 @@ export function InsightsCharts({ data }: { data: Insights }) {
         <ol className="divide-y divide-ink/5">
           {data.ctaByPoi.slice(0, 15).map((r, i) => (
             <li key={r.id} className="flex items-center gap-3 py-2 text-sm">
-              <span className="w-6 text-right text-ink/40">{i + 1}</span>
+              <span className="w-6 text-right text-muted">{i + 1}</span>
               <span className="flex-1 font-medium">{r.name}</span>
               <span className="w-10 text-right font-mono">{r.clicks}</span>
             </li>
           ))}
-          {data.ctaByPoi.length === 0 && <li className="py-4 text-sm text-ink/40">No clicks yet.</li>}
+          {data.ctaByPoi.length === 0 && <li className="py-4 text-sm text-muted">No clicks yet.</li>}
         </ol>
       </Panel>
 
       <Panel title="Generation cost & latency by prompt version">
         <table className="w-full text-sm">
-          <thead className="text-left text-xs text-ink/60">
+          <thead className="text-left text-xs text-graphite">
             <tr>
               <th className="py-2">Prompt version</th>
               <th className="py-2 text-right">Runs</th>
@@ -93,7 +93,7 @@ export function InsightsCharts({ data }: { data: Insights }) {
           </thead>
           <tbody>
             {data.generationByPromptVersion.map((r) => (
-              <tr key={r.prompt_version} className="border-t border-ink/5">
+              <tr key={r.prompt_version} className="border-t border-linen">
                 <td className="py-2 font-mono text-xs">{r.prompt_version}</td>
                 <td className="py-2 text-right">{r.runs}</td>
                 <td className="py-2 text-right">${r.avg_cost_usd.toFixed(4)}</td>
@@ -101,7 +101,7 @@ export function InsightsCharts({ data }: { data: Insights }) {
               </tr>
             ))}
             {data.generationByPromptVersion.length === 0 && (
-              <tr><td colSpan={4} className="py-4 text-center text-ink/40">No runs yet.</td></tr>
+              <tr><td colSpan={4} className="py-4 text-center text-muted">No runs yet.</td></tr>
             )}
           </tbody>
         </table>
@@ -112,7 +112,7 @@ export function InsightsCharts({ data }: { data: Insights }) {
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded border border-ink/10 bg-white p-4">
+    <section className="rounded border border-linen bg-ivory p-4">
       <h2 className="mb-3 font-medium">{title}</h2>
       {children}
     </section>
@@ -121,10 +121,10 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
 
 function Kpi({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded border border-ink/10 bg-white p-4">
-      <p className="text-xs uppercase tracking-wide text-ink/50">{label}</p>
+    <div className="rounded border border-linen bg-ivory p-4">
+      <p className="text-xs uppercase tracking-wide text-muted">{label}</p>
       <p className="mt-1 font-display text-3xl">{value}</p>
-      {sub && <p className="text-xs text-ink/40">{sub}</p>}
+      {sub && <p className="text-xs text-muted">{sub}</p>}
     </div>
   );
 }

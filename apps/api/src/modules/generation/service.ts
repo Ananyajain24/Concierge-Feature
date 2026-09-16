@@ -1,28 +1,37 @@
 import crypto from "node:crypto";
 import { eq } from "drizzle-orm";
-import { validateItinerary } from "@lohono/itinerary-engine";
+import { computeWarnings, validateItinerary } from "@lohono/itinerary-engine";
 import {
   llmNarrationSchema,
   llmSelectionSchema,
+  WARNING_COPY,
   type Day,
   type LlmSelection,
   type Poi,
   type Stop,
 } from "@lohono/shared-types";
 import { db } from "../../db/client";
-import { bookings, villas, itineraries } from "../../db/schema/index";
+import { bookings, villas, destinations, itineraries } from "../../db/schema/index";
 import { preferencesRepo } from "../questionnaire/repository";
-import { loadDriveMatrix, retrieveCandidates } from "./retriever";
+import { loadDriveMatrix, retrieveCandidates, secondsOnly, type DrivePair } from "./retriever";
 import { buildSelectPrompt, V1_SELECT_VERSION } from "./prompts/v1-select";
 import { buildNarratePrompt, V1_NARRATE_VERSION } from "./prompts/v1-narrate";
 import { jsonCall } from "./llm";
 import { repairSelection } from "./repair";
+import { reviewService } from "../review/service";
 
 export async function generateItineraryForBooking(bookingId: string) {
   const booking = await db.select().from(bookings).where(eq(bookings.id, bookingId)).limit(1).then((r) => r[0]);
   if (!booking) throw new Error(`booking ${bookingId} not found`);
   const villa = await db.select().from(villas).where(eq(villas.id, booking.villaId)).limit(1).then((r) => r[0]);
   if (!villa) throw new Error("villa not found");
+  const destination = await db
+    .select()
+    .from(destinations)
+    .where(eq(destinations.id, villa.destinationId))
+    .limit(1)
+    .then((r) => r[0]);
+  if (!destination) throw new Error("destination not found");
   const prefs = await preferencesRepo.get(bookingId);
   if (!prefs) throw new Error("guest preferences not found — questionnaire required first");
 
@@ -44,7 +53,7 @@ export async function generateItineraryForBooking(bookingId: string) {
   // Pass 1 — selection
   const select = buildSelectPrompt({
     villaName: villa.name,
-    destinationName: villa.name.includes("Goa") ? "Goa" : "Goa",
+    destinationName: destination.name,
     checkIn: String(booking.checkIn),
     checkOut: String(booking.checkOut),
     answers: prefs.answers,
@@ -64,7 +73,7 @@ export async function generateItineraryForBooking(bookingId: string) {
     destinationId: villa.destinationId,
     days: days1,
     poisById: poiById,
-    driveSecondsByPair: driveMatrix,
+    driveSecondsByPair: secondsOnly(driveMatrix),
   });
 
   let repairAttempted = false;
@@ -83,7 +92,7 @@ export async function generateItineraryForBooking(bookingId: string) {
         destinationId: villa.destinationId,
         days: days2,
         poisById: poiById,
-        driveSecondsByPair: driveMatrix,
+        driveSecondsByPair: secondsOnly(driveMatrix),
       });
       if (v2.length > 0) flaggedForReview = true;
     }
@@ -94,7 +103,7 @@ export async function generateItineraryForBooking(bookingId: string) {
   // Pass 2 — narration
   const nar = buildNarratePrompt({
     villaName: villa.name,
-    destinationName: "Goa",
+    destinationName: destination.name,
     days: selection.days,
     poiById,
   });
@@ -107,40 +116,66 @@ export async function generateItineraryForBooking(bookingId: string) {
   const narratedDays = mergeNarration(days, parsedNar.data);
   const summary = parsedNar.data.summary;
 
-  const status = flaggedForReview ? "review" : "review"; // always go to review — reviewer publishes
-  const slaDueAt = new Date(Date.now() + 24 * 3600 * 1000);
+  // No human reviewer in front of the guest right now, so this is the one
+  // chance to attach the engine's own advisory flags (KID_UNFRIENDLY,
+  // CLOSED_TODAY, ...) before the guest ever sees the plan — previously
+  // these only appeared after a guest's first edit, as a side effect of
+  // editing/service.ts's applyAndPublish running the same check.
+  const kidAges = prefs.answers.kidAges;
+  const { stopWarnings } = computeWarnings({
+    days: narratedDays,
+    poisById: poiById,
+    driveSecondsByPair: secondsOnly(driveMatrix),
+    travelMonth,
+    hasYoungKids: kidAges.some((n) => n <= 10),
+  });
+  const withWarnings = narratedDays.map((d) => ({
+    ...d,
+    stops: d.stops.map((s) => ({
+      ...s,
+      warnings: stopWarnings
+        .filter((w) => w.dayIndex === d.dayIndex && w.poiId === s.poiId)
+        .map((w) => WARNING_COPY[w.code]),
+    })),
+  }));
 
   const [row] = await db
     .insert(itineraries)
     .values({
       id: crypto.randomUUID(),
       bookingId,
-      status,
-      slaDueAt,
+      status: "draft",
       promptVersion: `${V1_SELECT_VERSION}+${V1_NARRATE_VERSION}`,
       model: s1.model,
       costUsd: totalCost,
       latencyMs: totalLatencyMs,
       version: 1,
-      days: narratedDays,
+      days: withWarnings,
       summary,
     })
     .returning();
 
-  return { itinerary: row, repairAttempted, flaggedForReview };
+  // Human review is switched off for now (CLAUDE.md rule 3 revisited) — the
+  // guest sees this the moment generation finishes, not after a reviewer
+  // approves it. reviewService.publish is the same path the admin "Approve &
+  // publish" button used to call, so the snapshot it produces is identical.
+  if (!row) throw new Error("failed to insert itinerary row");
+  const published = await reviewService.publish(row.id);
+
+  return { itinerary: published ?? row, repairAttempted, flaggedForReview };
 }
 
 // Convert LLM selection to internal Day objects with drive times populated.
 function selectionToDays(
   sel: LlmSelection,
-  drive: Record<string, number>,
+  drive: Record<string, DrivePair>,
   villaId: string,
 ): Day[] {
   return sel.days.map((d) => {
     const sorted = [...d.stops].sort((a, b) => a.order - b.order);
     let prevId = villaId;
     const stops: Stop[] = sorted.map((s, i) => {
-      const secs = drive[`${prevId}|${s.poiId}`] ?? 0;
+      const pair = drive[`${prevId}|${s.poiId}`];
       const stop: Stop = {
         id: crypto.randomUUID(),
         poiId: s.poiId,
@@ -148,8 +183,8 @@ function selectionToDays(
         order: i,
         isPinned: false,
         copy: "",
-        driveFromPreviousSec: secs,
-        driveFromPreviousMeters: 0,
+        driveFromPreviousSec: pair?.sec ?? 0,
+        driveFromPreviousMeters: pair?.meters ?? 0,
         warnings: [],
       };
       prevId = s.poiId;

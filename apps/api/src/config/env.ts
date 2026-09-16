@@ -9,6 +9,9 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   API_PORT: z.coerce.number().int().positive().default(4000),
   CORS_ORIGIN: z.string().default("http://localhost:3000"),
+  // Where the guest-facing app is served — used only to log the trip link
+  // on publish (no WhatsApp/email sending in MVP, per CLAUDE.md).
+  WEB_ORIGIN: z.string().default("http://localhost:3000"),
   // Which LLM backs generation — the only switch callers need to flip.
   LLM_PROVIDER: z.enum(["anthropic", "gemini"]).default("anthropic"),
   ANTHROPIC_API_KEY: z.string().optional(),

@@ -8,7 +8,10 @@ export async function api<T = unknown>(
   const res = await fetch(`${BASE}${path}`, {
     ...init,
     headers: {
-      "Content-Type": "application/json",
+      // A JSON content-type on a bodyless request (POST /publish, etc.) makes
+      // Fastify's body parser choke on the empty body and reject with 400 —
+      // only claim JSON when there is actually a JSON body to parse.
+      ...(init.body ? { "Content-Type": "application/json" } : {}),
       ...(init.headers ?? {}),
     },
     cache: "no-store",

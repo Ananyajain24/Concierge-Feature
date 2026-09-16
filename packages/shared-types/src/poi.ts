@@ -52,6 +52,9 @@ export const poiSchema = z.object({
   qualityScore: z.number().min(0).max(1),
   bookingUrl: z.string().url().nullable().optional(),
   photoUrl: z.string().url().nullable().optional(),
+  address: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  priceInr: z.number().int().nonnegative().nullable().optional(),
 });
 export type Poi = z.infer<typeof poiSchema>;
 

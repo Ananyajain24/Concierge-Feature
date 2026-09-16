@@ -9,3 +9,5 @@ export * from "./edits";
 export * from "./jobs";
 export * from "./map-assets";
 export * from "./booking-leads";
+export * from "./service-providers";
+export * from "./guest-bookings";

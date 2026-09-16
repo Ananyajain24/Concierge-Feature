@@ -7,7 +7,8 @@ import { db } from "../../db/client";
 import { bookings, itineraries, villas } from "../../db/schema/index";
 import { reviewRepo } from "../review/repository";
 import { buildPublishedSnapshot } from "../review/snapshot";
-import { loadDriveMatrix } from "../generation/retriever";
+import { loadDriveMatrix, secondsOnly, type DrivePair } from "../generation/retriever";
+import { preferencesRepo } from "../questionnaire/repository";
 import { verifyBookingToken } from "../../lib/token";
 
 async function loadContext(itineraryId: string) {
@@ -21,15 +22,21 @@ async function loadContext(itineraryId: string) {
   return { it, booking, villa, pois: pois as Poi[] };
 }
 
-function recomputeDrive(days: Day[], drive: Record<string, number>, villaId: string): Day[] {
+function recomputeDrive(days: Day[], drive: Record<string, DrivePair>, villaId: string): Day[] {
   return days.map((d) => {
     let prevId = villaId;
     return {
       ...d,
       stops: d.stops.map((s, i) => {
         const key = `${prevId}|${s.poiId}`;
+        const pair = drive[key];
         prevId = s.poiId;
-        return { ...s, order: i, driveFromPreviousSec: drive[key] ?? 0 };
+        return {
+          ...s,
+          order: i,
+          driveFromPreviousSec: pair?.sec ?? 0,
+          driveFromPreviousMeters: pair?.meters ?? 0,
+        };
       }),
     };
   });
@@ -51,7 +58,7 @@ async function applyAndPublish(
     destinationId: ctx.villa.destinationId,
     days: withDrive,
     poisById,
-    driveSecondsByPair: drive,
+    driveSecondsByPair: secondsOnly(drive),
   });
   // Guest edits are never blocked — but structural violations shouldn't publish.
   if (violations.some((v) => v.kind === "unknown_poi" || v.kind === "wrong_destination")) {
@@ -59,11 +66,14 @@ async function applyAndPublish(
   }
 
   const travelMonth = new Date(String(ctx.booking.checkIn)).getUTCMonth() + 1;
-  const kidAges = ((ctx.it.days as unknown) as unknown[]).length ? [] : []; // preferences not fetched here
+  // Real kid ages from the questionnaire, not a stub — a guest edit that
+  // reintroduces a KID_UNFRIENDLY stop should warn just like generation does.
+  const prefs = await preferencesRepo.get(ctx.booking.id);
+  const kidAges = prefs?.answers.kidAges ?? [];
   const { stopWarnings, dayWarnings } = computeWarnings({
     days: withDrive,
     poisById,
-    driveSecondsByPair: drive,
+    driveSecondsByPair: secondsOnly(drive),
     travelMonth,
     hasYoungKids: kidAges.some((n) => (n as number) <= 10),
   });
@@ -189,10 +199,11 @@ export const editingService = {
 
   freeText: async (token: string, itineraryId: string, message: string) => {
     requireTokenAccess(token, itineraryId);
-    await db
-      .update(itineraries)
-      .set({ status: "review" })
-      .where(eq(itineraries.id, itineraryId));
+    // No human reviewer in front of the guest right now — flipping status to
+    // "review" here used to hand this to a concierge, but with nothing left
+    // to re-publish it, that would just hide the guest's own itinerary from
+    // them indefinitely. Log the request and leave the published trip up.
+    console.log(`[REQUEST] itinerary=${itineraryId}: ${message}`);
     await reviewRepo.writeEdit({
       itineraryId,
       actor: "guest",
@@ -201,6 +212,6 @@ export const editingService = {
       reasonCode: "COPY_TONE",
       note: `Guest free-text request: ${message}`,
     });
-    return { queuedForReview: true };
+    return { logged: true };
   },
 };

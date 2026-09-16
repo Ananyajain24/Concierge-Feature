@@ -1,0 +1,118 @@
+/* Map motion. Only transform, opacity and stroke-dashoffset — all compositor-friendly.
+   Delays are passed per element as an inline animation-delay. */
+
+.place {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: rise 0.5s cubic-bezier(0.2, 0.85, 0.25, 1) forwards;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.lab {
+  opacity: 0;
+  animation: fade 0.4s ease forwards;
+}
+@keyframes fade {
+  to {
+    opacity: 1;
+  }
+}
+
+/* The dotted connector is revealed through an animated mask, so the dots
+   appear to travel outward from the villa rather than sliding along. */
+.reveal {
+  animation: reveal 0.9s cubic-bezier(0.3, 0.7, 0.3, 1) forwards;
+}
+@keyframes reveal {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.sway {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: sway 6s ease-in-out infinite;
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2.2deg);
+  }
+}
+
+.bob {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: bob 4.5s ease-in-out infinite;
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(1.2deg);
+  }
+}
+
+.flutter {
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+  animation: flutter 3s ease-in-out infinite;
+}
+@keyframes flutter {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.72);
+  }
+}
+
+.shine {
+  animation: shine 5s ease-in-out infinite;
+}
+@keyframes shine {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.stop {
+  cursor: pointer;
+  transition: opacity 0.28s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .place,
+  .lab,
+  .reveal,
+  .sway,
+  .bob,
+  .flutter,
+  .shine {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    stroke-dashoffset: 0 !important;
+  }
+}

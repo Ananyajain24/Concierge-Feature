@@ -1,6 +1,6 @@
 import { and, eq, ilike, or } from "drizzle-orm";
 import { db } from "../../db/client";
-import { destinations, pois, villas } from "../../db/schema/index";
+import { destinations, mapAssets, pois, villas } from "../../db/schema/index";
 import type { ListPoisQuery } from "./schema";
 
 // ---- destinations ----
@@ -13,6 +13,28 @@ export const destinationRepo = {
   update: (id: string, data: Partial<typeof destinations.$inferInsert>) =>
     db.update(destinations).set(data).where(eq(destinations.id, id)).returning().then((r) => r[0] ?? null),
   remove: (id: string) => db.delete(destinations).where(eq(destinations.id, id)).returning({ id: destinations.id }),
+
+  // Whether this destination has enough real data to actually generate an
+  // itinerary from — a curated catalog and a georeferenced map. Never a
+  // hardcoded destination check: a new destination becomes "ready" the moment
+  // ops seeds its catalog and runs the anchor fit, nothing in code changes.
+  readiness: async (id: string) => {
+    const [poiRows, villaRows, assetRows] = await Promise.all([
+      db.select({ id: pois.id }).from(pois).where(eq(pois.destinationId, id)),
+      db.select({ id: villas.id }).from(villas).where(eq(villas.destinationId, id)),
+      db.select({ id: mapAssets.id }).from(mapAssets).where(eq(mapAssets.destinationId, id)),
+    ]);
+    const poiCount = poiRows.length;
+    const hasMapAsset = assetRows.length > 0;
+    // Mirrors generation/retriever's own floor (`candidates.length < 5` fails
+    // the job outright), so "ready" here means generation will not fail.
+    return {
+      ready: poiCount >= 5 && hasMapAsset,
+      poiCount,
+      villaCount: villaRows.length,
+      hasMapAsset,
+    };
+  },
 };
 
 // ---- villas ----

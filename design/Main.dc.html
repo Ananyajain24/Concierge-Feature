@@ -1,0 +1,638 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap">
+  <style>
+    body { margin: 0; background: #FBF9F5; font-family: "Jost", system-ui, sans-serif; color: #1B1A17; -webkit-font-smoothing: antialiased; }
+    a { color: #6E5430; text-decoration: none; }
+    a:hover { color: #55401F; }
+    .disp { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 400; }
+    .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #8A8377; }
+
+    .place { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%;
+             animation: rise .5s cubic-bezier(.2,.85,.25,1) forwards; }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px) scale(.86) } to { opacity: 1; transform: none } }
+    .lab { opacity: 0; animation: fade .4s ease forwards; }
+    @keyframes fade { to { opacity: 1 } }
+    .rev { animation: rev .9s cubic-bezier(.3,.7,.3,1) forwards; }
+    @keyframes rev { to { stroke-dashoffset: 0 } }
+    .d0 { animation-delay: .10s } .d1 { animation-delay: .46s } .d2 { animation-delay: .64s }
+    .d3 { animation-delay: .82s } .d4 { animation-delay: 1s }   .d5 { animation-delay: 1.18s }
+    .d6 { animation-delay: 1.36s }
+    .v1 { animation-delay: .54s } .v2 { animation-delay: .72s } .v3 { animation-delay: .90s }
+    .v4 { animation-delay: 1.08s } .v5 { animation-delay: 1.26s } .v6 { animation-delay: 1.44s }
+    .n1 { animation-delay: 1.30s } .n2 { animation-delay: 1.48s } .n3 { animation-delay: 1.66s }
+    .n4 { animation-delay: 1.84s } .n5 { animation-delay: 2.02s } .n6 { animation-delay: 2.20s }
+    .sway { transform-box: fill-box; transform-origin: 50% 100%; animation: sway 6s ease-in-out infinite; }
+    @keyframes sway { 0%,100% { transform: rotate(-2deg) } 50% { transform: rotate(2.2deg) } }
+    .bob { transform-box: fill-box; transform-origin: 50% 100%; animation: bob 4.5s ease-in-out infinite; }
+    @keyframes bob { 0%,100% { transform: translateY(0) rotate(-1deg) } 50% { transform: translateY(-3px) rotate(1.2deg) } }
+    .flutter { transform-box: fill-box; transform-origin: 0% 50%; animation: flutter 3s ease-in-out infinite; }
+    @keyframes flutter { 0%,100% { transform: scaleX(1) } 50% { transform: scaleX(.72) } }
+    .shine { animation: shine 5s ease-in-out infinite; }
+    @keyframes shine { 0%,100% { opacity: .5 } 50% { opacity: .9 } }
+    @media (prefers-reduced-motion: reduce) {
+      .place, .lab, .rev, .sway, .bob, .flutter, .shine { animation: none !important; opacity: 1; transform: none; stroke-dashoffset: 0 !important; }
+    }
+  </style>
+</helmet>
+
+<div style="min-height: 100%; background: #FBF9F5;">
+
+  <!-- top bar -->
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; border-bottom: 1px solid #E4DACA; background: #FBF9F5;">
+    <div style="display: flex; align-items: baseline; gap: 14px;">
+      <span class="disp" style="font-size: 22px; letter-spacing: .22em; text-transform: uppercase;">Lohono</span>
+      <span style="width: 1px; height: 14px; background: #E4DACA; display: inline-block;"></span>
+      <span class="eyebrow" style="color: #B08D57;">Concierge</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 20px; font-size: 13px; color: #4F4B44;">
+      <span>Reviewed by Meera K. · 14 Nov</span>
+      <span style="display: inline-flex; align-items: center; gap: 7px; border: 1px solid #E4DACA; border-radius: 999px; padding: 6px 14px; background: #FBF9F5;">
+        <span style="width: 6px; height: 6px; border-radius: 999px; background: #7E9080;"></span>Published · v2
+      </span>
+    </div>
+  </div>
+
+  <!-- hero -->
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 336px; gap: 56px; padding: 48px 48px 36px;">
+    <div>
+      <div class="eyebrow">12 – 16 November · Villa Amarelo, Assagao</div>
+      <h1 class="disp" style="margin: 14px 0 0; font-size: 44px; line-height: 1.09; letter-spacing: -.01em; max-width: 15ch; text-wrap: pretty;">Five slow days on the north coast</h1>
+      <p style="margin: 18px 0 0; max-width: 62ch; font-size: 15px; line-height: 1.72; color: #4F4B44; text-wrap: pretty;">
+        Aanya — you asked for quiet mornings, long lunches and one proper night out. So the drives stay
+        under forty minutes, the beaches are the ones that empty by four, and Saturday is held for
+        the night market. Everything here is walkable from the car, and everything is within an hour of the villa.
+      </p>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px;">
+        <span style="border: 1px solid #E4DACA; border-radius: 999px; padding: 7px 15px; font-size: 13px; color: #4F4B44;">4 guests · 2 rooms</span>
+        <span style="border: 1px solid #E4DACA; border-radius: 999px; padding: 7px 15px; font-size: 13px; color: #4F4B44;">Slow pace</span>
+        <span style="border: 1px solid #E4DACA; border-radius: 999px; padding: 7px 15px; font-size: 13px; color: #4F4B44;">Foodie · Relax</span>
+        <span style="border: 1px solid #E4DACA; border-radius: 999px; padding: 7px 15px; font-size: 13px; color: #4F4B44;">11 stops · 5 days</span>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="border: 1px solid #E4DACA; border-radius: 12px; background: #F2EBE0; padding: 20px;">
+        <div class="eyebrow">Getting there</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+            <span style="font-size: 14px;">BOM → GOI, 11 Nov</span>
+            <a href="#" style="font-size: 13px; font-weight: 500;">Find flights</a>
+          </div>
+          <div style="height: 1px; background: #E4DACA;"></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+            <span style="font-size: 14px;">Airport → villa, 62 min</span>
+            <a href="#" style="font-size: 13px; font-weight: 500;">Arrange a car</a>
+          </div>
+          <div style="height: 1px; background: #E4DACA;"></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+            <span style="font-size: 14px;">Scooters, 4 days</span>
+            <a href="#" style="font-size: 13px; font-weight: 500;">Reserve</a>
+          </div>
+        </div>
+      </div>
+      <div style="border: 1px solid #E4DACA; border-radius: 12px; padding: 20px; background: #FBF9F5;">
+        <div class="eyebrow">Your concierge</div>
+        <p style="margin: 12px 0 16px; font-size: 14px; line-height: 1.65; color: #4F4B44;">
+          Want something changed? Swap any stop yourself, or tell us and we'll redo the day.
+        </p>
+        <button style="width: 100%; height: 44px; border: 0; border-radius: 999px; background: #8A6B3A; color: #FBF9F5; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer;">Message Meera</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- map -->
+  <div style="padding: 0 48px 12px;">
+    <div style="position: relative; border-radius: 4px; overflow: hidden; background: #6FAEBC; height: 734px;">
+<svg viewBox="0 0 1000 620" width="100%" height="100%" style="display: block;">
+    <defs>
+      <linearGradient id="seaGm" x1="0" y1="0" x2="0.7" y2="1">
+        <stop offset="0" stop-color="#8FC3CC"/><stop offset="1" stop-color="#6FAEBC"/>
+      </linearGradient>
+      <clipPath id="awningM"><path d="M-23 -15 L-18 -28 L18 -28 L23 -15 Z"/></clipPath>
+
+      <mask id="mkm1" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="620">
+        <path d="M430 292 Q 264 220 326 140" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" class="rev v1"/>
+      </mask>
+      <mask id="mkm2" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="620">
+        <path d="M434 288 Q 406 252 382 232" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" class="rev v2"/>
+      </mask>
+      <mask id="mkm3" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="620">
+        <path d="M462 288 Q 496 258 510 242" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" class="rev v3"/>
+      </mask>
+      <mask id="mkm4" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="620">
+        <path d="M426 314 Q 386 340 356 360" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" class="rev v4"/>
+      </mask>
+      <mask id="mkm5" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="620">
+        <path d="M466 314 Q 522 348 566 376" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" class="rev v5"/>
+      </mask>
+      <mask id="mkm6" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="620">
+        <path d="M470 300 Q 580 306 690 332" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" class="rev v6"/>
+      </mask>
+    </defs>
+
+    <!-- ============ GROUND ============ -->
+    <rect width="1000" height="620" fill="url(#seaGm)"/>
+
+    <!-- land: coastal sand -->
+    <path d="M296 0 C286 44 306 74 298 112 C290 152 320 178 310 214 C300 252 334 276 324 314
+             C314 352 344 372 336 404 C328 440 356 464 348 500 C340 536 366 562 358 598
+             L358 620 L1000 620 L1000 0 Z" fill="#F2E3C0"/>
+    <!-- land: inland -->
+    <path d="M318 0 C308 44 328 74 320 112 C312 152 342 178 332 214 C322 252 356 276 346 314
+             C336 352 366 372 358 404 C350 440 378 464 370 500 C362 536 388 562 380 598
+             L380 620 L1000 620 L1000 0 Z" fill="#D9E0B6"/>
+    <!-- land: ghats -->
+    <path d="M660 0 C700 90 760 150 840 196 C900 230 950 250 1000 258 L1000 0 Z" fill="#BCCD96"/>
+    <path d="M756 620 C800 560 860 520 1000 486 L1000 620 Z" fill="#BCCD96"/>
+
+    <!-- rivers -->
+    <path d="M318 196 C386 186 440 208 512 196 C566 186 616 200 664 192" stroke="#8FC3CC" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M334 390 C424 374 480 404 566 390 C654 374 714 394 786 376" stroke="#8FC3CC" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <path d="M352 508 C434 496 486 520 566 506 C636 494 698 508 758 496" stroke="#8FC3CC" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M316 188 L296 196 L316 206 Z" fill="#8FC3CC"/>
+    <path d="M332 378 L306 390 L332 404 Z" fill="#8FC3CC"/>
+
+    <!-- ============ AMBIENT ILLUSTRATION ============ -->
+    <g stroke="#FBF9F5" stroke-opacity=".5" stroke-width="2" fill="none" stroke-linecap="round" class="shine">
+      <path d="M62 120 q11 -7 22 0 t22 0"/><path d="M140 244 q11 -7 22 0 t22 0"/>
+      <path d="M46 352 q11 -7 22 0 t22 0"/><path d="M152 452 q11 -7 22 0 t22 0"/>
+      <path d="M70 548 q11 -7 22 0 t22 0"/><path d="M196 92 q11 -7 22 0 t22 0"/>
+      <path d="M104 296 q11 -7 22 0 t22 0"/>
+    </g>
+
+    <!-- fishing boats -->
+    <g class="bob" transform="translate(186,318)">
+      <path d="M-14 0 q14 8 28 0 Z" fill="#FBF9F5"/>
+      <path d="M0 -1 L0 -18 L11 -5 Z" fill="#C1663F"/>
+    </g>
+    <g class="bob" style="animation-delay: 1.4s" transform="translate(112,476)">
+      <path d="M-11 0 q11 6 22 0 Z" fill="#FBF9F5"/>
+      <path d="M0 -1 L0 -14 L9 -4 Z" fill="#E8A77F"/>
+    </g>
+
+    <!-- birds -->
+    <g stroke="#FBF9F5" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8">
+      <path d="M212 168 q5 -4 10 0 q5 -4 10 0"/>
+      <path d="M238 152 q4 -3 8 0 q4 -3 8 0"/>
+    </g>
+
+    <!-- coastal palms (decor) -->
+    <g fill="none" stroke-linecap="round">
+      <g class="sway" transform="translate(316,268)">
+        <path d="M0 0 C1 -7 2 -13 3 -19" stroke="#8A7350" stroke-width="2.2"/>
+        <path d="M3 -19 q-10 -3 -13 4" stroke="#6F8A6B" stroke-width="2.6"/>
+        <path d="M3 -19 q10 -3 12 5" stroke="#6F8A6B" stroke-width="2.6"/>
+        <path d="M3 -19 q-6 -11 -13 -10" stroke="#86A37D" stroke-width="2.6"/>
+        <path d="M3 -19 q7 -11 14 -8" stroke="#86A37D" stroke-width="2.6"/>
+      </g>
+      <g class="sway" style="animation-delay: .8s" transform="translate(332,478)">
+        <path d="M0 0 C1 -7 2 -13 3 -19" stroke="#8A7350" stroke-width="2.2"/>
+        <path d="M3 -19 q-10 -3 -13 4" stroke="#6F8A6B" stroke-width="2.6"/>
+        <path d="M3 -19 q10 -3 12 5" stroke="#6F8A6B" stroke-width="2.6"/>
+        <path d="M3 -19 q-6 -11 -13 -10" stroke="#86A37D" stroke-width="2.6"/>
+        <path d="M3 -19 q7 -11 14 -8" stroke="#86A37D" stroke-width="2.6"/>
+      </g>
+      <g class="sway" style="animation-delay: 2.1s" transform="translate(348,560)">
+        <path d="M0 0 C1 -6 2 -11 3 -16" stroke="#8A7350" stroke-width="2"/>
+        <path d="M3 -16 q-9 -2 -11 4" stroke="#6F8A6B" stroke-width="2.4"/>
+        <path d="M3 -16 q9 -2 11 4" stroke="#6F8A6B" stroke-width="2.4"/>
+        <path d="M3 -16 q-5 -10 -12 -9" stroke="#86A37D" stroke-width="2.4"/>
+        <path d="M3 -16 q6 -10 13 -7" stroke="#86A37D" stroke-width="2.4"/>
+      </g>
+    </g>
+
+    <!-- inland groves + paddy -->
+    <g opacity=".75">
+      <ellipse cx="612" cy="140" rx="26" ry="12" fill="#AFC28B"/>
+      <ellipse cx="648" cy="156" rx="18" ry="9" fill="#AFC28B"/>
+      <ellipse cx="560" cy="452" rx="30" ry="13" fill="#AFC28B"/>
+      <ellipse cx="820" cy="300" rx="34" ry="14" fill="#AFC28B"/>
+      <ellipse cx="866" cy="320" rx="22" ry="10" fill="#AFC28B"/>
+      <ellipse cx="470" cy="556" rx="26" ry="11" fill="#AFC28B"/>
+    </g>
+    <g stroke="#C4D3A0" stroke-width="1.6" fill="none" opacity=".8">
+      <path d="M700 470 q18 -6 36 0 M700 482 q18 -6 36 0 M700 494 q18 -6 36 0"/>
+      <path d="M520 110 q16 -5 32 0 M520 120 q16 -5 32 0"/>
+    </g>
+
+    <!-- ============ DOTTED DISTANCE LINES ============ -->
+    <g fill="none" stroke="#A9803F" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="1 7">
+      <g class="stopS" style="opacity: 1"><path d="M430 292 Q 264 220 326 140" mask="url(#mkm1)"/></g>
+      <g class="stopS" style="opacity: 1"><path d="M434 288 Q 406 252 382 232" mask="url(#mkm2)"/></g>
+      <g class="stopS" style="opacity: 1"><path d="M462 288 Q 496 258 510 242" mask="url(#mkm3)"/></g>
+      <g class="stopS" style="opacity: 1"><path d="M426 314 Q 386 340 356 360" mask="url(#mkm4)"/></g>
+      <g class="stopS" style="opacity: 1"><path d="M466 314 Q 522 348 566 376" mask="url(#mkm5)"/></g>
+      <g class="stopS" style="opacity: 1"><path d="M470 300 Q 580 306 690 332" mask="url(#mkm6)"/></g>
+    </g>
+
+    <!-- ============ THE VILLA ============ -->
+    <g transform="translate(444,302)">
+      <g class="place d0">
+        <ellipse cx="0" cy="3" rx="42" ry="9" fill="#EDDCB4"/>
+        <rect x="-38" y="-9" width="17" height="9" rx="3.5" fill="#7FB8C4"/>
+        <path d="M-35 -6.5 h11 M-35 -3 h11" stroke="#A9D2DB" stroke-width="1"/>
+        <rect x="-17" y="-26" width="34" height="26" fill="#FDFBF7"/>
+        <path d="M-23 -26 L0 -43 L23 -26 Z" fill="#C1663F"/>
+        <path d="M-23 -26 L0 -43 L23 -26" fill="none" stroke="#A5522F" stroke-width="1.1" stroke-linejoin="round"/>
+        <rect x="-5" y="-13" width="10" height="13" rx="1" fill="#8A6B3A"/>
+        <rect x="-14" y="-21" width="7" height="6" fill="#9DC4CE"/>
+        <rect x="7" y="-21" width="7" height="6" fill="#9DC4CE"/>
+        <g class="sway" style="animation-delay: .3s">
+          <path d="M26 0 C27 -9 28 -16 29 -23" stroke="#8A7350" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          <path d="M29 -23 q-11 -3 -14 5" stroke="#6F8A6B" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <path d="M29 -23 q11 -3 13 5" stroke="#6F8A6B" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <path d="M29 -23 q-6 -12 -14 -11" stroke="#86A37D" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <path d="M29 -23 q8 -12 15 -9" stroke="#86A37D" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+        </g>
+      </g>
+      <g class="lab d0" style="animation-delay: .34s">
+        <rect x="-52" y="7" width="104" height="19" rx="9.5" fill="#8A6B3A"/>
+        <text x="0" y="20.5" text-anchor="middle" font-family="Jost, sans-serif" font-size="10" font-weight="600" letter-spacing="1.6" fill="#FBF9F5">VILLA AMARELO</text>
+      </g>
+    </g>
+
+    <!-- ============ STOPS ============ -->
+
+    <!-- 1 · Ashwem Beach -->
+    <g class="stopS" style="opacity: 1">
+      <g transform="translate(328,126)">
+        <g class="place d1">
+          <ellipse cx="0" cy="0" rx="31" ry="7" fill="#F8EED4"/>
+          <path d="M-18 0 L-18 -11 L-3 -11 L-3 0 Z" fill="#FDFBF7"/>
+          <path d="M-24 -11 L-10.5 -24 L3 -11 Z" fill="#C1663F"/>
+          <path d="M-24 -11 L-10.5 -24 L3 -11" fill="none" stroke="#A5522F" stroke-width="1"/>
+          <rect x="-13" y="-7" width="5" height="7" fill="#8A6B3A"/>
+          <g class="sway">
+            <path d="M14 0 C15 -8 16 -14 17 -21" stroke="#8A7350" stroke-width="2.3" fill="none" stroke-linecap="round"/>
+            <path d="M17 -21 q-11 -3 -14 5" stroke="#6F8A6B" stroke-width="2.7" fill="none" stroke-linecap="round"/>
+            <path d="M17 -21 q11 -3 13 5" stroke="#6F8A6B" stroke-width="2.7" fill="none" stroke-linecap="round"/>
+            <path d="M17 -21 q-6 -12 -14 -10" stroke="#86A37D" stroke-width="2.7" fill="none" stroke-linecap="round"/>
+            <path d="M17 -21 q8 -12 15 -9" stroke="#86A37D" stroke-width="2.7" fill="none" stroke-linecap="round"/>
+          </g>
+          <ellipse cx="-27" cy="-5" rx="3" ry="9.5" fill="#E8A77F" transform="rotate(-20 -27 -5)"/>
+        </g>
+      </g>
+      <g class="lab n1">
+        <text x="328" y="84" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="17" font-weight="600" fill="#1B1A17" paint-order="stroke" stroke="#F2E3C0" stroke-width="3.5" stroke-linejoin="round">Ashwem Beach</text>
+        <g transform="translate(312,216)">
+          <rect x="-30" y="-9" width="60" height="18" rx="9" fill="#FBF9F5" opacity=".95"/>
+          <text x="0" y="4" text-anchor="middle" font-family="Jost, sans-serif" font-size="10.5" font-weight="500" fill="#8A6B3A">5.1 km · 12 min</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- 2 · Chapora Fort -->
+    <g class="stopS" style="opacity: 1">
+      <g transform="translate(374,224)">
+        <g class="place d2">
+          <path d="M-27 0 C-19 -9 -10 -12 0 -12 C10 -12 19 -9 27 0 Z" fill="#CBBB95"/>
+          <path d="M-17 -12 L-17 -24 L-13 -24 L-13 -28 L-9 -28 L-9 -24 L-4 -24 L-4 -28 L0 -28 L0 -24 L5 -24 L5 -28 L9 -28 L9 -24 L13 -24 L13 -28 L17 -28 L17 -12 Z" fill="#F3EAD4"/>
+          <path d="M-17 -12 L17 -12" stroke="#D6C7A6" stroke-width="1"/>
+          <rect x="-3" y="-21" width="6" height="9" rx="1" fill="#8A6B3A"/>
+          <path d="M17 -28 L17 -42" stroke="#8A6B3A" stroke-width="1.7" stroke-linecap="round"/>
+          <path class="flutter" d="M17.5 -42 L29 -38.5 L17.5 -35 Z" fill="#C1663F"/>
+        </g>
+      </g>
+      <g class="lab n2">
+        <text x="336" y="222" text-anchor="end" font-family="Cormorant Garamond, Georgia, serif" font-size="17" font-weight="600" fill="#1B1A17" paint-order="stroke" stroke="#F2E3C0" stroke-width="3.5" stroke-linejoin="round">Chapora Fort</text>
+        <g transform="translate(418,246)">
+          <rect x="-30" y="-9" width="60" height="18" rx="9" fill="#FBF9F5" opacity=".95"/>
+          <text x="0" y="4" text-anchor="middle" font-family="Jost, sans-serif" font-size="10.5" font-weight="500" fill="#8A6B3A">7.4 km · 18 min</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- 3 · Mapusa Market -->
+    <g class="stopS" style="opacity: 1">
+      <g transform="translate(516,234)">
+        <g class="place d3">
+          <ellipse cx="0" cy="0" rx="27" ry="6" fill="#E6E9C4"/>
+          <rect x="-18" y="-15" width="36" height="15" fill="#FDFBF7"/>
+          <path d="M-23 -15 L-18 -28 L18 -28 L23 -15 Z" fill="#C1663F"/>
+          <g clip-path="url(#awningM)">
+            <path d="M-16.5 -15 L-12 -28 M-9 -15 L-4.5 -28 M-1.5 -15 L3 -28 M6 -15 L10.5 -28 M13.5 -15 L18 -28"
+                  stroke="#FDFBF7" stroke-width="3.4"/>
+          </g>
+          <path d="M-24 -28.5 L24 -28.5" stroke="#8A6B3A" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="-10" cy="-6" r="4.2" fill="#7E9080"/>
+          <circle cx="0" cy="-5" r="4.8" fill="#C8973E"/>
+          <circle cx="10" cy="-6" r="4.2" fill="#C1663F"/>
+          <path d="M-22 -3 q4 -6 8 0 Z" fill="#8A6B3A"/>
+          <path d="M14 -3 q4 -6 8 0 Z" fill="#8A6B3A"/>
+        </g>
+      </g>
+      <g class="lab n3">
+        <text x="548" y="234" text-anchor="start" font-family="Cormorant Garamond, Georgia, serif" font-size="17" font-weight="600" fill="#1B1A17" paint-order="stroke" stroke="#D9E0B6" stroke-width="3.5" stroke-linejoin="round">Mapusa Market</text>
+        <g transform="translate(510,268)">
+          <rect x="-30" y="-9" width="60" height="18" rx="9" fill="#FBF9F5" opacity=".95"/>
+          <text x="0" y="4" text-anchor="middle" font-family="Jost, sans-serif" font-size="10.5" font-weight="500" fill="#8A6B3A">6.8 km · 16 min</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- 4 · Bomra's, Candolim -->
+    <g class="stopS" style="opacity: 1">
+      <g transform="translate(346,372)">
+        <g class="place d4">
+          <ellipse cx="0" cy="0" rx="28" ry="6" fill="#F8EED4"/>
+          <path d="M-26 -34 q13 9 26 0 q13 -9 26 0" fill="none" stroke="#B08D57" stroke-width="1"/>
+          <circle cx="-15" cy="-30.5" r="1.9" fill="#E8C98E"/>
+          <circle cx="0" cy="-34" r="1.9" fill="#E8C98E"/>
+          <circle cx="15" cy="-30.5" r="1.9" fill="#E8C98E"/>
+          <rect x="-16" y="-16" width="32" height="16" fill="#FDFBF7"/>
+          <path d="M-22 -16 L0 -29 L22 -16 Z" fill="#C1663F"/>
+          <path d="M-22 -16 L0 -29 L22 -16" fill="none" stroke="#A5522F" stroke-width="1" stroke-linejoin="round"/>
+          <rect x="-4" y="-10" width="9" height="10" rx="1" fill="#8A6B3A"/>
+          <circle cx="-23" cy="-4" r="4" fill="#FDFBF7" stroke="#D8C9A6" stroke-width="1"/>
+          <circle cx="23" cy="-4" r="4" fill="#FDFBF7" stroke="#D8C9A6" stroke-width="1"/>
+        </g>
+      </g>
+      <g class="lab n4">
+        <text x="346" y="394" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="17" font-weight="600" fill="#1B1A17" paint-order="stroke" stroke="#F2E3C0" stroke-width="3.5" stroke-linejoin="round">Bomra's, Candolim</text>
+        <g transform="translate(404,336)">
+          <rect x="-30" y="-9" width="60" height="18" rx="9" fill="#FBF9F5" opacity=".95"/>
+          <text x="0" y="4" text-anchor="middle" font-family="Jost, sans-serif" font-size="10.5" font-weight="500" fill="#8A6B3A">9.2 km · 22 min</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- 5 · Mandovi sunset sail -->
+    <g class="stopS" style="opacity: 1">
+      <g transform="translate(582,392)">
+        <g class="place d5">
+          <g class="bob" style="animation-delay: .6s">
+            <path d="M-21 0 q21 11 42 0 Z" fill="#FDFBF7"/>
+            <path d="M-21 0 q21 11 42 0" fill="none" stroke="#D8C9A6" stroke-width="1"/>
+            <path d="M0 -2 L0 -32" stroke="#8A6B3A" stroke-width="2.1" stroke-linecap="round"/>
+            <path d="M2.5 -30 L21 -6 L2.5 -6 Z" fill="#C1663F"/>
+            <path d="M-2.5 -25 L-15 -6 L-2.5 -6 Z" fill="#E8A77F"/>
+          </g>
+          <path d="M-32 6 q9 -4 16 0 M18 7 q9 -4 16 0" stroke="#FBF9F5" stroke-width="1.8" fill="none" stroke-linecap="round" opacity=".85"/>
+        </g>
+      </g>
+      <g class="lab n5">
+        <text x="616" y="398" text-anchor="start" font-family="Cormorant Garamond, Georgia, serif" font-size="17" font-weight="600" fill="#1B1A17" paint-order="stroke" stroke="#D9E0B6" stroke-width="3.5" stroke-linejoin="round">Mandovi sunset sail</text>
+        <g transform="translate(516,348)">
+          <rect x="-32" y="-9" width="64" height="18" rx="9" fill="#FBF9F5" opacity=".95"/>
+          <text x="0" y="4" text-anchor="middle" font-family="Jost, sans-serif" font-size="10.5" font-weight="500" fill="#8A6B3A">14.1 km · 28 min</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- 6 · Basilica, Old Goa -->
+    <g class="stopS" style="opacity: 1">
+      <g transform="translate(708,352)">
+        <g class="place d6">
+          <ellipse cx="0" cy="1" rx="34" ry="7" fill="#E6E9C4"/>
+          <rect x="-28" y="-33" width="11" height="33" fill="#F3EAD4"/>
+          <path d="M-30 -33 L-22.5 -44 L-15 -33 Z" fill="#C1663F"/>
+          <rect x="17" y="-33" width="11" height="33" fill="#F3EAD4"/>
+          <path d="M15 -33 L22.5 -44 L30 -33 Z" fill="#C1663F"/>
+          <rect x="-19" y="-24" width="38" height="24" fill="#FDFBF7"/>
+          <path d="M-24 -24 L0 -40 L24 -24 Z" fill="#C1663F"/>
+          <path d="M-24 -24 L0 -40 L24 -24" fill="none" stroke="#A5522F" stroke-width="1" stroke-linejoin="round"/>
+          <path d="M-5 0 L-5 -11 a5 5 0 0 1 10 0 L5 0 Z" fill="#8A6B3A"/>
+          <circle cx="0" cy="-19" r="3.6" fill="#B08D57"/>
+          <path d="M0 -40 L0 -48 M-3 -45 L3 -45" stroke="#8A6B3A" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M-22.5 -44 L-22.5 -49 M-25 -46.8 L-20 -46.8" stroke="#8A6B3A" stroke-width="1.3" stroke-linecap="round"/>
+          <path d="M22.5 -44 L22.5 -49 M20 -46.8 L25 -46.8" stroke="#8A6B3A" stroke-width="1.3" stroke-linecap="round"/>
+        </g>
+      </g>
+      <g class="lab n6">
+        <text x="708" y="374" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="17" font-weight="600" fill="#1B1A17" paint-order="stroke" stroke="#D9E0B6" stroke-width="3.5" stroke-linejoin="round">Basilica, Old Goa</text>
+        <g transform="translate(590,308)">
+          <rect x="-32" y="-9" width="64" height="18" rx="9" fill="#FBF9F5" opacity=".95"/>
+          <text x="0" y="4" text-anchor="middle" font-family="Jost, sans-serif" font-size="10.5" font-weight="500" fill="#8A6B3A">21.4 km · 41 min</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- ============ CARTOGRAPHY ============ -->
+    <text x="128" y="176" font-family="Cormorant Garamond, Georgia, serif" font-size="17" letter-spacing="4.5" fill="#FBF9F5" opacity=".85">ARABIAN SEA</text>
+    <text x="756" y="90" font-family="Cormorant Garamond, Georgia, serif" font-size="14" letter-spacing="3.5" fill="#8A9B6A" opacity=".9">WESTERN GHATS</text>
+
+    <g transform="translate(112,540)" opacity=".92">
+      <circle r="26" fill="none" stroke="#FBF9F5" stroke-width="1.4"/>
+      <circle r="19" fill="none" stroke="#FBF9F5" stroke-width="0.8" opacity=".6"/>
+      <path d="M0 -24 L5 0 L0 24 L-5 0 Z" fill="#FBF9F5"/>
+      <path d="M0 -24 L5 0 L0 0 Z" fill="#C1663F"/>
+      <path d="M-24 0 L0 -4 L24 0 L0 4 Z" fill="#FBF9F5" opacity=".55"/>
+      <text x="0" y="-31" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="12" font-weight="600" fill="#FBF9F5">N</text>
+    </g>
+
+    <!-- frame -->
+    <rect x="9" y="9" width="982" height="602" fill="none" stroke="#B08D57" stroke-width="2.5"/>
+    <rect x="17" y="17" width="966" height="586" fill="none" stroke="#B08D57" stroke-width="0.9" opacity=".55"/>
+  </svg>
+      <div style="position: absolute; bottom: 26px; right: 26px; background: rgba(251,249,245,.94); border-radius: 12px; padding: 14px 16px;">
+        <div class="eyebrow" style="margin-bottom: 10px;">Distances are from your villa</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12.5px; color: #4F4B44;">
+          <span style="display: flex; align-items: center; gap: 9px;"><span style="width: 11px; height: 11px; border-radius: 2px; background: #C1663F; display: inline-block;"></span>Villa Amarelo, your base</span>
+          <span style="display: flex; align-items: center; gap: 9px;"><span style="width: 24px; height: 2px; background: #A9803F; display: inline-block;"></span>Drive from the villa</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- days -->
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 336px; gap: 56px; padding: 32px 48px 44px;">
+    <div style="display: flex; flex-direction: column; gap: 40px;">
+
+      <div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #E4DACA; padding-bottom: 14px;">
+          <div style="display: flex; align-items: baseline; gap: 16px;">
+            <span class="eyebrow">Day 1 · Wed 12 Nov</span>
+            <span class="disp" style="font-size: 27px;">Land, swim, eat late</span>
+          </div>
+          <span style="font-size: 12.5px; color: #8A8377;">41 min driving</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
+
+          <div style="display: flex; gap: 18px; border: 1px solid #E4DACA; border-radius: 12px; background: #FBF9F5; padding: 18px;">
+            <svg width="92" height="92" viewBox="0 0 92 92" style="border-radius: 8px; flex-shrink: 0;">
+              <rect width="92" height="92" fill="#ADD1D8"/>
+              <path d="M0 58 C 26 50 42 62 62 54 C 76 48 86 54 92 52 L92 92 L0 92 Z" fill="#EFE3CA"/>
+              <circle cx="70" cy="24" r="11" fill="#E8C98E"/>
+              <g stroke="#6F8A6B" stroke-width="2.6" fill="none" stroke-linecap="round">
+                <path d="M22 66 L20 50"/><path d="M20 50 q-10 -2 -13 5"/><path d="M20 50 q10 -2 13 5"/><path d="M20 50 q-6 -10 -13 -9"/><path d="M20 50 q6 -10 13 -9"/>
+              </g>
+            </svg>
+            <div style="flex-grow: 1;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;">
+                <div>
+                  <div class="eyebrow">Afternoon · 15:30 · Beach</div>
+                  <div style="font-size: 17px; font-weight: 500; margin-top: 5px;">Ashwem Beach</div>
+                </div>
+                <span style="border: 1px solid #E4DACA; border-radius: 999px; padding: 5px 12px; font-size: 12px; color: #4F4B44; white-space: nowrap;">12 min from villa</span>
+              </div>
+              <p style="margin: 9px 0 0; font-size: 14.5px; line-height: 1.65; color: #4F4B44; max-width: 64ch;">
+                The wide, flat one where the crowd thins after four. Park at the shack end, walk left for twenty minutes and you'll have sand to yourselves.
+              </p>
+              <div style="display: flex; gap: 10px; margin-top: 14px;">
+                <button style="border: 1px solid #E4DACA; background: transparent; border-radius: 999px; height: 36px; padding: 0 16px; font-family: inherit; font-size: 13px; color: #1B1A17; cursor: pointer;">Swap this stop</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 18px; border: 1px solid #E4DACA; border-radius: 12px; background: #FBF9F5; padding: 18px;">
+            <svg width="92" height="92" viewBox="0 0 92 92" style="border-radius: 8px; flex-shrink: 0;">
+              <rect width="92" height="92" fill="#F2EBE0"/>
+              <rect x="16" y="40" width="60" height="38" fill="#E3D2B2"/>
+              <path d="M10 40 L46 16 L82 40 Z" fill="#CFC0A1"/>
+              <rect x="38" y="56" width="16" height="22" fill="#8A6B3A"/>
+              <circle cx="46" cy="46" r="5" fill="#FBF9F5"/>
+            </svg>
+            <div style="flex-grow: 1;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;">
+                <div>
+                  <div class="eyebrow">Sunset · 18:15 · Viewpoint</div>
+                  <div style="font-size: 17px; font-weight: 500; margin-top: 5px;">Chapora Fort</div>
+                </div>
+                <span style="border: 1px solid #E4DACA; border-radius: 999px; padding: 5px 12px; font-size: 12px; color: #4F4B44; white-space: nowrap;">18 min · 7.4 km</span>
+              </div>
+              <p style="margin: 9px 0 0; font-size: 14.5px; line-height: 1.65; color: #4F4B44; max-width: 64ch;">
+                Ten minutes uphill on loose stone — wear something with a grip. The river mouth goes gold about twenty minutes before the sun actually drops.
+              </p>
+              <div style="display: flex; align-items: center; gap: 10px; background: #F6EFE2; border-left: 3px solid #C1663F; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-top: 14px;">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#C1663F" stroke-width="1.5" stroke-linecap="round"><path d="M8 2.5 L14.5 13.5 L1.5 13.5 Z"/><path d="M8 6.5 V9.5"/><path d="M8 11.4 V11.5"/></svg>
+                <span style="font-size: 13px; color: #4F4B44;">Steep, uneven steps — probably not for Kiaan (4).</span>
+              </div>
+              <div style="display: flex; gap: 10px; margin-top: 14px;">
+                <button style="border: 1px solid #E4DACA; background: transparent; border-radius: 999px; height: 36px; padding: 0 16px; font-family: inherit; font-size: 13px; color: #1B1A17; cursor: pointer;">Swap this stop</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 18px; border: 1px solid #E4DACA; border-radius: 12px; background: #FBF9F5; padding: 18px;">
+            <svg width="92" height="92" viewBox="0 0 92 92" style="border-radius: 8px; flex-shrink: 0;">
+              <rect width="92" height="92" fill="#24352D"/>
+              <circle cx="46" cy="44" r="20" fill="#F2EBE0"/>
+              <circle cx="46" cy="44" r="13" fill="#E3D2B2"/>
+              <path d="M22 70 h48" stroke="#B08D57" stroke-width="3" stroke-linecap="round"/>
+              <path d="M68 24 v22 M64 24 v10 a4 4 0 0 0 8 0 v-10" stroke="#B08D57" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+            <div style="flex-grow: 1;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;">
+                <div>
+                  <div class="eyebrow">Dinner · 20:45 · Restaurant</div>
+                  <div style="font-size: 17px; font-weight: 500; margin-top: 5px;">Bomra's, Candolim</div>
+                </div>
+                <span style="border: 1px solid #E4DACA; border-radius: 999px; padding: 5px 12px; font-size: 12px; color: #4F4B44; white-space: nowrap;">22 min · 9.2 km</span>
+              </div>
+              <p style="margin: 9px 0 0; font-size: 14.5px; line-height: 1.65; color: #4F4B44; max-width: 64ch;">
+                Burmese, small, and booked out by Thursday. We've flagged the two vegetarian dishes worth ordering — the tea leaf salad is the one.
+              </p>
+              <div style="display: flex; gap: 10px; margin-top: 14px;">
+                <button style="border: 0; background: #8A6B3A; color: #FBF9F5; border-radius: 999px; height: 36px; padding: 0 18px; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer;">Reserve a table</button>
+                <button style="border: 1px solid #E4DACA; background: transparent; border-radius: 999px; height: 36px; padding: 0 16px; font-family: inherit; font-size: 13px; color: #1B1A17; cursor: pointer;">Swap this stop</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #E4DACA; padding-bottom: 14px;">
+          <div style="display: flex; align-items: baseline; gap: 16px;">
+            <span class="eyebrow">Day 2 · Thu 13 Nov</span>
+            <span class="disp" style="font-size: 27px;">Market, then nothing</span>
+          </div>
+          <span style="font-size: 12.5px; color: #8A8377;">36 min driving</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
+          <div style="display: flex; gap: 18px; border: 1px solid #E4DACA; border-radius: 12px; background: #FBF9F5; padding: 18px;">
+            <svg width="92" height="92" viewBox="0 0 92 92" style="border-radius: 8px; flex-shrink: 0;">
+              <rect width="92" height="92" fill="#F2EBE0"/>
+              <path d="M14 38 h64 l-6 -14 h-52 Z" fill="#C1663F"/>
+              <rect x="20" y="38" width="52" height="34" fill="#E3D2B2"/>
+              <circle cx="34" cy="54" r="6" fill="#7E9080"/><circle cx="50" cy="54" r="6" fill="#B08D57"/><circle cx="64" cy="56" r="5" fill="#C1663F"/>
+            </svg>
+            <div style="flex-grow: 1;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;">
+                <div>
+                  <div class="eyebrow">Morning · 10:00 · Market</div>
+                  <div style="font-size: 17px; font-weight: 500; margin-top: 5px;">Mapusa Friday Market</div>
+                </div>
+                <span style="border: 1px solid #E4DACA; border-radius: 999px; padding: 5px 12px; font-size: 12px; color: #4F4B44; white-space: nowrap;">16 min · 6.8 km</span>
+              </div>
+              <p style="margin: 9px 0 0; font-size: 14.5px; line-height: 1.65; color: #4F4B44; max-width: 64ch;">
+                Go before eleven or you'll be shuffling. Buy the chorizo at the back row and the bebinca from the stall by the bus stand.
+              </p>
+              <div style="display: flex; align-items: center; gap: 10px; background: #F6EFE2; border-left: 3px solid #C1663F; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-top: 14px;">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#C1663F" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5 V8 L10.2 9.6"/></svg>
+                <span style="font-size: 13px; color: #4F4B44;">This market only runs on Friday — your Day 2 is a Thursday.</span>
+              </div>
+              <div style="display: flex; gap: 10px; margin-top: 14px;">
+                <button style="border: 1px solid #C1663F; background: transparent; border-radius: 999px; height: 36px; padding: 0 16px; font-family: inherit; font-size: 13px; color: #1B1A17; cursor: pointer;">Move to Day 4</button>
+                <button style="border: 1px solid #E4DACA; background: transparent; border-radius: 999px; height: 36px; padding: 0 16px; font-family: inherit; font-size: 13px; color: #1B1A17; cursor: pointer;">Swap this stop</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 18px; border: 1px solid #E4DACA; border-radius: 12px; background: #FBF9F5; padding: 18px;">
+            <svg width="92" height="92" viewBox="0 0 92 92" style="border-radius: 8px; flex-shrink: 0;">
+              <rect width="92" height="92" fill="#ADD1D8"/>
+              <path d="M0 62 C 24 54 44 66 68 58 C 80 54 88 58 92 56 L92 92 L0 92 Z" fill="#8FBBC6"/>
+              <path d="M26 58 q20 12 40 0 Z" fill="#FBF9F5"/>
+              <path d="M46 57 L46 30 L64 48 Z" fill="#C1663F"/>
+              <circle cx="24" cy="22" r="9" fill="#E8C98E"/>
+            </svg>
+            <div style="flex-grow: 1;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;">
+                <div>
+                  <div class="eyebrow">Sunset · 17:30 · Experience</div>
+                  <div style="font-size: 17px; font-weight: 500; margin-top: 5px;">Mandovi sunset sail</div>
+                </div>
+                <span style="border: 1px solid #E4DACA; border-radius: 999px; padding: 5px 12px; font-size: 12px; color: #4F4B44; white-space: nowrap;">28 min · 14.1 km</span>
+              </div>
+              <p style="margin: 9px 0 0; font-size: 14.5px; line-height: 1.65; color: #4F4B44; max-width: 64ch;">
+                Two hours out, small boat, no music. Kiaan gets a life jacket that actually fits — we asked.
+              </p>
+              <div style="display: flex; gap: 10px; margin-top: 14px;">
+                <button style="border: 0; background: #8A6B3A; color: #FBF9F5; border-radius: 999px; height: 36px; padding: 0 18px; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer;">Book — ₹4,200 for 4</button>
+                <button style="border: 1px solid #E4DACA; background: transparent; border-radius: 999px; height: 36px; padding: 0 16px; font-family: inherit; font-size: 13px; color: #1B1A17; cursor: pointer;">Swap this stop</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border: 1px dashed #E4DACA; border-radius: 12px; padding: 26px; text-align: center; color: #8A8377; font-size: 14px;">
+        Days 3 – 5 continue below
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="border: 1px solid #E4DACA; border-radius: 12px; padding: 20px; background: #24352D; color: #FBF9F5;">
+        <div class="eyebrow" style="color: #B08D57;">Held for you</div>
+        <div class="disp" style="font-size: 25px; margin: 12px 0 10px; line-height: 1.2;">In-villa chef, one night</div>
+        <p style="margin: 0 0 18px; font-size: 14px; line-height: 1.65; color: rgba(251,249,245,.76);">
+          Goan-Portuguese, six courses, cooked in your kitchen. We hold Thursday until Tuesday.
+        </p>
+        <button style="width: 100%; height: 44px; border: 0; border-radius: 999px; background: #B08D57; color: #1B1A17; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer;">₹6,500 per head</button>
+      </div>
+      <div style="border: 1px solid #E4DACA; border-radius: 12px; padding: 20px; background: #F2EBE0;">
+        <div class="eyebrow">Why these places</div>
+        <p style="margin: 12px 0 0; font-size: 14px; line-height: 1.7; color: #4F4B44;">
+          Every stop here is one our team has been to. Nothing is auto-generated from the internet, and
+          a person read this whole plan before it reached you.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

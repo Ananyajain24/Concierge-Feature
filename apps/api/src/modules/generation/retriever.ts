@@ -30,6 +30,7 @@ export async function retrieveCandidates(input: RetrieveInput): Promise<Poi[]> {
       const distance = haversineMeters({ lat: p.lat, lng: p.lng }, { lat: input.villaLat, lng: input.villaLng });
       const score = scorePoi(p as Poi, {
         vibes: input.answers.vibes,
+        interests: input.answers.interests,
         budget: input.answers.budget,
         kidFriendlyRequired: kidsPresent,
         travelMonth: input.travelMonth,
@@ -43,19 +44,30 @@ export async function retrieveCandidates(input: RetrieveInput): Promise<Poi[]> {
   return withScores.map((r) => r.poi);
 }
 
+export interface DrivePair {
+  sec: number;
+  meters: number;
+}
+
 // Load precomputed drive pairs for the candidate set.
-// Returns a `${from}|${to}` -> seconds map for validator + itinerary use.
+// Returns a `${from}|${to}` -> {sec, meters} map for validator + itinerary use.
+// Rule 4: distances are never computed at request time — this is a lookup.
 export async function loadDriveMatrix(
   ids: string[],
   villaId: string,
-): Promise<Record<string, number>> {
+): Promise<Record<string, DrivePair>> {
   const wanted = new Set([...ids, villaId]);
   const rows = await db.select().from(poiDistances);
-  const out: Record<string, number> = {};
+  const out: Record<string, DrivePair> = {};
   for (const r of rows) {
     if (wanted.has(r.fromId) && wanted.has(r.toId)) {
-      out[`${r.fromId}|${r.toId}`] = r.seconds;
+      out[`${r.fromId}|${r.toId}`] = { sec: r.seconds, meters: r.meters };
     }
   }
   return out;
+}
+
+// Callers that only need seconds (e.g. ranking alternates) can flatten with this.
+export function secondsOnly(matrix: Record<string, DrivePair>): Record<string, number> {
+  return Object.fromEntries(Object.entries(matrix).map(([k, v]) => [k, v.sec]));
 }

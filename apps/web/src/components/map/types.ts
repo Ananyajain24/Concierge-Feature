@@ -1,23 +1,23 @@
 import type { MapAnchor } from "@lohono/shared-types";
 
-export interface MapPin {
+export interface MapStop {
   id: string;
   lat: number;
   lng: number;
   category: string;
-  label?: string;
-  dayIndex?: number;
-  order?: number;
-  isVilla?: boolean;
+  name: string;
+  dayIndex: number;
+  order: number;
+  /** Drive from the villa, not from the previous stop — the map measures spokes. */
+  driveSec: number;
+  driveMeters: number;
 }
 
-export interface MapRoute {
+export interface MapVilla {
   id: string;
-  dayIndex: number;
-  from: MapPin;
-  to: MapPin;
-  driveMin: number;
-  driveKm: number;
+  lat: number;
+  lng: number;
+  name: string;
 }
 
 export interface MapAssetInfo {
