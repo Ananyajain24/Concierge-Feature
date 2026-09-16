@@ -1,0 +1,115 @@
+/* Lohono Concierge — the single source of truth for colour.
+   Swap these hexes and the whole product follows. Nothing in apps/web
+   may hardcode a colour that isn't derived from one of these. */
+
+:root {
+  color-scheme: light;
+
+  /* Ground */
+  --l-ivory-rgb: 251 249 245;
+  --l-ivory: rgb(var(--l-ivory-rgb));
+  --l-sand-rgb: 242 235 224;
+  --l-sand: rgb(var(--l-sand-rgb));
+  --l-linen-rgb: 228 218 202;
+  --l-linen: rgb(var(--l-linen-rgb));
+
+  /* Ink */
+  --l-ink-rgb: 27 26 23;
+  --l-ink: rgb(var(--l-ink-rgb));
+  --l-graphite-rgb: 79 75 68;
+  --l-graphite: rgb(var(--l-graphite-rgb));
+  --l-muted-rgb: 138 131 119;
+  --l-muted: rgb(var(--l-muted-rgb));
+
+  /* Brand accent */
+  --l-brass-rgb: 176 141 87;
+  --l-brass: rgb(var(--l-brass-rgb));
+  --l-brass-deep-rgb: 138 107 58;
+  --l-brass-deep: rgb(var(--l-brass-deep-rgb));
+  --l-brass-hover-rgb: 110 84 48;
+  --l-brass-hover: rgb(var(--l-brass-hover-rgb));
+  --l-brass-wash-rgb: 246 239 226;
+  --l-brass-wash: rgb(var(--l-brass-wash-rgb));
+  --l-linen-warm-rgb: 217 201 168;
+  --l-linen-warm: rgb(var(--l-linen-warm-rgb));
+
+  /* Dark surface */
+  --l-forest-rgb: 36 53 45;
+  --l-forest: rgb(var(--l-forest-rgb));
+  --l-sage-rgb: 126 144 128;
+  --l-sage: rgb(var(--l-sage-rgb));
+
+  /* Signals */
+  --l-terracotta-rgb: 193 102 63;
+  --l-terracotta: rgb(var(--l-terracotta-rgb));
+  --l-amber-rgb: 200 151 62;
+  --l-amber: rgb(var(--l-amber-rgb));
+  --l-crimson-rgb: 163 58 43;
+  --l-crimson: rgb(var(--l-crimson-rgb));
+
+  /* Derived — SLA chips */
+  --l-sage-tint-rgb: 241 244 239;
+  --l-sage-tint: rgb(var(--l-sage-tint-rgb));
+  --l-sage-ink-rgb: 71 96 63;
+  --l-sage-ink: rgb(var(--l-sage-ink-rgb));
+  --l-sage-edge-rgb: 214 223 209;
+  --l-sage-edge: rgb(var(--l-sage-edge-rgb));
+  --l-amber-tint-rgb: 251 244 230;
+  --l-amber-tint: rgb(var(--l-amber-tint-rgb));
+  --l-amber-edge-rgb: 231 213 176;
+  --l-amber-edge: rgb(var(--l-amber-edge-rgb));
+  --l-crimson-edge-rgb: 232 201 184;
+  --l-crimson-edge: rgb(var(--l-crimson-edge-rgb));
+
+  /* Map */
+  --l-sea-rgb: 157 196 206;
+  --l-sea: rgb(var(--l-sea-rgb));
+  --l-sea-deep-rgb: 111 174 188;
+  --l-sea-deep: rgb(var(--l-sea-deep-rgb));
+  --l-sea-light-rgb: 143 195 204;
+  --l-sea-light: rgb(var(--l-sea-light-rgb));
+  --l-map-sand-rgb: 242 227 192;
+  --l-map-sand: rgb(var(--l-map-sand-rgb));
+  --l-map-land-rgb: 217 224 182;
+  --l-map-land: rgb(var(--l-map-land-rgb));
+  --l-map-ghat-rgb: 188 205 150;
+  --l-map-ghat: rgb(var(--l-map-ghat-rgb));
+  --l-map-grove-rgb: 175 194 139;
+  --l-map-grove: rgb(var(--l-map-grove-rgb));
+  --l-map-route-rgb: 169 128 63;
+  --l-map-route: rgb(var(--l-map-route-rgb));
+  --l-map-roof-rgb: 193 102 63;
+  --l-map-roof: rgb(var(--l-map-roof-rgb));
+  --l-map-roof-ink-rgb: 165 82 47;
+  --l-map-roof-ink: rgb(var(--l-map-roof-ink-rgb));
+  --l-map-wall-rgb: 253 251 247;
+  --l-map-wall: rgb(var(--l-map-wall-rgb));
+  --l-map-stone-rgb: 243 234 212;
+  --l-map-stone: rgb(var(--l-map-stone-rgb));
+  --l-map-rock-rgb: 203 187 149;
+  --l-map-rock: rgb(var(--l-map-rock-rgb));
+  --l-map-trunk-rgb: 138 115 80;
+  --l-map-trunk: rgb(var(--l-map-trunk-rgb));
+  --l-map-frond-rgb: 111 138 107;
+  --l-map-frond: rgb(var(--l-map-frond-rgb));
+  --l-map-frond-2-rgb: 134 163 125;
+  --l-map-frond-2: rgb(var(--l-map-frond-2-rgb));
+  --l-map-beach-rgb: 248 238 212;
+  --l-map-beach: rgb(var(--l-map-beach-rgb));
+  --l-map-pool-rgb: 127 184 196;
+  --l-map-pool: rgb(var(--l-map-pool-rgb));
+  --l-map-lamp-rgb: 232 201 142;
+  --l-map-lamp: rgb(var(--l-map-lamp-rgb));
+  --l-map-sail-rgb: 232 167 127;
+  --l-map-sail: rgb(var(--l-map-sail-rgb));
+
+  /* Shape */
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  --shadow-card: 0 1px 2px rgba(27, 26, 23, 0.04), 0 8px 24px rgba(27, 26, 23, 0.06);
+  --shadow-sheet: 0 -8px 40px rgba(27, 26, 23, 0.16);
+  --shadow-pop: 0 8px 28px rgba(27, 26, 23, 0.12);
+}

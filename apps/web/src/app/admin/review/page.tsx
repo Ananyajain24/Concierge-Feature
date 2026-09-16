@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { api } from "@/lib/api";
+import { SlaPill } from "@/components/ui/SlaPill";
 import { ReviewFilters } from "./ReviewFilters";
 
 export const dynamic = "force-dynamic";
@@ -17,57 +18,88 @@ interface QueueItem {
   villaName: string;
 }
 
-export default async function ReviewQueuePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ status?: string }>;
-}) {
-  const _sp = await searchParams;
+const fmt = (d: string) => new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+
+function ago(iso: string): string {
+  const h = (Date.now() - new Date(iso).getTime()) / 3_600_000;
+  if (h < 1) return `${Math.max(1, Math.round(h * 60))}m ago`;
+  if (h < 24) return `${Math.round(h)}h ago`;
+  return `${Math.round(h / 24)}d ago`;
+}
+
+export default async function ReviewQueuePage() {
   const rows = await api<QueueItem[]>("/review/queue").catch(() => []);
+  // Burn-down order: whatever is closest to breaching is at the top.
+  const queue = [...rows].sort(
+    (a, b) => new Date(a.slaDueAt ?? 0).getTime() - new Date(b.slaDueAt ?? 0).getTime(),
+  );
+  const atRisk = queue.filter(
+    (r) => r.slaDueAt && new Date(r.slaDueAt).getTime() - Date.now() < 4 * 3_600_000,
+  ).length;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-baseline justify-between">
+    <div>
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl">Review queue</h1>
-          <p className="text-sm text-ink/60">{rows.length} awaiting review</p>
+          <h1 className="font-display text-[34px] tracking-tight">Review queue</h1>
+          <p className="mt-1.5 text-sm text-graphite">
+            {queue.length} {queue.length === 1 ? "plan" : "plans"} waiting
+            {atRisk > 0 && ` · ${atRisk} inside four hours`}
+          </p>
         </div>
         <ReviewFilters />
       </div>
 
-      <ul className="space-y-3">
-        {rows.map((r) => {
-          const remaining = r.slaDueAt ? new Date(r.slaDueAt).getTime() - Date.now() : 0;
-          const tone =
-            remaining <= 0 ? "border-coral bg-coral/5" :
-            remaining < 4 * 3600 * 1000 ? "border-yellow-400 bg-yellow-50" :
-            "border-ink/10 bg-white";
-          const hrs = Math.round(remaining / 3600 / 1000);
-          return (
-            <li key={r.id} className={`rounded border ${tone} p-4`}>
-              <Link href={`/admin/review/${r.id}`} className="flex items-center justify-between gap-4">
-                <div>
+      <div className="mt-7 overflow-x-auto">
+        <table className="w-full min-w-[720px] border-collapse">
+          <thead>
+            <tr className="[&>th]:pb-3 [&>th]:text-left [&>th]:text-[11px] [&>th]:font-semibold [&>th]:uppercase [&>th]:tracking-eyebrow [&>th]:text-muted">
+              <th className="w-[30%]">Guest &amp; villa</th>
+              <th className="w-[18%]">Stay</th>
+              <th className="w-[14%]">Generated</th>
+              <th className="w-[16%]">Time left</th>
+              <th className="w-[12%]">Cost</th>
+              <th className="w-[10%]" />
+            </tr>
+          </thead>
+          <tbody>
+            {queue.map((r) => (
+              <tr key={r.id} className="border-t border-linen align-middle [&>td]:py-4">
+                <td>
                   <p className="font-medium">{r.guestName}</p>
-                  <p className="text-xs text-ink/60">
-                    {r.villaName} · {r.checkIn} → {r.checkOut}
-                  </p>
-                </div>
-                <div className="text-right text-xs">
-                  <p className={remaining <= 0 ? "font-semibold text-coral" : ""}>
-                    {remaining <= 0 ? "SLA breached" : `${hrs}h remaining`}
-                  </p>
-                  <p className="text-ink/50">v{r.version} · ${r.costUsd.toFixed(3)}</p>
-                </div>
-              </Link>
-            </li>
-          );
-        })}
-        {rows.length === 0 && (
-          <li className="rounded border border-dashed p-8 text-center text-ink/40">
-            Empty queue.
-          </li>
-        )}
-      </ul>
+                  <p className="mt-0.5 text-[12.5px] text-muted">{r.villaName}</p>
+                </td>
+                <td className="text-graphite">
+                  {fmt(r.checkIn)} – {fmt(r.checkOut)}
+                </td>
+                <td className="text-graphite">{ago(r.createdAt)}</td>
+                <td>
+                  <SlaPill dueAt={r.slaDueAt} />
+                </td>
+                <td className="text-[13px] text-graphite">
+                  v{r.version}
+                  <span className="block text-[12.5px] text-muted">${r.costUsd.toFixed(3)}</span>
+                </td>
+                <td className="text-right">
+                  <Link
+                    href={`/admin/review/${r.id}`}
+                    className="inline-flex h-9 items-center rounded-full bg-brass-deep px-4 text-[13px] font-medium text-ivory hover:bg-brass-hover"
+                  >
+                    Open
+                  </Link>
+                </td>
+              </tr>
+            ))}
+            {queue.length === 0 && (
+              <tr>
+                <td colSpan={6} className="border-t border-linen py-16 text-center text-muted">
+                  Nothing waiting. The queue is clear.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

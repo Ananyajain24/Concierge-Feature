@@ -10,13 +10,19 @@ import {
   villaUpdateBody,
 } from "./schema";
 
+// Fastify has no built-in httpErrors without @fastify/sensible; the global
+// error handler in server.ts reads statusCode off whatever is thrown.
+function notFound(message: string): Error & { statusCode: number } {
+  return Object.assign(new Error(message), { statusCode: 404, name: "NotFound" });
+}
+
 export async function registerCatalog(app: FastifyInstance) {
   // destinations
   app.get("/catalog/destinations", async () => catalogService.destinations.list());
   app.get("/catalog/destinations/:id", async (req) => {
     const id = (req.params as { id: string }).id;
     const row = await catalogService.destinations.get(id);
-    if (!row) throw app.httpErrors?.notFound?.("destination not found") ?? new Error("not found");
+    if (!row) throw notFound("destination not found");
     return row;
   });
   app.post("/catalog/destinations", async (req) => {

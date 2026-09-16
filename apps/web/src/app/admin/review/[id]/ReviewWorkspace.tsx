@@ -86,28 +86,28 @@ export function ReviewWorkspace({ detail }: { detail: Detail }) {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="font-display text-2xl">{detail.booking.guestName}</h1>
-            <p className="text-sm text-ink/60">
+            <p className="text-sm text-graphite">
               {detail.villa.name} · {detail.booking.checkIn} → {detail.booking.checkOut}
             </p>
           </div>
           <button
             onClick={publish}
             disabled={saving}
-            className="rounded-full bg-ink px-5 py-2 text-sm text-sand disabled:opacity-40"
+            className="rounded-full bg-ink px-5 py-2 text-sm text-ivory disabled:opacity-40"
           >
             {saving ? "…" : "Approve & publish"}
           </button>
         </div>
 
-        <p className="rounded border-l-4 border-ink/40 bg-white p-3 text-sm italic">
+        <p className="rounded border-l-4 border-ink/40 bg-ivory p-3 text-sm italic">
           {detail.itinerary.summary || "(no summary)"}
         </p>
 
         {days.map((d, di) => (
-          <div key={di} className="rounded border border-ink/10 bg-white">
-            <header className="flex items-baseline justify-between border-b border-ink/5 px-4 py-2">
+          <div key={di} className="rounded border border-linen bg-ivory">
+            <header className="flex items-baseline justify-between border-b border-linen px-4 py-2">
               <h3 className="font-medium">Day {d.dayIndex + 1} · {d.date}</h3>
-              <p className="text-xs uppercase tracking-wide text-ink/50">{d.theme}</p>
+              <p className="text-xs uppercase tracking-wide text-muted">{d.theme}</p>
             </header>
             <ul>
               {d.stops.map((s, si) => {
@@ -118,26 +118,26 @@ export function ReviewWorkspace({ detail }: { detail: Detail }) {
                     key={s.id}
                     onClick={() => setSelection({ dayIndex: di, stopIndex: si })}
                     className={
-                      "flex cursor-pointer items-start gap-3 border-b border-ink/5 p-3 last:border-b-0 " +
+                      "flex cursor-pointer items-start gap-3 border-b border-linen p-3 last:border-b-0 " +
                       (active ? "bg-ink/5" : "hover:bg-ink/[0.02]")
                     }
                   >
-                    <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full bg-ink text-center text-xs leading-6 text-sand">
+                    <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full bg-ink text-center text-xs leading-6 text-ivory">
                       {si + 1}
                     </span>
                     <div className="flex-1">
                       <p className="font-medium">{poi?.name ?? "(unknown POI)"}</p>
-                      <p className="text-xs text-ink/50">
+                      <p className="text-xs text-muted">
                         {s.slot} · {poi?.category} · {Math.round(s.driveFromPreviousSec / 60)}min from prev
                       </p>
-                      {s.copy && <p className="mt-1 text-sm text-ink/70">{s.copy}</p>}
+                      {s.copy && <p className="mt-1 text-sm text-graphite">{s.copy}</p>}
                     </div>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         removeStop(di, si);
                       }}
-                      className="text-xs text-coral"
+                      className="text-xs text-terracotta"
                     >
                       remove
                     </button>

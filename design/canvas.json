@@ -1,0 +1,129 @@
+{
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "Guest"
+    },
+    {
+      "id": "page-2",
+      "name": "Concierge desk"
+    },
+    {
+      "id": "page-3",
+      "name": "System"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "Itinerary — guest view",
+      "page": "page-1",
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 2780
+    },
+    {
+      "file": "MapDetail.dc.html",
+      "title": "Illustrated map",
+      "page": "page-1",
+      "x": 1400,
+      "y": 0,
+      "w": 1000,
+      "h": 620,
+      "is_interactive": true
+    },
+    {
+      "file": "Questionnaire.dc.html",
+      "title": "Questionnaire — step 1 of 6",
+      "page": "page-1",
+      "x": 1400,
+      "y": 760,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "Crafting.dc.html",
+      "title": "Waiting on review",
+      "page": "page-1",
+      "x": 1870,
+      "y": 760,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "SwapDrawer.dc.html",
+      "title": "Swap a stop",
+      "page": "page-1",
+      "x": 2340,
+      "y": 760,
+      "w": 390,
+      "h": 844
+    },
+    {
+      "file": "ReviewQueue.dc.html",
+      "title": "Review queue",
+      "page": "page-2",
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 820
+    },
+    {
+      "file": "ReviewDetail.dc.html",
+      "title": "Review workspace",
+      "page": "page-2",
+      "x": 1400,
+      "y": 0,
+      "w": 1280,
+      "h": 900
+    },
+    {
+      "file": "Tokens.dc.html",
+      "title": "Design tokens",
+      "page": "page-3",
+      "x": 0,
+      "y": 0,
+      "w": 1180,
+      "h": 1500
+    }
+  ],
+  "annotations": [
+    {
+      "id": "guest-flow",
+      "page": "page-1",
+      "x": 1400,
+      "y": -170,
+      "w": 1330,
+      "text": "Guest flow, left to right: questionnaire (6 steps, ~90s) -> waiting screen with the 24h promise -> published itinerary -> swap a stop.\nThe map is one map for the whole trip: dotted lines carry the drive from the villa. Click a place on it."
+    },
+    {
+      "id": "map-perf",
+      "page": "page-1",
+      "x": 0,
+      "y": -170,
+      "w": 1280,
+      "text": "Every pin x/y and every route path here is precomputed at publish time and baked into published_snapshot. The browser does no projection maths, so this renders as static HTML before any JS runs."
+    },
+    {
+      "id": "reason-codes",
+      "page": "page-2",
+      "x": 1400,
+      "y": -150,
+      "w": 1280,
+      "text": "The reason-code picker is the whole point of the review step. Every edit writes an itinerary_edits row with before/after JSON and a reason code, and those codes are the labels that drive the next prompt version."
+    },
+    {
+      "id": "tokens-note",
+      "page": "page-3",
+      "x": 0,
+      "y": -150,
+      "w": 1180,
+      "text": "These are matched to Lohono's ivory / ink / brass / forest look, not lifted from their stylesheet. They live in one file (apps/web/src/lib/tokens.css), so exact brand hexes are a one-file swap."
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "page-1"
+  }
+}

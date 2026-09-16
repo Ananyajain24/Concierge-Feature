@@ -39,7 +39,7 @@ export default async function TripPage({
   if (!trip) {
     return (
       <main className="flex min-h-screen items-center justify-center p-6 text-center">
-        <p className="text-ink/60">This itinerary link isn&apos;t ready yet.</p>
+        <p className="text-graphite">This itinerary link isn&apos;t ready yet.</p>
       </main>
     );
   }

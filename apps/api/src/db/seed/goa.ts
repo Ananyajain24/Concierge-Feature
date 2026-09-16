@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../client";
 import { destinations, villas, pois } from "../schema/index";
 import { GOA_POIS } from "./goa.pois";
+import { upsertGoaMap } from "./goa.map";
 
 const DEST_SLUG = "goa";
 
@@ -76,7 +77,9 @@ export async function seedGoa(): Promise<void> {
   const dest = await upsertDestination();
   await upsertVillas(dest.id);
   await upsertPois(dest.id);
+  await upsertGoaMap(dest.id);
   console.log(`  Goa destination: ${dest.id}`);
+  console.log(`  Map asset: v2`);
   console.log(`  Villas: 2`);
   console.log(`  POIs: ${GOA_POIS.length}`);
 }

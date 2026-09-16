@@ -33,12 +33,12 @@ export function CatalogTable({
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search…"
-          className="rounded border border-ink/20 bg-white px-3 py-1.5 text-sm"
+          className="rounded border border-linen bg-ivory px-3 py-1.5 text-sm"
         />
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="rounded border border-ink/20 bg-white px-3 py-1.5 text-sm"
+          className="rounded border border-linen bg-ivory px-3 py-1.5 text-sm"
         >
           <option value="">All categories</option>
           {CATEGORIES.map((c) => (
@@ -50,14 +50,14 @@ export function CatalogTable({
         <div className="ml-auto flex gap-2">
           <Link
             href="/admin/catalog/new"
-            className="rounded bg-ink px-3 py-1.5 text-sm text-sand hover:opacity-90"
+            className="rounded bg-ink px-3 py-1.5 text-sm text-ivory hover:opacity-90"
           >
             + New POI
           </Link>
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded border border-ink/10 bg-white">
+      <div className="overflow-x-auto rounded border border-linen bg-ivory">
         <table className="w-full text-sm">
           <thead className="bg-ink/5 text-left">
             <tr>
@@ -73,18 +73,18 @@ export function CatalogTable({
           </thead>
           <tbody>
             {filtered.map((p) => (
-              <tr key={p.id} className="border-t border-ink/5">
+              <tr key={p.id} className="border-t border-linen">
                 <td className="p-2 font-medium">{p.name}</td>
-                <td className="p-2 text-ink/70">{p.category}</td>
-                <td className="p-2 text-ink/70">{p.priceBand}</td>
+                <td className="p-2 text-graphite">{p.category}</td>
+                <td className="p-2 text-graphite">{p.priceBand}</td>
                 <td className="p-2">{p.bookable ? "✓" : "—"}</td>
                 <td className="p-2">{p.kidFriendly ? "✓" : "—"}</td>
-                <td className="p-2 text-ink/70">{p.qualityScore.toFixed(2)}</td>
-                <td className="p-2 text-xs text-ink/50">
+                <td className="p-2 text-graphite">{p.qualityScore.toFixed(2)}</td>
+                <td className="p-2 text-xs text-muted">
                   {p.lat.toFixed(3)}, {p.lng.toFixed(3)}
                 </td>
                 <td className="p-2 text-right">
-                  <Link href={`/admin/catalog/${p.id}`} className="text-ocean underline">
+                  <Link href={`/admin/catalog/${p.id}`} className="text-brass-deep underline">
                     edit
                   </Link>
                 </td>
@@ -92,7 +92,7 @@ export function CatalogTable({
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={8} className="p-6 text-center text-ink/40">
+                <td colSpan={8} className="p-6 text-center text-muted">
                   No POIs. Run <code>pnpm db:seed</code>.
                 </td>
               </tr>

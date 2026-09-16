@@ -1,13 +1,38 @@
+@import "../lib/tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
+html,
+body {
+  background: var(--l-ivory);
+  color: var(--l-ink);
+  font-family: var(--font-body), system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-html, body {
-  background: #f4ecdf;
-  color: #1f1d1a;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+a {
+  color: var(--l-brass-hover);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--l-ink);
+}
+
+/* Motion is opt-in per component; everything here is transform/opacity only. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-eyebrow text-muted;
+  }
 }

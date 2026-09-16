@@ -24,10 +24,10 @@ export function ReasonPicker({
   onCancel: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onCancel}>
-      <div className="w-full max-w-md rounded-lg bg-white p-6" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4" onClick={onCancel}>
+      <div className="w-full max-w-md rounded-lg bg-ivory p-6" onClick={(e) => e.stopPropagation()}>
         <h3 className="mb-3 font-display text-lg">Why did you change this?</h3>
-        <p className="mb-4 text-xs text-ink/60">
+        <p className="mb-4 text-xs text-graphite">
           Every edit is recorded — this is how we improve the model.
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -35,13 +35,13 @@ export function ReasonPicker({
             <button
               key={r.value}
               onClick={() => onPick(r.value, "")}
-              className="rounded border border-ink/20 px-3 py-2 text-sm hover:bg-ink/5"
+              className="rounded border border-linen px-3 py-2 text-sm hover:bg-sand"
             >
               {r.label}
             </button>
           ))}
         </div>
-        <button onClick={onCancel} className="mt-4 w-full text-xs text-ink/50 hover:text-ink">
+        <button onClick={onCancel} className="mt-4 w-full text-xs text-muted hover:text-ink">
           Cancel
         </button>
       </div>

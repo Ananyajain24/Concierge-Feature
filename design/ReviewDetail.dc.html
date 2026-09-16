@@ -1,0 +1,295 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500;600&display=swap">
+  <style>
+    body { margin: 0; background: #FBF9F5; font-family: "Jost", system-ui, sans-serif; color: #1B1A17; -webkit-font-smoothing: antialiased; }
+    a { color: #8A6B3A; text-decoration: none; } a:hover { color: #6E5430; }
+    .disp { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 400; }
+    .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #8A8377; }
+    .reason { font-size: 12.5px; border: 1px solid #E4DACA; border-radius: 999px; padding: 6px 13px; color: #4F4B44; background: #FBF9F5; cursor: pointer; }
+    .reason-on { border-color: #B08D57; background: #F6EFE2; color: #1B1A17; }
+  </style>
+</helmet>
+
+<div style="height: 900px; display: flex; flex-direction: column; background: #FBF9F5;">
+
+  <!-- top bar -->
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; border-bottom: 1px solid #E4DACA;">
+    <div style="display: flex; align-items: center; gap: 18px;">
+      <button style="width: 36px; height: 36px; border: 1px solid #E4DACA; border-radius: 999px; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#1B1A17" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3 L5 8 L10 13"/></svg>
+      </button>
+      <div>
+        <div style="font-size: 16px; font-weight: 500;">Aanya Rao · Villa Amarelo</div>
+        <div style="font-size: 12.5px; color: #8A8377; margin-top: 2px;">12 – 16 Nov · 4 guests, 1 child (4) · slow pace · relax, foodie</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; padding: 6px 14px; font-size: 12.5px; background: #F6EFE2; color: #A33A2B; border: 1px solid #E8C9B8;">
+        <span style="width: 6px; height: 6px; border-radius: 999px; background: #A33A2B;"></span>3h 10m to SLA
+      </span>
+      <span style="font-size: 12.5px; color: #8A8377;">4 edits logged</span>
+      <button style="height: 38px; padding: 0 18px; border: 1px solid #E4DACA; border-radius: 999px; background: transparent; font-family: inherit; font-size: 13.5px; color: #1B1A17; cursor: pointer;">Regenerate day</button>
+      <button style="height: 38px; padding: 0 22px; border: 0; border-radius: 999px; background: #8A6B3A; color: #FBF9F5; font-family: inherit; font-size: 13.5px; font-weight: 500; cursor: pointer;">Publish to guest</button>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1; display: grid; grid-template-columns: 372px minmax(0, 1fr) 316px; gap: 0; overflow: hidden;">
+
+    <!-- LEFT: map + brief -->
+    <div style="border-right: 1px solid #E4DACA; padding: 20px; display: flex; flex-direction: column; gap: 16px; background: #FBF9F5;">
+      <div style="border: 1px solid #E4DACA; border-radius: 12px; overflow: hidden; background: #9DC4CE; height: 300px; position: relative;">
+        <svg viewBox="296 96 448 368" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="display: block;">
+  <defs><linearGradient id="sgrd" x1="0" y1="0" x2="0.7" y2="1">
+    <stop offset="0" stop-color="#8FC3CC"/><stop offset="1" stop-color="#6FAEBC"/></linearGradient></defs>
+  <rect x="0" y="0" width="1000" height="620" fill="url(#sgrd)"/>
+  <path d="M296 0 C286 44 306 74 298 112 C290 152 320 178 310 214 C300 252 334 276 324 314 C314 352 344 372 336 404 C328 440 356 464 348 500 C340 536 366 562 358 598 L358 620 L1000 620 L1000 0 Z" fill="#F2E3C0"/>
+  <path d="M318 0 C308 44 328 74 320 112 C312 152 342 178 332 214 C322 252 356 276 346 314 C336 352 366 372 358 404 C350 440 378 464 370 500 C362 536 388 562 380 598 L380 620 L1000 620 L1000 0 Z" fill="#D9E0B6"/>
+  <path d="M318 196 C386 186 440 208 512 196 C566 186 616 200 664 192" stroke="#8FC3CC" stroke-width="11" fill="none" stroke-linecap="round"/>
+  <path d="M334 390 C424 374 480 404 566 390 C654 374 714 394 786 376" stroke="#8FC3CC" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <g fill="none" stroke="#A9803F" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="1 7">
+    <path d="M430 292 Q 264 220 326 140"/><path d="M434 288 Q 406 252 382 232"/>
+    <path d="M462 288 Q 496 258 510 242"/><path d="M426 314 Q 386 340 356 360"/>
+  </g>
+  <g transform="translate(328,126)">
+    <ellipse cx="0" cy="0" rx="31" ry="7" fill="#F8EED4"/>
+    <path d="M-18 0 L-18 -11 L-3 -11 L-3 0 Z" fill="#FDFBF7"/>
+    <path d="M-24 -11 L-10.5 -24 L3 -11 Z" fill="#C1663F"/>
+    <path d="M14 0 C15 -8 16 -14 17 -21" stroke="#8A7350" stroke-width="2.3" fill="none" stroke-linecap="round"/>
+    <path d="M17 -21 q-11 -3 -14 5 M17 -21 q11 -3 13 5 M17 -21 q-6 -12 -14 -10 M17 -21 q8 -12 15 -9" stroke="#6F8A6B" stroke-width="2.7" fill="none" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(374,224)">
+    <path d="M-27 0 C-19 -9 -10 -12 0 -12 C10 -12 19 -9 27 0 Z" fill="#CBBB95"/>
+    <path d="M-17 -12 L-17 -24 L-13 -24 L-13 -28 L-9 -28 L-9 -24 L-4 -24 L-4 -28 L0 -28 L0 -24 L5 -24 L5 -28 L9 -28 L9 -24 L13 -24 L13 -28 L17 -28 L17 -12 Z" fill="#F3EAD4"/>
+    <rect x="-3" y="-21" width="6" height="9" rx="1" fill="#8A6B3A"/>
+  </g>
+  <g transform="translate(516,234)">
+    <ellipse cx="0" cy="0" rx="27" ry="6" fill="#E6E9C4"/>
+    <rect x="-18" y="-15" width="36" height="15" fill="#FDFBF7"/>
+    <path d="M-23 -15 L-18 -28 L18 -28 L23 -15 Z" fill="#C1663F"/>
+    <circle cx="-10" cy="-6" r="4.2" fill="#7E9080"/><circle cx="0" cy="-5" r="4.8" fill="#C8973E"/><circle cx="10" cy="-6" r="4.2" fill="#C1663F"/>
+  </g>
+  <g transform="translate(346,372)">
+    <ellipse cx="0" cy="0" rx="28" ry="6" fill="#F8EED4"/>
+    <rect x="-16" y="-16" width="32" height="16" fill="#FDFBF7"/>
+    <path d="M-22 -16 L0 -29 L22 -16 Z" fill="#C1663F"/>
+    <rect x="-4" y="-10" width="9" height="10" rx="1" fill="#8A6B3A"/>
+  </g>
+  <g transform="translate(444,302)">
+    <ellipse cx="0" cy="3" rx="42" ry="9" fill="#EDDCB4"/>
+    <rect x="-38" y="-9" width="17" height="9" rx="3.5" fill="#7FB8C4"/>
+    <rect x="-17" y="-26" width="34" height="26" fill="#FDFBF7"/>
+    <path d="M-23 -26 L0 -43 L23 -26 Z" fill="#C1663F"/>
+    <rect x="-5" y="-13" width="10" height="13" rx="1" fill="#8A6B3A"/>
+    <rect x="-52" y="7" width="104" height="19" rx="9.5" fill="#8A6B3A"/>
+    <text x="0" y="20.5" text-anchor="middle" font-family="Jost, sans-serif" font-size="10" font-weight="600" letter-spacing="1.6" fill="#FBF9F5">VILLA AMARELO</text>
+  </g>
+</svg>
+        <span style="position: absolute; top: 12px; left: 12px; background: rgba(251,249,245,.92); border-radius: 999px; padding: 5px 13px; font-size: 12px;">Whole-trip map</span>
+      </div>
+
+      <div style="border: 1px solid #E4DACA; border-radius: 12px; padding: 16px; background: #F2EBE0;">
+        <div class="eyebrow">What she asked for</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px;">
+          <span style="font-size: 12px; border-radius: 999px; background: #FBF9F5; border: 1px solid #E4DACA; padding: 4px 11px;">Slow down</span>
+          <span style="font-size: 12px; border-radius: 999px; background: #FBF9F5; border: 1px solid #E4DACA; padding: 4px 11px;">Eat well</span>
+          <span style="font-size: 12px; border-radius: 999px; background: #FBF9F5; border: 1px solid #E4DACA; padding: 4px 11px;">No early starts</span>
+          <span style="font-size: 12px; border-radius: 999px; background: #FBF9F5; border: 1px solid #E4DACA; padding: 4px 11px;">Vegetarian × 2</span>
+        </div>
+        <p style="margin: 13px 0 0; font-size: 13px; line-height: 1.6; color: #4F4B44;">
+          "One night out is fine but we have a four-year-old — nothing that needs a long climb."
+        </p>
+      </div>
+
+      <div style="border: 1px solid #E4DACA; border-radius: 12px; padding: 16px;">
+        <div class="eyebrow">Engine flags on this plan</div>
+        <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 12px; font-size: 13px; color: #4F4B44;">
+          <span style="display: flex; gap: 9px; align-items: flex-start;">
+            <span style="width: 6px; height: 6px; border-radius: 999px; background: #C1663F; margin-top: 6px; flex-shrink: 0;"></span>
+            Day 1 · Chapora Fort — steep climb, child aged 4
+          </span>
+          <span style="display: flex; gap: 9px; align-items: flex-start;">
+            <span style="width: 6px; height: 6px; border-radius: 999px; background: #C1663F; margin-top: 6px; flex-shrink: 0;"></span>
+            Day 2 · Mapusa market is Friday only, Day 2 is Thursday
+          </span>
+          <span style="display: flex; gap: 9px; align-items: flex-start;">
+            <span style="width: 6px; height: 6px; border-radius: 999px; background: #C8973E; margin-top: 6px; flex-shrink: 0;"></span>
+            Day 4 · 3h 20m total driving
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTRE: day editor -->
+    <div style="padding: 20px 24px; overflow: hidden; background: #FBF9F5;">
+      <div style="display: flex; gap: 7px;">
+        <span style="height: 32px; padding: 0 15px; border-radius: 999px; background: #8A6B3A; color: #FBF9F5; font-size: 13px; display: inline-flex; align-items: center;">Day 1</span>
+        <span style="height: 32px; padding: 0 15px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 13px; display: inline-flex; align-items: center; gap: 7px;">
+          Day 2 <span style="width: 5px; height: 5px; border-radius: 999px; background: #C1663F;"></span>
+        </span>
+        <span style="height: 32px; padding: 0 15px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 13px; display: inline-flex; align-items: center;">Day 3</span>
+        <span style="height: 32px; padding: 0 15px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 13px; display: inline-flex; align-items: center; gap: 7px;">
+          Day 4 <span style="width: 5px; height: 5px; border-radius: 999px; background: #C8973E;"></span>
+        </span>
+        <span style="height: 32px; padding: 0 15px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 13px; display: inline-flex; align-items: center;">Day 5</span>
+      </div>
+
+      <div style="display: flex; align-items: baseline; gap: 14px; margin-top: 20px;">
+        <span class="disp" style="font-size: 25px;">Land, swim, eat late</span>
+        <span style="font-size: 12.5px; color: #8A8377;">41 min driving · 3 stops</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 16px;">
+
+        <div style="display: flex; gap: 13px; align-items: flex-start; border: 1px solid #E4DACA; border-radius: 10px; padding: 14px; background: #FBF9F5;">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#8A8377" stroke-width="1.5" stroke-linecap="round" style="margin-top: 3px; flex-shrink: 0;"><path d="M4 5 H12 M4 8 H12 M4 11 H12"/></svg>
+          <div style="flex-grow: 1;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+              <div><span class="eyebrow">Afternoon · 15:30</span> <span style="font-size: 15px; font-weight: 500; margin-left: 8px;">Ashwem Beach</span></div>
+              <span style="font-size: 12px; color: #8A8377;">12 min · 5.1 km</span>
+            </div>
+            <p style="margin: 6px 0 0; font-size: 13.5px; line-height: 1.6; color: #4F4B44;">The wide, flat one where the crowd thins after four. Park at the shack end and walk left.</p>
+          </div>
+        </div>
+
+        <!-- stop being edited -->
+        <div style="border: 1.5px solid #B08D57; border-radius: 10px; background: #FBF9F5; box-shadow: 0 8px 24px rgba(27,26,23,.07);">
+          <div style="display: flex; gap: 13px; align-items: flex-start; padding: 14px;">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#8A8377" stroke-width="1.5" stroke-linecap="round" style="margin-top: 3px; flex-shrink: 0;"><path d="M4 5 H12 M4 8 H12 M4 11 H12"/></svg>
+            <div style="flex-grow: 1;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+                <div><span class="eyebrow">Sunset · 18:15</span> <span style="font-size: 15px; font-weight: 500; margin-left: 8px;">Chapora Fort</span></div>
+                <span style="font-size: 12px; color: #8A8377;">18 min · 7.4 km</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 9px; background: #F6EFE2; border-left: 3px solid #C1663F; border-radius: 0 7px 7px 0; padding: 9px 12px; margin-top: 10px;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#C1663F" stroke-width="1.5" stroke-linecap="round"><path d="M8 2.5 L14.5 13.5 L1.5 13.5 Z"/><path d="M8 6.5 V9.5"/><path d="M8 11.4 V11.5"/></svg>
+                <span style="font-size: 12.5px; color: #4F4B44;">Steep, uneven steps — child aged 4 in the party.</span>
+              </div>
+              <div style="margin-top: 11px; border: 1px solid #E4DACA; border-radius: 8px; padding: 11px 13px; background: #F2EBE0;">
+                <span style="font-size: 13px; color: #4F4B44;">Replacing with </span>
+                <span style="font-size: 13px; font-weight: 500;">Ozran (Little Vagator)</span>
+                <span style="font-size: 12.5px; color: #8A8377;"> · 14 min · flat walk down</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- reason code picker -->
+          <div style="border-top: 1px solid #E4DACA; padding: 14px; background: #FBF9F5; border-radius: 0 0 9px 9px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span class="eyebrow">Why are you changing this? <span style="color: #C1663F;">Required</span></span>
+              <span style="font-size: 11.5px; color: #8A8377;">Feeds prompt v4</span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-top: 11px;">
+              <span class="reason reason-on">NOT_KID_SAFE</span>
+              <span class="reason">TOO_FAR</span>
+              <span class="reason">CLOSED</span>
+              <span class="reason">WRONG_VIBE</span>
+              <span class="reason">TOO_EXPENSIVE</span>
+              <span class="reason">SEASONAL</span>
+              <span class="reason">DUPLICATE_FEEL</span>
+              <span class="reason">BETTER_ALTERNATIVE</span>
+              <span class="reason">COPY_TONE</span>
+              <span class="reason">PACING</span>
+              <span class="reason">PARTNER_PRIORITY</span>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 13px; align-items: center;">
+              <input style="flex-grow: 1; height: 38px; border: 1px solid #E4DACA; border-radius: 6px; padding: 0 12px; font-family: inherit; font-size: 13.5px; background: #FBF9F5; color: #1B1A17;" value="Model keeps picking forts for families — third time this week." />
+              <button style="height: 38px; padding: 0 20px; border: 0; border-radius: 999px; background: #8A6B3A; color: #FBF9F5; font-family: inherit; font-size: 13.5px; font-weight: 500; cursor: pointer;">Save edit</button>
+              <button style="height: 38px; padding: 0 16px; border: 1px solid #E4DACA; border-radius: 999px; background: transparent; font-family: inherit; font-size: 13.5px; color: #4F4B44; cursor: pointer;">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 13px; align-items: flex-start; border: 1px solid #E4DACA; border-radius: 10px; padding: 14px; background: #FBF9F5;">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#8A8377" stroke-width="1.5" stroke-linecap="round" style="margin-top: 3px; flex-shrink: 0;"><path d="M4 5 H12 M4 8 H12 M4 11 H12"/></svg>
+          <div style="flex-grow: 1;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+              <div><span class="eyebrow">Dinner · 20:45</span> <span style="font-size: 15px; font-weight: 500; margin-left: 8px;">Bomra's, Candolim</span></div>
+              <span style="font-size: 12px; color: #8A8377;">22 min · 9.2 km</span>
+            </div>
+            <p style="margin: 6px 0 0; font-size: 13.5px; line-height: 1.6; color: #4F4B44;">Burmese, small, booked out by Thursday. Two vegetarian dishes flagged.</p>
+          </div>
+        </div>
+
+        <button style="border: 1px dashed #E4DACA; background: transparent; border-radius: 10px; padding: 13px; font-family: inherit; font-size: 13.5px; color: #8A8377; cursor: pointer;">+ Add a stop to Day 1</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: alternates -->
+    <div style="border-left: 1px solid #E4DACA; padding: 20px; background: #F2EBE0; overflow: hidden;">
+      <div class="eyebrow">Alternates · Sunset slot</div>
+      <p style="margin: 9px 0 0; font-size: 12.5px; line-height: 1.55; color: #4F4B44;">From the Goa catalog. Ranked on her profile and the drive window.</p>
+
+      <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 16px;">
+
+        <div style="border: 1.5px solid #B08D57; background: #FBF9F5; border-radius: 10px; padding: 13px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+            <span style="font-size: 14.5px; font-weight: 500;">Ozran</span>
+            <span style="font-size: 11.5px; color: #8A6B3A; font-weight: 500;">fit 0.91</span>
+          </div>
+          <p style="margin: 5px 0 0; font-size: 12.5px; line-height: 1.5; color: #4F4B44;">Flat walk down, same sunset, shack holds tables.</p>
+          <div style="display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;">
+            <span style="font-size: 11px; border-radius: 999px; border: 1px solid #E4DACA; padding: 3px 9px; color: #4F4B44;">14 min</span>
+            <span style="font-size: 11px; border-radius: 999px; border: 1px solid #E4DACA; padding: 3px 9px; color: #4F4B44;">kid-safe</span>
+          </div>
+        </div>
+
+        <div style="border: 1px solid #E4DACA; background: #FBF9F5; border-radius: 10px; padding: 13px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+            <span style="font-size: 14.5px; font-weight: 500;">Reis Magos Fort</span>
+            <span style="font-size: 11.5px; color: #8A8377;">fit 0.84</span>
+          </div>
+          <p style="margin: 5px 0 0; font-size: 12.5px; line-height: 1.5; color: #4F4B44;">Restored and ramped. Keeps the old-Goa thread.</p>
+          <div style="display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;">
+            <span style="font-size: 11px; border-radius: 999px; border: 1px solid #E4DACA; padding: 3px 9px; color: #4F4B44;">31 min</span>
+          </div>
+        </div>
+
+        <div style="border: 1px solid #E4DACA; background: #FBF9F5; border-radius: 10px; padding: 13px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+            <span style="font-size: 14.5px; font-weight: 500;">Thalassa, Siolim</span>
+            <span style="font-size: 11.5px; color: #8A8377;">fit 0.79</span>
+          </div>
+          <p style="margin: 5px 0 0; font-size: 12.5px; line-height: 1.5; color: #4F4B44;">Would swallow the dinner slot too. Commissioned.</p>
+          <div style="display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;">
+            <span style="font-size: 11px; border-radius: 999px; border: 1px solid #D9C9A8; background: #F6EFE2; padding: 3px 9px; color: #8A6B3A;">partner</span>
+            <span style="font-size: 11px; border-radius: 999px; border: 1px solid #E4DACA; padding: 3px 9px; color: #4F4B44;">19 min</span>
+          </div>
+        </div>
+
+        <div style="border: 1px solid #E4DACA; background: #FBF9F5; border-radius: 10px; padding: 13px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+            <span style="font-size: 14.5px; font-weight: 500;">Morjim sandbar</span>
+            <span style="font-size: 11.5px; color: #8A8377;">fit 0.72</span>
+          </div>
+          <p style="margin: 5px 0 0; font-size: 12.5px; line-height: 1.5; color: #4F4B44;">Quiet, but she already has two beaches on Day 1.</p>
+          <div style="display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap;">
+            <span style="font-size: 11px; border-radius: 999px; border: 1px solid #E4DACA; padding: 3px 9px; color: #4F4B44;">repeat vibe</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="margin-top: 18px; border-top: 1px solid #E4DACA; padding-top: 16px;">
+        <div class="eyebrow">Edit log</div>
+        <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 11px; font-size: 12px; color: #4F4B44;">
+          <span>Meera · <strong style="font-weight: 500;">COPY_TONE</strong> · Day 3 summary</span>
+          <span>Meera · <strong style="font-weight: 500;">TOO_FAR</strong> · Day 4, Dudhsagar out</span>
+          <span>Meera · <strong style="font-weight: 500;">PACING</strong> · Day 2, one stop removed</span>
+          <span>Meera · <strong style="font-weight: 500;">SEASONAL</strong> · Day 5, cruise moved earlier</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

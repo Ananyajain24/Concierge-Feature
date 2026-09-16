@@ -36,33 +36,33 @@ export function AlternatePanel({
 
   if (!selection) {
     return (
-      <div className="rounded border border-dashed p-6 text-sm text-ink/40">
+      <div className="rounded border border-dashed p-6 text-sm text-muted">
         Select a stop to see alternates.
       </div>
     );
   }
 
   return (
-    <div className="rounded border border-ink/10 bg-white p-4">
+    <div className="rounded border border-linen bg-ivory p-4">
       <h3 className="mb-3 font-medium">Alternates</h3>
-      {loading && <p className="text-xs text-ink/40">Ranking…</p>}
+      {loading && <p className="text-xs text-muted">Ranking…</p>}
       <ul className="space-y-2">
         {alts.map((a) => (
-          <li key={a.poi.id} className="rounded border border-ink/5 p-2">
+          <li key={a.poi.id} className="rounded border border-linen p-2">
             <p className="text-sm font-medium">{a.poi.name}</p>
-            <p className="text-xs text-ink/60">
+            <p className="text-xs text-graphite">
               {a.poi.category} · Δ {Math.round(a.driveDeltaSec / 60)}m · score {a.score.toFixed(2)}
             </p>
             <button
               onClick={() => onSwap(a.poi.id)}
-              className="mt-1 text-xs text-ocean underline"
+              className="mt-1 text-xs text-brass-deep underline"
             >
               swap in
             </button>
           </li>
         ))}
         {!loading && alts.length === 0 && (
-          <li className="text-xs text-ink/40">No good alternates.</li>
+          <li className="text-xs text-muted">No good alternates.</li>
         )}
       </ul>
     </div>

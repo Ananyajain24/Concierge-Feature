@@ -24,12 +24,12 @@ export async function buildServer(): Promise<FastifyInstance> {
 
   await app.register(cors, { origin: env.CORS_ORIGIN, credentials: true });
 
-  app.setErrorHandler((err, _req, reply) => {
+  app.setErrorHandler((err: unknown, _req, reply) => {
     app.log.error(err);
-    const status = (err as { statusCode?: number }).statusCode ?? 500;
-    reply.status(status).send({
-      error: err.name ?? "Error",
-      message: err.message,
+    const e = err as { statusCode?: number; name?: string; message?: string };
+    reply.status(e.statusCode ?? 500).send({
+      error: e.name ?? "Error",
+      message: e.message ?? "Unexpected error",
     });
   });
 

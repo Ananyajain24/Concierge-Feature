@@ -3,7 +3,19 @@
 import { useState } from "react";
 import type { PublishedStop } from "@lohono/shared-types";
 import { api } from "@/lib/api";
+import { Button } from "@/components/ui/Button";
+import { StopThumb } from "@/components/itinerary/StopThumb";
+import { WarningBanner } from "@/components/itinerary/WarningBanner";
 import { SwapDrawer } from "./SwapDrawer";
+
+const CTA: Record<string, string> = {
+  restaurant: "Reserve a table",
+  cafe: "Reserve a table",
+  bar: "Reserve a table",
+  spa: "Book a treatment",
+  watersport: "Book this",
+  day_trip: "Book this",
+};
 
 export function StopCard({
   itineraryId,
@@ -26,19 +38,17 @@ export function StopCard({
 }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const driveMin = Math.round(stop.driveFromPreviousSec / 60);
+  const driveKm = stop.driveFromPreviousMeters / 1000;
 
   async function bookClick(e: React.MouseEvent) {
     e.stopPropagation();
+    const url = stop.bookingUrl ?? "https://lohono.com";
+    // The click is the product: log the lead first, then hand off.
     await api("/trip/lead", {
       method: "POST",
-      body: JSON.stringify({
-        itineraryId,
-        stopId: stop.id,
-        poiId: stop.poiId,
-        url: stop.bookingUrl ?? "https://example.com",
-      }),
+      body: JSON.stringify({ itineraryId, stopId: stop.id, poiId: stop.poiId, url }),
     }).catch(() => null);
-    window.open(stop.bookingUrl ?? "https://example.com", "_blank");
+    window.open(url, "_blank", "noopener");
   }
 
   return (
@@ -46,55 +56,50 @@ export function StopCard({
       <li
         onClick={onFocus}
         className={
-          "cursor-pointer rounded-lg border bg-white p-4 transition " +
-          (active ? "border-ink shadow-sm" : "border-ink/10 hover:border-ink/30")
+          "flex cursor-pointer gap-[18px] rounded-md border bg-ivory p-[18px] transition " +
+          (active ? "border-brass shadow-card" : "border-linen hover:border-brass/60")
         }
       >
-        <div className="flex items-baseline justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-wide text-ink/50">
-              {stop.slot} · {stop.poiCategory}
-            </p>
-            <h3 className="mt-0.5 font-display text-lg">{stop.poiName}</h3>
+        <StopThumb category={stop.poiCategory} name={stop.poiName} uid={stop.id} />
+
+        <div className="min-w-0 grow">
+          <div className="flex items-baseline justify-between gap-4">
+            <div className="min-w-0">
+              <p className="eyebrow">
+                {stop.slot.replace(/_/g, " ")} · {stop.poiCategory.replace(/_/g, " ")}
+              </p>
+              <h3 className="mt-1 truncate text-[17px] font-medium">{stop.poiName}</h3>
+            </div>
+            <span className="shrink-0 whitespace-nowrap rounded-full border border-linen px-3 py-1 text-xs text-graphite">
+              {driveMin > 0 ? `${driveMin} min · ${driveKm.toFixed(1)} km` : "at the villa"}
+            </span>
           </div>
-          <p className="whitespace-nowrap text-xs text-ink/50">
-            {driveMin > 0 ? `${driveMin} min drive` : "at villa"}
-          </p>
-        </div>
 
-        {stop.copy && <p className="mt-3 text-sm text-ink/80">{stop.copy}</p>}
-        {!stop.copy && stop.conciergeNote && (
-          <p className="mt-3 text-sm italic text-ink/70">{stop.conciergeNote}</p>
-        )}
-
-        {stop.warnings.length > 0 && (
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {stop.warnings.map((w) => (
-              <li key={w} className="rounded-full bg-yellow-100 px-2 py-0.5 text-xs text-yellow-900">
-                {w}
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <div className="mt-4 flex flex-wrap gap-3 text-xs">
-          {stop.bookable && (
-            <button
-              onClick={bookClick}
-              className="rounded-full bg-ink px-4 py-1.5 text-sand hover:opacity-90"
-            >
-              Book / enquire
-            </button>
+          {(stop.copy || stop.conciergeNote) && (
+            <p className="mt-2 max-w-[64ch] text-[14.5px] leading-relaxed text-graphite">
+              {stop.copy || stop.conciergeNote}
+            </p>
           )}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setDrawerOpen(true);
-            }}
-            className="rounded-full border border-ink/30 px-4 py-1.5 text-ink hover:bg-ink/5"
-          >
-            Swap
-          </button>
+
+          <WarningBanner codes={stop.warnings} />
+
+          <div className="mt-3.5 flex flex-wrap gap-2.5">
+            {stop.bookable && (
+              <Button size="sm" onClick={bookClick}>
+                {CTA[stop.poiCategory] ?? "Book this"}
+              </Button>
+            )}
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                setDrawerOpen(true);
+              }}
+            >
+              Swap this stop
+            </Button>
+          </div>
         </div>
       </li>
 

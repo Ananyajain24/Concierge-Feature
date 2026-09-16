@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500;600&display=swap">
+  <style>
+    body { margin: 0; background: #FBF9F5; font-family: "Jost", system-ui, sans-serif; color: #1B1A17; -webkit-font-smoothing: antialiased; }
+    a { color: #8A6B3A; text-decoration: none; } a:hover { color: #6E5430; }
+    .disp { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 400; }
+    .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #8A8377; }
+  </style>
+</helmet>
+
+<div style="display: flex; flex-direction: column; height: 844px; background: #FBF9F5;">
+
+  <!-- header -->
+  <div style="padding: 28px 24px 0;">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <button style="width: 40px; height: 40px; border: 1px solid #E4DACA; border-radius: 999px; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1B1A17" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3 L5 8 L10 13"/></svg>
+      </button>
+      <span class="disp" style="font-size: 17px; letter-spacing: .22em; text-transform: uppercase;">Lohono</span>
+      <span style="font-size: 13px; color: #8A8377;">1 / 6</span>
+    </div>
+
+    <div style="display: flex; gap: 6px; margin-top: 24px;">
+      <span style="flex-grow: 1; height: 3px; border-radius: 999px; background: #8A6B3A;"></span>
+      <span style="flex-grow: 1; height: 3px; border-radius: 999px; background: #E4DACA;"></span>
+      <span style="flex-grow: 1; height: 3px; border-radius: 999px; background: #E4DACA;"></span>
+      <span style="flex-grow: 1; height: 3px; border-radius: 999px; background: #E4DACA;"></span>
+      <span style="flex-grow: 1; height: 3px; border-radius: 999px; background: #E4DACA;"></span>
+      <span style="flex-grow: 1; height: 3px; border-radius: 999px; background: #E4DACA;"></span>
+    </div>
+  </div>
+
+  <!-- body -->
+  <div style="flex-grow: 1; padding: 36px 24px 0; display: flex; flex-direction: column;">
+    <div class="eyebrow">Villa Amarelo · 12 – 16 Nov</div>
+    <h1 class="disp" style="margin: 12px 0 0; font-size: 34px; line-height: 1.12; letter-spacing: -.01em; text-wrap: pretty;">What's this trip for?</h1>
+    <p style="margin: 12px 0 0; font-size: 14.5px; line-height: 1.6; color: #4F4B44;">Pick up to three. It's the single thing that changes your plan the most.</p>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px;">
+      <span style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #B08D57; background: #F6EFE2; font-size: 15px;">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#8A6B3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>
+        Slow down
+      </span>
+      <span style="display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 15px; color: #1B1A17;">Get outside</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #B08D57; background: #F6EFE2; font-size: 15px;">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#8A6B3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>
+        Eat well
+      </span>
+      <span style="display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 15px; color: #1B1A17;">Just the two of us</span>
+      <span style="display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 15px; color: #1B1A17;">Big nights out</span>
+      <span style="display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 15px; color: #1B1A17;">Churches &amp; old town</span>
+      <span style="display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 15px; color: #1B1A17;">Keep the kids busy</span>
+      <span style="display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #E4DACA; font-size: 15px; color: #1B1A17;">Yoga &amp; spa</span>
+    </div>
+
+    <div style="margin-top: auto; padding-bottom: 20px;">
+      <div style="display: flex; align-items: flex-start; gap: 11px; background: #F2EBE0; border-radius: 12px; padding: 14px 16px;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8A6B3A" stroke-width="1.5" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px;"><circle cx="8" cy="8" r="6.5"/><path d="M8 7.2 V11"/><path d="M8 4.8 V4.9"/></svg>
+        <span style="font-size: 13px; line-height: 1.55; color: #4F4B44;">A concierge reads and fixes your plan before you see it — usually within a day.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div style="padding: 16px 24px 30px; border-top: 1px solid #E4DACA; background: #FBF9F5;">
+    <div style="display: flex; gap: 12px;">
+      <button style="height: 52px; padding: 0 22px; border: 1px solid #E4DACA; border-radius: 999px; background: transparent; font-family: inherit; font-size: 15px; color: #4F4B44; cursor: pointer;">Skip</button>
+      <button style="flex-grow: 1; height: 52px; border: 0; border-radius: 999px; background: #8A6B3A; color: #FBF9F5; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px;">
+        Continue
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#FBF9F5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 H13"/><path d="M9 4 L13 8 L9 12"/></svg>
+      </button>
+    </div>
+    <div style="text-align: center; margin-top: 12px; font-size: 12px; color: #8A8377;">Takes about 90 seconds · saved as you go</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

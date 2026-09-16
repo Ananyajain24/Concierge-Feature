@@ -16,7 +16,7 @@ export default async function QuestionnairePage({
   if (!data) {
     return (
       <main className="min-h-screen flex items-center justify-center p-6 text-center">
-        <p className="text-ink/60">This questionnaire link isn&apos;t valid.</p>
+        <p className="text-graphite">This questionnaire link isn&apos;t valid.</p>
       </main>
     );
   }

@@ -1,104 +1,121 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { Booking, QuestionnaireAnswers, PaceLevel, BudgetBand } from "@lohono/shared-types";
+import { useState } from "react";
+import type { Booking, QuestionnaireAnswers } from "@lohono/shared-types";
 import { api } from "@/lib/api";
+import { Button } from "@/components/ui/Button";
 import { EMPTY_ANSWERS, STEPS, type StepDef } from "./questions";
+import { StepBody } from "./StepBody";
+import { CraftingState } from "./CraftingState";
 
-export function QuestionnaireFlow({
-  token,
-  booking,
-}: {
-  token: string;
-  booking: Booking;
-}) {
+const fmt = (d: string) => new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+
+export function QuestionnaireFlow({ token, booking }: { token: string; booking: Booking }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<QuestionnaireAnswers>(EMPTY_ANSWERS);
   const [submitting, setSubmitting] = useState(false);
-  const [done, setDone] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
 
   const current = STEPS[step]!;
-  const progress = useMemo(() => Math.round(((step + 1) / STEPS.length) * 100), [step]);
-
+  const last = step === STEPS.length - 1;
   const canGoNext = validStep(current, answers);
 
   async function submit() {
     setSubmitting(true);
+    setError(null);
     try {
-      const res = await api<{ jobId: string; derivedTags: string[] }>(`/questionnaire/${token}`, {
+      const res = await api<{ jobId: string }>(`/questionnaire/${token}`, {
         method: "POST",
         body: JSON.stringify(answers),
       });
-      setDone(res.jobId);
+      setJobId(res.jobId);
     } catch (e) {
-      alert((e as Error).message);
+      setError((e as Error).message);
     } finally {
       setSubmitting(false);
     }
   }
 
-  if (done) {
-    return (
-      <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center p-6 text-center">
-        <h1 className="font-display text-3xl">We&apos;re on it.</h1>
-        <p className="mt-4 text-ink/70">
-          Your itinerary is being drafted and will be reviewed by our concierge before it reaches you. Expect it within 24 hours.
-        </p>
-        <p className="mt-6 text-xs text-ink/40">Job ID: {done}</p>
-      </main>
-    );
-  }
+  if (jobId) return <CraftingState booking={booking} jobId={jobId} />;
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col p-6">
-      <header className="mb-8">
-        <p className="text-xs uppercase tracking-widest text-ink/50">
-          {booking.guestName} · {booking.checkIn} → {booking.checkOut}
-        </p>
-        <div className="mt-3 h-1 w-full overflow-hidden rounded bg-ink/10">
-          <div
-            className="h-full bg-ink transition-all"
-            style={{ width: `${progress}%` }}
-          />
+    <main className="mx-auto flex min-h-screen max-w-md flex-col bg-ivory">
+      <div className="px-6 pt-7">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setStep((s) => Math.max(0, s - 1))}
+            disabled={step === 0}
+            aria-label="Back"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-linen disabled:opacity-30"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10 3 L5 8 L10 13" />
+            </svg>
+          </button>
+          <span className="font-display text-[17px] uppercase tracking-[0.22em]">Lohono</span>
+          <span className="text-[13px] text-muted">
+            {step + 1} / {STEPS.length}
+          </span>
         </div>
-        <p className="mt-2 text-xs text-ink/50">
-          Question {step + 1} of {STEPS.length}
-        </p>
-      </header>
 
-      <section className="flex-1">
-        <h2 className="font-display text-2xl">{current.title}</h2>
-        <p className="mt-2 text-sm text-ink/60">{current.sub}</p>
-        <div className="mt-6">
-          <Step step={current} answers={answers} setAnswers={setAnswers} />
+        <div className="mt-6 flex gap-1.5" role="progressbar" aria-valuenow={step + 1} aria-valuemax={STEPS.length}>
+          {STEPS.map((s, i) => (
+            <span
+              key={s.id}
+              className={"h-[3px] grow rounded-full " + (i <= step ? "bg-brass-deep" : "bg-linen")}
+            />
+          ))}
+        </div>
+      </div>
+
+      <section className="flex flex-1 flex-col px-6 pt-9">
+        <p className="eyebrow">
+          {booking.guestName} · {fmt(booking.checkIn)} – {fmt(booking.checkOut)}
+        </p>
+        <h1 className="mt-3 font-display text-[34px] leading-[1.12] tracking-tight">{current.title}</h1>
+        <p className="mt-3 text-[14.5px] leading-relaxed text-graphite">{current.sub}</p>
+
+        <div className="mt-7">
+          <StepBody step={current} answers={answers} setAnswers={setAnswers} />
+        </div>
+
+        <div className="mt-auto pb-5 pt-8">
+          <div className="flex items-start gap-3 rounded-md bg-sand px-4 py-3.5">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="mt-0.5 shrink-0 text-brass-deep">
+              <circle cx="8" cy="8" r="6.5" />
+              <path d="M8 7.2 V11 M8 4.8 V4.9" />
+            </svg>
+            <span className="text-[13px] leading-snug text-graphite">
+              A concierge reads and fixes your plan before you see it — usually within a day.
+            </span>
+          </div>
         </div>
       </section>
 
-      <footer className="mt-8 flex items-center gap-3">
-        <button
-          onClick={() => setStep((s) => Math.max(0, s - 1))}
-          disabled={step === 0}
-          className="rounded-full border px-4 py-2 text-sm disabled:opacity-30"
-        >
-          Back
-        </button>
-        {step < STEPS.length - 1 ? (
-          <button
-            onClick={() => setStep((s) => s + 1)}
-            disabled={!canGoNext}
-            className="ml-auto rounded-full bg-ink px-6 py-2 text-sm text-sand disabled:opacity-40"
-          >
-            Next
-          </button>
-        ) : (
-          <button
-            onClick={submit}
+      <footer className="border-t border-linen px-6 pb-7 pt-4">
+        {error && <p className="mb-3 text-[13px] text-terracotta">{error}</p>}
+        <div className="flex gap-3">
+          {!last && (
+            <Button variant="secondary" size="lg" onClick={() => setStep((s) => s + 1)}>
+              Skip
+            </Button>
+          )}
+          <Button
+            size="lg"
+            className="grow"
             disabled={!canGoNext || submitting}
-            className="ml-auto rounded-full bg-ink px-6 py-2 text-sm text-sand disabled:opacity-40"
+            onClick={last ? submit : () => setStep((s) => s + 1)}
           >
-            {submitting ? "Sending…" : "Send"}
-          </button>
-        )}
+            {submitting ? "Sending…" : last ? "Send to my concierge" : "Continue"}
+            {!submitting && (
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 8 H13 M9 4 L13 8 L9 12" />
+              </svg>
+            )}
+          </Button>
+        </div>
+        <p className="mt-3 text-center text-xs text-muted">Takes about 90 seconds · saved as you go</p>
       </footer>
     </main>
   );
@@ -106,137 +123,15 @@ export function QuestionnaireFlow({
 
 function validStep(step: StepDef, a: QuestionnaireAnswers): boolean {
   switch (step.id) {
-    case "vibes": return a.vibes.length >= 1;
-    case "pace": return Boolean(a.pace);
-    case "party": return a.partyComposition.length > 0;
-    case "budget": return Boolean(a.budget);
-    default: return true;
+    case "vibes":
+      return a.vibes.length >= 1;
+    case "pace":
+      return Boolean(a.pace);
+    case "party":
+      return a.partyComposition.length > 0;
+    case "budget":
+      return Boolean(a.budget);
+    default:
+      return true;
   }
-}
-
-function Step({
-  step,
-  answers,
-  setAnswers,
-}: {
-  step: StepDef;
-  answers: QuestionnaireAnswers;
-  setAnswers: React.Dispatch<React.SetStateAction<QuestionnaireAnswers>>;
-}) {
-  if (step.kind === "chips-multi" && step.options) {
-    const key = step.id as "vibes" | "dietary";
-    const current = answers[key] as string[];
-    return (
-      <div className="flex flex-wrap gap-2">
-        {step.options.map((o) => {
-          const active = current.includes(o.value);
-          return (
-            <button
-              key={o.value}
-              onClick={() =>
-                setAnswers((a) => ({
-                  ...a,
-                  [key]: active ? current.filter((v) => v !== o.value) : [...current, o.value],
-                } as QuestionnaireAnswers))
-              }
-              className={
-                "rounded-full border px-4 py-2 text-sm transition " +
-                (active ? "border-ink bg-ink text-sand" : "border-ink/20 text-ink hover:bg-ink/5")
-              }
-            >
-              {o.label}
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-
-  if (step.kind === "chips-single" && step.options) {
-    const key = step.id as "pace" | "budget";
-    const current = answers[key] as string;
-    return (
-      <div className="flex flex-wrap gap-2">
-        {step.options.map((o) => {
-          const active = current === o.value;
-          return (
-            <button
-              key={o.value}
-              onClick={() =>
-                setAnswers((a) => ({
-                  ...a,
-                  [key]: o.value as PaceLevel | BudgetBand,
-                }))
-              }
-              className={
-                "rounded-full border px-4 py-2 text-sm transition " +
-                (active ? "border-ink bg-ink text-sand" : "border-ink/20 text-ink hover:bg-ink/5")
-              }
-            >
-              {o.label}
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-
-  if (step.kind === "kids") {
-    return (
-      <div>
-        <input
-          type="text"
-          value={answers.kidAges.join(", ")}
-          onChange={(e) =>
-            setAnswers((a) => ({
-              ...a,
-              kidAges: e.target.value
-                .split(",")
-                .map((s) => Number(s.trim()))
-                .filter((n) => Number.isFinite(n)),
-            }))
-          }
-          placeholder="e.g. 4, 8"
-          className="w-full rounded border border-ink/20 bg-white px-4 py-3 text-base"
-        />
-        <p className="mt-2 text-xs text-ink/50">Leave blank if none.</p>
-      </div>
-    );
-  }
-
-  if (step.kind === "text") {
-    return (
-      <input
-        value={
-          step.id === "party"
-            ? answers.partyComposition
-            : answers.interests.join(", ")
-        }
-        onChange={(e) =>
-          setAnswers((a) => ({
-            ...a,
-            partyComposition: step.id === "party" ? e.target.value : a.partyComposition,
-            interests:
-              step.id === "interests"
-                ? e.target.value.split(",").map((s) => s.trim()).filter(Boolean)
-                : a.interests,
-          }))
-        }
-        className="w-full rounded border border-ink/20 bg-white px-4 py-3 text-base"
-      />
-    );
-  }
-
-  if (step.kind === "textarea") {
-    return (
-      <textarea
-        rows={4}
-        value={answers.mobilityNotes ?? ""}
-        onChange={(e) => setAnswers((a) => ({ ...a, mobilityNotes: e.target.value }))}
-        className="w-full rounded border border-ink/20 bg-white px-4 py-3 text-base"
-      />
-    );
-  }
-
-  return null;
 }

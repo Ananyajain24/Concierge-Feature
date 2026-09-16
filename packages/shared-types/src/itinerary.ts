@@ -36,12 +36,18 @@ export const itinerarySchema = z.object({
   model: z.string().nullable(),
   costUsd: z.number().nonnegative().default(0),
   version: z.number().int().positive().default(1),
+  summary: z.string().default(""),
   days: z.array(daySchema),
 });
 export type Itinerary = z.infer<typeof itinerarySchema>;
 
 // Published snapshot — a self-contained render payload for the guest view.
 export const publishedStopSchema = stopSchema.extend({
+  // Drive from the VILLA, not from the previous stop. The illustrated map is
+  // radial — every line on it is measured from where the guest is staying —
+  // so this is denormalised at publish time alongside everything else.
+  driveFromVillaSec: z.number().int().nonnegative().default(0),
+  driveFromVillaMeters: z.number().int().nonnegative().default(0),
   poiName: z.string(),
   poiCategory: z.string(),
   poiLat: z.number(),

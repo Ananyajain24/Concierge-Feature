@@ -1,15 +1,16 @@
 import { fitAffine, project, type AnchorPoint } from "./affine";
 
-export interface AnchorError {
+export interface AnchorError<A extends AnchorPoint = AnchorPoint> {
   index: number;
-  anchor: AnchorPoint;
+  anchor: A;
   errorPx: number;
 }
 
 // Leave-one-out validation: fit on N-1 anchors, measure pixel error on the excluded one.
-export function leaveOneOutErrors(anchors: AnchorPoint[]): AnchorError[] {
+// Generic so callers keep whatever extra fields their anchors carry (id, label).
+export function leaveOneOutErrors<A extends AnchorPoint>(anchors: A[]): AnchorError<A>[] {
   if (anchors.length < 4) return [];
-  const errors: AnchorError[] = [];
+  const errors: AnchorError<A>[] = [];
   for (let i = 0; i < anchors.length; i++) {
     const subset = anchors.filter((_, j) => j !== i);
     const m = fitAffine(subset);
