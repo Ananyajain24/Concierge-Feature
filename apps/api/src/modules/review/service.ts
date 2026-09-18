@@ -1,8 +1,9 @@
-import type { Day, Poi } from "@lohono/shared-types";
+import type { Day, Poi, ReasonCode } from "@lohono/shared-types";
 import { rankAlternates } from "@lohono/itinerary-engine";
 import { eq } from "drizzle-orm";
 import { reviewRepo } from "./repository";
 import { buildPublishedSnapshot } from "./snapshot";
+import { publishEditedDays } from "./publishEdit";
 import { loadDriveMatrix, secondsOnly } from "../generation/retriever";
 import { db } from "../../db/client";
 import { bookings, villas } from "../../db/schema/index";
@@ -28,18 +29,18 @@ export const reviewService = {
     note?: string;
     days: Day[];
   }) => {
-    const before = await reviewRepo.get(params.itineraryId);
-    if (!before) throw new Error("itinerary not found");
-    const updated = await reviewRepo.updateDays(params.itineraryId, params.days, "review");
-    await reviewRepo.writeEdit({
-      itineraryId: params.itineraryId,
-      actor: params.actor,
-      before: (before.days ?? []) as never,
-      after: params.days as never,
-      reasonCode: params.reasonCode,
-      note: params.note ?? null,
-    });
-    return updated;
+    // Same recompute-and-publish path a guest's own swap/remove uses — an
+    // agent's edit from the dashboard must never leave the itinerary sitting
+    // unpublished, since the guest page only ever renders the published
+    // snapshot and would otherwise go blank mid-edit.
+    await publishEditedDays(
+      params.itineraryId,
+      params.days,
+      params.actor,
+      params.reasonCode as ReasonCode,
+      params.note,
+    );
+    return reviewRepo.get(params.itineraryId);
   },
 
   publish: async (id: string) => {

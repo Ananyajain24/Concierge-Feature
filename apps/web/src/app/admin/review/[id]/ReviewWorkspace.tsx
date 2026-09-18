@@ -35,12 +35,16 @@ export function ReviewWorkspace({ detail }: { detail: Detail }) {
     if (!pending) return;
     setSaving(true);
     try {
-      await api(`/review/${detail.itinerary.id}/edit`, {
+      // The server recomputes drive times and warnings and republishes right
+      // away — pull the result back rather than trusting the client-staged
+      // days, so what's on screen matches what the guest now sees.
+      const updated = await api<Itinerary>(`/review/${detail.itinerary.id}/edit`, {
         method: "POST",
         body: JSON.stringify({ reasonCode, days: pending.nextDays }),
       });
-      setDays(pending.nextDays);
+      setDays(updated.days ?? pending.nextDays);
       setPending(null);
+      router.refresh();
     } finally {
       setSaving(false);
     }
@@ -93,9 +97,10 @@ export function ReviewWorkspace({ detail }: { detail: Detail }) {
           <button
             onClick={publish}
             disabled={saving}
+            title="Edits already publish instantly — this just re-snapshots the current state"
             className="rounded-full bg-ink px-5 py-2 text-sm text-ivory disabled:opacity-40"
           >
-            {saving ? "…" : "Approve & publish"}
+            {saving ? "…" : "Republish"}
           </button>
         </div>
 
