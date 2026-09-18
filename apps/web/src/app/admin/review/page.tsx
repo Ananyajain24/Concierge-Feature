@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { SlaPill } from "@/components/ui/SlaPill";
+import { StatusPill } from "@/components/ui/StatusPill";
 import { ReviewFilters } from "./ReviewFilters";
 
 export const dynamic = "force-dynamic";
@@ -29,22 +29,19 @@ function ago(iso: string): string {
 
 export default async function ReviewQueuePage() {
   const rows = await api<QueueItem[]>("/review/queue").catch(() => []);
-  // Burn-down order: whatever is closest to breaching is at the top.
+  // Newest first — every itinerary a guest has been shown, not just ones
+  // waiting on a human, since generation publishes on its own now.
   const queue = [...rows].sort(
-    (a, b) => new Date(a.slaDueAt ?? 0).getTime() - new Date(b.slaDueAt ?? 0).getTime(),
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
-  const atRisk = queue.filter(
-    (r) => r.slaDueAt && new Date(r.slaDueAt).getTime() - Date.now() < 4 * 3_600_000,
-  ).length;
 
   return (
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-[34px] tracking-tight">Review queue</h1>
+          <h1 className="font-display text-[34px] tracking-tight">Guest itineraries</h1>
           <p className="mt-1.5 text-sm text-graphite">
-            {queue.length} {queue.length === 1 ? "plan" : "plans"} waiting
-            {atRisk > 0 && ` · ${atRisk} inside four hours`}
+            {queue.length} {queue.length === 1 ? "itinerary" : "itineraries"} · open one to edit or remove a stop
           </p>
         </div>
         <ReviewFilters />
@@ -57,7 +54,7 @@ export default async function ReviewQueuePage() {
               <th className="w-[30%]">Guest &amp; villa</th>
               <th className="w-[18%]">Stay</th>
               <th className="w-[14%]">Generated</th>
-              <th className="w-[16%]">Time left</th>
+              <th className="w-[16%]">Status</th>
               <th className="w-[12%]">Cost</th>
               <th className="w-[10%]" />
             </tr>
@@ -74,7 +71,7 @@ export default async function ReviewQueuePage() {
                 </td>
                 <td className="text-graphite">{ago(r.createdAt)}</td>
                 <td>
-                  <SlaPill dueAt={r.slaDueAt} />
+                  <StatusPill status={r.status} />
                 </td>
                 <td className="text-[13px] text-graphite">
                   v{r.version}
@@ -93,7 +90,7 @@ export default async function ReviewQueuePage() {
             {queue.length === 0 && (
               <tr>
                 <td colSpan={6} className="border-t border-linen py-16 text-center text-muted">
-                  Nothing waiting. The queue is clear.
+                  No itineraries generated yet.
                 </td>
               </tr>
             )}

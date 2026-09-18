@@ -24,7 +24,8 @@ export async function buildServer(): Promise<FastifyInstance> {
     },
   });
 
-  await app.register(cors, { origin: env.CORS_ORIGIN, credentials: true });
+  const corsOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim());
+  await app.register(cors, { origin: corsOrigins, credentials: true });
 
   app.setErrorHandler((err: unknown, _req, reply) => {
     app.log.error(err);

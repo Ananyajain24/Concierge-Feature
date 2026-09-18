@@ -18,23 +18,13 @@ interface Insights {
 const CARDS = [
   {
     href: "/admin/review",
-    label: "Review queue",
-    desc: "Anything still waiting on a reason-coded edit.",
+    label: "Guest itineraries",
+    desc: "See what each guest was shown — swap or remove a stop.",
   },
   {
     href: "/admin/catalog",
     label: "POI catalog",
     desc: "The curated places generation is allowed to pick from.",
-  },
-  {
-    href: "/admin/maps/goa",
-    label: "Map anchors",
-    desc: "Fit lat/lng onto the illustrated artwork.",
-  },
-  {
-    href: "/dev/map",
-    label: "Map sandbox",
-    desc: "The illustrated trip map, on fixtures.",
   },
   {
     href: "/admin/insights",
@@ -59,7 +49,7 @@ export default async function AdminDashboard() {
   const totalGenerated = insights.generationByPromptVersion.reduce((n, r) => n + Number(r.runs), 0);
 
   const stats = [
-    { label: "Awaiting review", value: queue.length },
+    { label: "Itineraries", value: queue.length },
     { label: "Itineraries generated", value: totalGenerated },
     { label: "Villas", value: villas.length },
     { label: "Destinations", value: destinations.length },

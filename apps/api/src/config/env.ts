@@ -8,7 +8,9 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   DATABASE_URL: z.string().url(),
   API_PORT: z.coerce.number().int().positive().default(4000),
-  CORS_ORIGIN: z.string().default("http://localhost:3000"),
+  // Comma-separated — the guest site and the internal dashboard run as two
+  // separate origins (different ports of the same Next.js app).
+  CORS_ORIGIN: z.string().default("http://localhost:3000,http://localhost:3001"),
   // Where the guest-facing app is served — used only to log the trip link
   // on publish (no WhatsApp/email sending in MVP, per CLAUDE.md).
   WEB_ORIGIN: z.string().default("http://localhost:3000"),

@@ -1,4 +1,4 @@
-import { and, asc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { db } from "../../db/client";
 import { itineraries, itineraryEdits, bookings, villas, pois } from "../../db/schema/index";
 
@@ -24,8 +24,11 @@ export const reviewRepo = {
       .from(itineraries)
       .innerJoin(bookings, eq(itineraries.bookingId, bookings.id))
       .innerJoin(villas, eq(bookings.villaId, villas.id))
-      .where(eq(itineraries.status, "review"))
-      .orderBy(asc(itineraries.slaDueAt)),
+      // Every itinerary a guest has ever been shown, not just ones stuck at
+      // "review" — that status is never reached now that generation
+      // publishes immediately, so filtering to it would leave this list
+      // permanently empty.
+      .orderBy(desc(itineraries.createdAt)),
 
   get: (id: string) =>
     db.select().from(itineraries).where(eq(itineraries.id, id)).limit(1).then((r) => r[0] ?? null),
