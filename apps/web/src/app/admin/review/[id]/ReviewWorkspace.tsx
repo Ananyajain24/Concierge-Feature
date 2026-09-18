@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Booking, Day, Itinerary, Poi, ReasonCode, Villa } from "@lohono/shared-types";
+import type { Booking, Day, Itinerary, Poi, ReasonCode, SlotKind, Stop, Villa } from "@lohono/shared-types";
+import { slotKind } from "@lohono/shared-types";
 import { api } from "@/lib/api";
 import { ReasonPicker } from "./ReasonPicker";
 import { AlternatePanel } from "./AlternatePanel";
@@ -21,10 +22,22 @@ export function ReviewWorkspace({ detail }: { detail: Detail }) {
   const [pending, setPending] = useState<null | { nextDays: Day[] }>(null);
   const [selection, setSelection] = useState<{ dayIndex: number; stopIndex: number } | null>(null);
   const [saving, setSaving] = useState(false);
+  const [addingDay, setAddingDay] = useState<number | null>(null);
+  const [addPoiId, setAddPoiId] = useState("");
+  const [addSlot, setAddSlot] = useState<SlotKind>("morning");
 
   const poiById = useMemo(
     () => Object.fromEntries(detail.pois.map((p) => [p.id, p])),
     [detail.pois],
+  );
+
+  const usedPoiIds = useMemo(
+    () => new Set(days.flatMap((d) => d.stops.map((s) => s.poiId))),
+    [days],
+  );
+  const availablePois = useMemo(
+    () => detail.pois.filter((p) => !usedPoiIds.has(p.id)),
+    [detail.pois, usedPoiIds],
   );
 
   function stageEdit(nextDays: Day[]) {
@@ -66,6 +79,26 @@ export function ReviewWorkspace({ detail }: { detail: Detail }) {
     const next = days.map((d, di) =>
       di !== dayIndex ? d : { ...d, stops: d.stops.filter((_, si) => si !== stopIndex) },
     );
+    stageEdit(next);
+  }
+
+  function addStop(dayIndex: number, poiId: string, slot: SlotKind) {
+    const newStop: Stop = {
+      id: crypto.randomUUID(),
+      poiId,
+      slot,
+      order: 0,
+      isPinned: false,
+      copy: "",
+      driveFromPreviousSec: 0,
+      driveFromPreviousMeters: 0,
+      warnings: [],
+    };
+    const next = days.map((d, di) =>
+      di !== dayIndex ? d : { ...d, stops: [...d.stops, newStop] },
+    );
+    setAddingDay(null);
+    setAddPoiId("");
     stageEdit(next);
   }
 
@@ -150,6 +183,60 @@ export function ReviewWorkspace({ detail }: { detail: Detail }) {
                 );
               })}
             </ul>
+
+            {addingDay === di ? (
+              <div className="flex flex-wrap items-center gap-2 border-t border-linen p-3">
+                <select
+                  value={addPoiId}
+                  onChange={(e) => setAddPoiId(e.target.value)}
+                  className="min-w-0 flex-1 rounded border border-linen bg-ivory px-2 py-1.5 text-sm"
+                >
+                  <option value="">Pick a place…</option>
+                  {availablePois.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name} · {p.category}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={addSlot}
+                  onChange={(e) => setAddSlot(e.target.value as SlotKind)}
+                  className="rounded border border-linen bg-ivory px-2 py-1.5 text-sm"
+                >
+                  {slotKind.options.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  disabled={!addPoiId}
+                  onClick={() => addStop(di, addPoiId, addSlot)}
+                  className="rounded-full bg-ink px-4 py-1.5 text-xs text-ivory disabled:opacity-40"
+                >
+                  Add
+                </button>
+                <button
+                  onClick={() => {
+                    setAddingDay(null);
+                    setAddPoiId("");
+                  }}
+                  className="text-xs text-muted hover:text-ink"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setAddingDay(di);
+                  setAddPoiId("");
+                }}
+                className="w-full border-t border-linen p-3 text-left text-xs text-brass-hover hover:bg-ink/[0.02]"
+              >
+                + Add a place
+              </button>
+            )}
           </div>
         ))}
       </section>

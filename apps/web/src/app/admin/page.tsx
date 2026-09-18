@@ -27,16 +27,6 @@ const CARDS = [
     desc: "The curated places generation is allowed to pick from.",
   },
   {
-    href: "/admin/maps/goa",
-    label: "Map anchors",
-    desc: "Fit lat/lng onto the illustrated artwork.",
-  },
-  {
-    href: "/dev/map",
-    label: "Map sandbox",
-    desc: "The illustrated trip map, on fixtures.",
-  },
-  {
     href: "/admin/insights",
     label: "Insights",
     desc: "Reason-code trends, SLA compliance, lead clicks.",
