@@ -6,8 +6,6 @@ const nextConfig = {
     "@lohono/itinerary-engine",
     "@lohono/map-projection",
   ],
-  experimental: {
-    typedRoutes: false,
-  },
+  typedRoutes: false,
 };
 export default nextConfig;
